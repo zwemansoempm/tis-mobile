@@ -5,7 +5,7 @@ workflows:
     ios-flutter:
         name: iOS App with Flutter Module
         environment:
-            vars:
+            # vars:
                 # FLUTTER_MODULE_DIR: "{{ ADD YOUR PATH HERE }}"
                 # HOST_IOS_APP_DIR: "{{ ADD YOUR PATH HERE }}"
                 # XCODE_PROJECT: "{{ ADD WORKSPACE NAME HERE }}"

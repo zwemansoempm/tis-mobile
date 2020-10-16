@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tis/views/settingScreen.dart';
 
 class TopPage extends StatefulWidget{
   final List<String> list=List.generate(10, (index) => "Textto $index");
@@ -21,19 +22,19 @@ class _TopPageState extends State<TopPage> {
                SliverAppBar(
                  automaticallyImplyLeading: false,
                  leading: IconButton(      
-                   padding: new EdgeInsets.all(20.0),          
+                   padding: new EdgeInsets.all(15.0),          
                    icon: Image.asset("assets/images/refresh.png"),
                    onPressed: () {  },                 
                  ),
-                  centerTitle: false,
-                  title:  Transform(                    
+                  centerTitle: true,
+                  title: Row( //Transform(                    
                       // you can forcefully translate values left side using Transform
-                      transform:MediaQuery.of(context).size.width>1000?Matrix4.translationValues(MediaQuery.of(context).size.width/3.5, 0.0, 0):
-                      MediaQuery.of(context).size.width>700?Matrix4.translationValues(MediaQuery.of(context).size.width/4.3, 0.0, 0):
-                      MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):
-                      Matrix4.translationValues(-15, 0.0, 0),
+                      // transform:MediaQuery.of(context).size.width>1000?Matrix4.translationValues(MediaQuery.of(context).size.width/3.5, 0.0, 0):
+                      // MediaQuery.of(context).size.width>700?Matrix4.translationValues(MediaQuery.of(context).size.width/4.3, 0.0, 0):
+                      // MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):
+                      // Matrix4.translationValues(-15, 0.0, 0),
                      // transform:MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):Matrix4.translationValues(-15, 0.0, 0),
-                    child: Row(
+                    // child: Row(
                         
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[ 
@@ -43,7 +44,7 @@ class _TopPageState extends State<TopPage> {
                                     width: MediaQuery.of(context).size.width>1000?MediaQuery.of(context).size.width/3.5:
                                             MediaQuery.of(context).size.width>700?MediaQuery.of(context).size.width/3:
                                             MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:
-                                            MediaQuery.of(context).size.width/1.4,
+                                            MediaQuery.of(context).size.width/1.7,//1.4
                                           // width: MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:MediaQuery.of(context).size.width/1.4,
                                     child: new IconButton(                  
                                             icon:  Image.asset("assets/images/s1.png"),
@@ -51,8 +52,16 @@ class _TopPageState extends State<TopPage> {
                                     )
                             ), 
                       ],
-                    ),
-                  ),                   
+                    // ),
+                  ),    
+                  actions: [
+                    IconButton(
+                      icon: Image.asset("assets/images/setting.png"), 
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingScreen()));
+                      },
+                    )
+                  ],               
                   // Allows the user to reveal the app bar if they begin scrolling
                   // back up the list of items.
                   floating: true,

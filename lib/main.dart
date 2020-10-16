@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tis/views/home.dart';
+import 'package:tis/views/top.dart';
+// import 'package:tis/views/home.dart';
 
 
 void main() {
@@ -7,6 +8,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  // MyApp({Key key}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -14,11 +16,11 @@ class MyApp extends StatelessWidget {
       title: 'TIS Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.white,
-        // primarySwatch: Colors.blue,    
+        primaryColor: Colors.black,
+        // primarySwatch: Colors.blue,        
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home:TopPage(),// HomePage(),
       
     );
   }

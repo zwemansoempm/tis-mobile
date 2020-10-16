@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class TopPage extends StatefulWidget{
   final List<String> list=List.generate(10, (index) => "Textto $index");
   @override
@@ -12,8 +11,7 @@ class _TopPageState extends State<TopPage> {
   Widget build(BuildContext context) {
     
         
-      return new Scaffold(
-        
+      return new Scaffold(        
         // No appbar provided to the Scaffold, only a body with a
         // CustomScrollView.
         body: CustomScrollView(
@@ -21,76 +19,40 @@ class _TopPageState extends State<TopPage> {
             slivers: <Widget>[
             // Add the app bar to the CustomScrollView.
                SliverAppBar(
-                  automaticallyImplyLeading: false,
+                 automaticallyImplyLeading: false,
                  leading: IconButton(      
                    padding: new EdgeInsets.all(20.0),          
                    icon: Image.asset("assets/images/refresh.png"),
                    onPressed: () {  },                 
                  ),
                   centerTitle: false,
-
-                  
-                    title:  Transform(
-                    
-              // you can forcefully translate values left side using Transform
-              transform:MediaQuery.of(context).size.width>1000?Matrix4.translationValues(MediaQuery.of(context).size.width/3.5, 0.0, 0):
-              MediaQuery.of(context).size.width>700?Matrix4.translationValues(MediaQuery.of(context).size.width/4.3, 0.0, 0):
-              MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):
-              Matrix4.translationValues(-15, 0.0, 0),
-              // transform:MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):Matrix4.translationValues(-15, 0.0, 0),
-               child: Row(
-                      
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
+                  title:  Transform(                    
+                      // you can forcefully translate values left side using Transform
+                      transform:MediaQuery.of(context).size.width>1000?Matrix4.translationValues(MediaQuery.of(context).size.width/3.5, 0.0, 0):
+                      MediaQuery.of(context).size.width>700?Matrix4.translationValues(MediaQuery.of(context).size.width/4.3, 0.0, 0):
+                      MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):
+                      Matrix4.translationValues(-15, 0.0, 0),
+                     // transform:MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):Matrix4.translationValues(-15, 0.0, 0),
+                    child: Row(
+                        
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[ 
+                            SizedBox(
               
-              // LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {  return new IconButton(   
-              //     onPressed: null,  icon:  Image.asset("assets/images/s1.png"), iconSize: constraints.biggest.height); },),
-           SizedBox(
-             
-   height:MediaQuery.of(context).size.height,
-   width: MediaQuery.of(context).size.width>1000?MediaQuery.of(context).size.width/3.5:
-          MediaQuery.of(context).size.width>700?MediaQuery.of(context).size.width/3:
-          MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:
-          MediaQuery.of(context).size.width/1.4,
-  // width: MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:MediaQuery.of(context).size.width/1.4,
-    child: new IconButton(
- 
-                // iconSize:188.0,
-                  icon:  Image.asset("assets/images/s1.png"),
-                  onPressed: null,
-          )
-   ),
-                //      IconButton(
-                //   // padding: new EdgeInsets.fromLTRB(0, 0, 0, 0),
-             
-                //   icon:  Image.asset("assets/images/s1.png"),
-                //   onPressed: null,
-                // );
-              // })
-                      
-              ],
-            ),
-              ),
-                    
-             
-                  // Provide a standard title.
-                  
-                  // title:TextField(                  
-                  //     style: TextStyle(color: Colors.white),
-                  //     decoration: InputDecoration(
-                  //       fillColor: Colors.white,
-                  //       // border: InputBorder.none,
-                  //       hintText: 'Search News',
-                  //       hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
-                  //       prefixIcon: const Icon(
-                  //               Icons.search,
-                  //               color: Colors.white,
-                  //             ),
-                  //     ),
-                  // ),
-//                 actions: <Widget>[
-//   GestureDetector(child: TextField(decoration: InputDecoration(hintText: 'Search News', hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),), onTap: null))
-// ],
+                                    height:MediaQuery.of(context).size.height,
+                                    width: MediaQuery.of(context).size.width>1000?MediaQuery.of(context).size.width/3.5:
+                                            MediaQuery.of(context).size.width>700?MediaQuery.of(context).size.width/3:
+                                            MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:
+                                            MediaQuery.of(context).size.width/1.4,
+                                          // width: MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:MediaQuery.of(context).size.width/1.4,
+                                    child: new IconButton(                  
+                                            icon:  Image.asset("assets/images/s1.png"),
+                                            onPressed: null,
+                                    )
+                            ), 
+                      ],
+                    ),
+                  ),                   
                   // Allows the user to reveal the app bar if they begin scrolling
                   // back up the list of items.
                   floating: true,
@@ -106,15 +68,12 @@ class _TopPageState extends State<TopPage> {
                     // The builder function returns a ListTile with a title that
                     // displays the index of the current item.
                     (context, index) => ListTile(title: Text('Item #$index')),
-                    // Builds 1000 ListTiles
+                    // Builds 200 ListTiles
                     childCount: 20,
                 )
               )
             ]
-
         )
-
       );  
   }
-
 }

@@ -6,14 +6,16 @@ class SearchScreen extends  SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
       return <Widget>[
         IconButton(
-          icon: Icon(Icons.close),
+          icon: Icon(Icons.cancel),
           onPressed: (){
             query="";
           },
         )
       ];
-    }
-  
+    } 
+     @override
+    String get searchFieldLabel => "Search News";
+
     @override
     Widget buildLeading(BuildContext context) {
       return IconButton(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tis/views/search.dart';
 import 'package:tis/views/settingScreen.dart';
 
 class TopPage extends StatefulWidget{
-  final List<String> list=List.generate(10, (index) => "Textto $index");
+  final List<String> list=List.generate(20, (index) => "Textto $index");
   @override
     _TopPageState createState() => _TopPageState();
 }
@@ -17,7 +18,7 @@ class _TopPageState extends State<TopPage> {
         // CustomScrollView.
         body: CustomScrollView(
           
-            slivers: <Widget>[
+            slivers: <Widget>[  
             // Add the app bar to the CustomScrollView.
                SliverAppBar(
                  automaticallyImplyLeading: false,
@@ -48,7 +49,9 @@ class _TopPageState extends State<TopPage> {
                                           // width: MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:MediaQuery.of(context).size.width/1.4,
                                     child: new IconButton(                  
                                             icon:  Image.asset("assets/images/s1.png"),
-                                            onPressed: null,
+                                            onPressed: (){
+                                              showSearch(context: context,delegate: SearchScreen(widget.list));
+                                            },
                                     )
                             ), 
                       ],
@@ -76,7 +79,7 @@ class _TopPageState extends State<TopPage> {
                 delegate: SliverChildBuilderDelegate(
                     // The builder function returns a ListTile with a title that
                     // displays the index of the current item.
-                    (context, index) => ListTile(title: Text('Item #$index')),
+                    (context, index) => ListTile(title: Text(widget.list[index])),//'Item #$index'
                     // Builds 200 ListTiles
                     childCount: 20,
                 )

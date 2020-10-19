@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'TIS Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.black,
+        primaryColor: Colors.red,
         // primarySwatch: Colors.blue,        
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),

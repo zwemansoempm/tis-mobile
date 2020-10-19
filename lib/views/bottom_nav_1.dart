@@ -1,0 +1,99 @@
+import 'package:flutter/material.dart';
+import 'package:tis/views/search.dart';
+import 'package:tis/views/settingScreen.dart';
+
+class HomeWidget extends StatefulWidget {
+ final List<String> list=List.generate(20, (index) => "Textto $index");
+  @override
+  _BottomNav1State createState() => _BottomNav1State();
+
+}
+  
+class _BottomNav1State  extends State<HomeWidget> { 
+ 
+  @override
+  Widget build(BuildContext context) {        
+
+         return Container(
+                child: CustomScrollView(              
+                slivers: <Widget>[                 
+                // Add the app bar to the CustomScrollView.
+                  SliverAppBar(
+                    backgroundColor:Colors.black,
+                    automaticallyImplyLeading: false,
+                    leading: IconButton(      
+                      padding: new EdgeInsets.all(15.0),          
+                      icon:new Icon(Icons.refresh),// Image.asset("assets/images/refresh.png"),
+                      onPressed: () {  },                 
+                    ),
+                      centerTitle: true,
+                      title: Row( //Transform(                    
+                          // you can forcefully translate values left side using Transform
+                          // transform:MediaQuery.of(context).size.width>1000?Matrix4.translationValues(MediaQuery.of(context).size.width/3.5, 0.0, 0):
+                          // MediaQuery.of(context).size.width>700?Matrix4.translationValues(MediaQuery.of(context).size.width/4.3, 0.0, 0):
+                          // MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):
+                          // Matrix4.translationValues(-15, 0.0, 0),
+                          // transform:MediaQuery.of(context).size.width>417 || MediaQuery.of(context).size.width>680 ?Matrix4.translationValues(MediaQuery.of(context).size.width/25, 0.0, 0):Matrix4.translationValues(-15, 0.0, 0),
+                          // child: Row(
+                            
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[ 
+                                SizedBox(
+                  
+                                        // height:MediaQuery.of(context).size.height,
+                                        // width: MediaQuery.of(context).size.width>1000?MediaQuery.of(context).size.width/0.5:
+                                        //         MediaQuery.of(context).size.width>700?MediaQuery.of(context).size.width/0.5:
+                                        //         MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/0.5:
+                                        //         MediaQuery.of(context).size.width/1.7,//1.4
+                                              // width: MediaQuery.of(context).size.width>417 ||  MediaQuery.of(context).size.width>680 ?MediaQuery.of(context).size.width/1.5:MediaQuery.of(context).size.width/1.4,
+                                        child: new IconButton(                  
+                                                icon:new Icon(Icons.search), // Image.asset("assets/images/s1.png"),
+                                                onPressed: (){
+                                                  showSearch(context: context,delegate: SearchScreen(widget.list));
+                                                },
+                                        ),  
+                                                                            
+                                ), 
+                                new RaisedButton(
+                                        color: Colors.black.withOpacity(0.05),
+                                        onPressed: () {  showSearch(context: context,delegate: SearchScreen(widget.list)); },
+                                        child: new Text("Search News...", style: TextStyle(color: Colors.lightBlue)),
+                                ),                               
+                            ],
+                        // ),
+                      ),    
+                      actions: [
+                        IconButton(
+                          icon:new Icon(Icons.settings),//Image.asset("assets/images/setting.png"), 
+                          onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingScreen()));
+                          },
+                        )
+                      ],               
+                      // Allows the user to reveal the app bar if they begin scrolling
+                      // back up the list of items.
+                      floating: true,
+                      // Display a placeholder widget to visualize the shrinking size.
+                      // flexibleSpace: Placeholder(),
+                      // Make the initial height of the SliverAppBar larger than normal.
+                      // expandedHeight: 100,
+                  ),                 
+                  // Next, create a SliverList
+                  SliverList(
+                    // Use a delegate to build items as they're scrolled on screen.
+                    delegate: SliverChildBuilderDelegate(
+                      
+                        // The builder function returns a ListTile with a title that
+                        // displays the index of the current item.
+                        (context, index) => ListTile(title: Text(widget.list[index])),//'Item #$index'
+                        // Builds 200 ListTiles
+                        childCount: 20,
+                    )
+                  ),
+                
+                ]
+            ),
+        ); 
+  }
+}
+

@@ -32,7 +32,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
       final tab = Tab(
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
             color: data.color,
           ),
           constraints: BoxConstraints.expand(),
@@ -116,9 +116,14 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                         ),
                       
                       bottom: TabBar(
-                        indicator: BoxDecoration(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                        indicator: UnderlineTabIndicator(
+                          borderSide: BorderSide(width: 5,color: _activeColor),
+                          insets: EdgeInsets.symmetric(horizontal:800.0),
                         ),
+                        // indicator: BoxDecoration(
+                        //     borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                        // ),
+                        
                         indicatorColor: _activeColor,
                         labelPadding: EdgeInsets.zero,
                         labelColor: Colors.white,

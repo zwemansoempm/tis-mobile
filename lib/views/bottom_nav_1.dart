@@ -3,12 +3,13 @@ import 'package:tis/views/search.dart';
 import 'package:tis/views/settingScreen.dart';
 
 class HomeWidget extends StatefulWidget {
+
  final List<String> list=List.generate(20, (index) => "Textto $index");
   @override
   _BottomNav1State createState() => _BottomNav1State();
 
-}
-  
+}  
+
 class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderStateMixin { 
 
     TabController _controller;
@@ -60,11 +61,11 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   void dispose() {
     _controller?.dispose();
     super.dispose();
-  }
- 
+  } 
+
   @override
   Widget build(BuildContext context) {        
-
+      
          return Container(
                 child: CustomScrollView(              
                 slivers: <Widget>[                 
@@ -141,7 +142,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       // flexibleSpace: Placeholder(),
                       // Make the initial height of the SliverAppBar larger than normal.
                       // expandedHeight: 100,
-                  ),                 
+                  ),   
+                         
                   // Next, create a SliverList
                   //SliverList(
                     // Use a delegate to build items as they're scrolled on screen.
@@ -164,8 +166,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                         ],
                       ),
                     ),
-                  //),
-                
+                  //),                
                 ]
             ),
         ); 

@@ -5,9 +5,10 @@ import 'bottom_nav_2.dart';
 import 'bottom_nav_3.dart';
 
 class TopPage extends StatefulWidget{  
+
   @override
     _TopPageState createState() => _TopPageState();
-}
+  }
     
 class _TopPageState extends State<TopPage> {
   int _currentIndex = 0;
@@ -25,8 +26,7 @@ class _TopPageState extends State<TopPage> {
 
   @override
   Widget build(BuildContext context) {
-
-        
+      
       return new Scaffold(        
         // No appbar provided to the Scaffold, only a body with a
         // CustomScrollView.
@@ -36,8 +36,10 @@ class _TopPageState extends State<TopPage> {
           onTap: onTabTapped, 
           showSelectedLabels: false,
           showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor:Colors.blueGrey[300],
           currentIndex: _currentIndex,
-          items: [
+          items: [ 
               BottomNavigationBarItem(
                 
                 icon: new Icon(CustomApp.newspaper_1, size: 24,),

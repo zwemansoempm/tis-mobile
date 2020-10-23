@@ -1,29 +1,26 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:tis/bloc/get_source_news_bloc.dart';
 import 'package:tis/elements/loader.dart';
 import 'package:tis/model/article.dart';
 import 'package:tis/model/article_response.dart';
-import 'package:tis/model/source.dart';
+// import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
 import 'package:tis/views/search.dart';
 import 'package:tis/views/settingScreen.dart';
-import 'package:tis/style/theme.dart' as Style;
 import 'package:timeago/timeago.dart' as timeago;
 
 class HomeWidget extends StatefulWidget {
- final SourceModel source;
+//  final SourceModel source;
  final List<String> list=List.generate(20, (index) => "Textto $index");
- HomeWidget({Key key, @required this.source}) : super(key: key);
+//  HomeWidget({Key key, @required this.source}) : super(key: key);
   @override
-  _BottomNav1State createState() => _BottomNav1State(source);
+  _BottomNav1State createState() => _BottomNav1State();//source
 
 }  
 
 class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderStateMixin { 
-  final SourceModel source;
-  _BottomNav1State(this.source);
+  // final SourceModel source;
+  // _BottomNav1State(this.source);
 
   TabController _controller;
   List<TabData> _tabData;

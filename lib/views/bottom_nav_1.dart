@@ -71,6 +71,9 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                 slivers: <Widget>[                 
                 // Add the app bar to the CustomScrollView.
                   SliverAppBar(
+                    floating: true,
+                    pinned: true,
+                    snap: true,
                     backgroundColor:Colors.black,
                     automaticallyImplyLeading: false,
                     leading: IconButton(      
@@ -139,10 +142,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                             Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingScreen()));
                           },
                         )
-                      ],               
-                      // Allows the user to reveal the app bar if they begin scrolling
-                      // back up the list of items.
-                      floating: true,
+                      ],
+                                          
                       // Display a placeholder widget to visualize the shrinking size.
                       // flexibleSpace: Placeholder(),
                       // Make the initial height of the SliverAppBar larger than normal.

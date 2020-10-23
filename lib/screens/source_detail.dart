@@ -8,6 +8,7 @@ import 'package:tis/screens/news_detail.dart';
 import 'package:tis/style/theme.dart' as Style;
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'dart:developer' as developer;
 // import 'news_detail.dart';
 
 class SourceDetail extends StatefulWidget {
@@ -23,6 +24,7 @@ class _SourceDetailState extends State<SourceDetail> {
   @override
   void initState() {
     super.initState();
+     developer.log('sourceIDDD', name: source.id);
     getSourceNewsBloc..getSourceNews(source.id);
   }
   @override

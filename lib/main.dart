@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tis/screens/main_screen.dart';
 import 'package:tis/views/top.dart';
@@ -7,7 +9,11 @@ import 'dart:ui' as ui;
 
 
 void main() {
-  runApp(MyApp());
+  runApp(DevicePreview(     
+    builder: (context)=>MyApp(),
+    enabled:!kReleaseMode,
+  ) );
+   
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +21,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
+      locale: DevicePreview.of(context).locale, // <--- /!\ Add the locale
+      builder: DevicePreview.appBuilder, // <--- /!\ Add the builder
       title: 'TIS Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

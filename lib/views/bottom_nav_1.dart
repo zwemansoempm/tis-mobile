@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:tis/bloc/get_source_news_bloc.dart';
 import 'package:tis/elements/loader.dart';
@@ -8,6 +9,7 @@ import 'package:tis/screens/news_detail.dart';
 import 'package:tis/views/search.dart';
 import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 
 class HomeWidget extends StatefulWidget {
 //  final SourceModel source;
@@ -27,10 +29,11 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   List<Tab> _tabs = [];
   //List<Widget> _tabViews = [];
   Color _activeColor;
-
+  
   @override
-  void initState() {
-    super.initState();
+  void initState() {    
+    super.initState(); 
+    double devprev=DevicePreview.of(context).mediaQuery.size.width;
     _tabData = [
       TabData(title: 'ニュース', color: Colors.red),
       TabData(title: '介護施設検索', color: Colors.green),
@@ -48,7 +51,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
           constraints: BoxConstraints.expand(),
           
           child: Center(
-            child: Text(data.title,),
+            child: Text(data.title,style: TextStyle(fontSize:(devprev==768 || (devprev>768 && devprev<1024 ))?20:(devprev>=1024)?24:12) ),
           ),
         ),
       );
@@ -76,8 +79,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   } 
 
   @override
-  Widget build(BuildContext context) {        
-      
+  Widget build(BuildContext context) {
+                                     
          return Container(
                 child: CustomScrollView(              
                 slivers: <Widget>[                 
@@ -271,14 +274,14 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                     top: BorderSide(color: Colors.grey[200], width: 1.0),
                   ),
                   color: Colors.white,
-                ),
+                ),          
                 height: 150,
                 child: Row(
                   children: <Widget>[
                     Container(
                       padding: EdgeInsets.only(
                           top: 10.0, left: 10.0, bottom: 10.0, right: 10.0),
-                      width: MediaQuery.of(context).size.width * 3 / 5,
+                      width:captionSize(context),// MediaQuery.of(context).size.width * 3 / 5,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,24 +318,31 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       ),
                     ),
                     Container(
-                        padding: EdgeInsets.only(right: 10.0),
-                        width: MediaQuery.of(context).size.width * 2 / 5,
+                        padding:EdgeInsets.only(right: 10.0),//EdgeInsets.all(10.0),
+                        width:fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
                         height: 130,
                         child: 
                         FadeInImage.assetNetwork(
-                            alignment: Alignment.topCenter,
+                            alignment: Alignment.topRight,
                             placeholder: 'assets/img/placeholder.jpg',
                             image: articles[index].img == null
                                 ? "http://to-let.com.bd/operator/images/noimage.png"
                                 : articles[index].img,
                             fit: BoxFit.fitHeight,
                             width: double.maxFinite,
-                            height: MediaQuery.of(context).size.height * 1 / 3))
+                            height: MediaQuery.of(context).size.height)
+                            )
                   ],
                 ),
               ),
             );
           });
+  }
+  fotoSize(BuildContext context) {  
+       return MediaQuery.of(context).size.width/2;    
+  }
+  captionSize(BuildContext context){  
+       return MediaQuery.of(context).size.width/2;   
   }
   String timeUntil(DateTime date) {
   return timeago.format(date, allowFromNow: true, locale: 'en');

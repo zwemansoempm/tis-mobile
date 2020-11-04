@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class tabMenuView extends StatefulWidget {
+class TabMenuView extends StatefulWidget {
   @override
-  _tabMenuViewState createState() => _tabMenuViewState();
+  _TabMenuViewState createState() => _TabMenuViewState();
 }
 
-class _tabMenuViewState extends State<tabMenuView> with TickerProviderStateMixin {
+class _TabMenuViewState extends State<TabMenuView> with TickerProviderStateMixin {
   // TickerProviderStateMixin allows the fade out/fade in animation when changing the active button
 
   // this will control the button clicks and tab changing

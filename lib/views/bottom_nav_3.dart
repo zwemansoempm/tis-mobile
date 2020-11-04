@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tis/views/locationSearch.dart';
 
 class PlaceWidget extends StatefulWidget { 
   @override
@@ -196,7 +197,7 @@ class _BottomNav3State  extends State<PlaceWidget> {
                       width: 250,
                       child: Card(
                         color: Colors.blue,
-                        margin: EdgeInsets.only(top: 20.0),
+                        margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
                         child: ListTile(
                           title : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -217,16 +218,21 @@ class _BottomNav3State  extends State<PlaceWidget> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20.0),
+      
+                    InkWell(
                       child: Text(
-                        'Enter Zip Code',
+                        "Enter Zip Code",
                         style: TextStyle(
-                          fontSize: 15.0,
                           color: Colors.blue,
+                          fontSize: 18.0,
+                          decoration: TextDecoration.underline
                         ),
                       ),
-                    ),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> LocationSearch()));
+                      },
+                    )
+                      
                   ]
                 ),
               ),

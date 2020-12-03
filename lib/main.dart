@@ -1,7 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tis/screens/main_screen.dart';
+//import 'package:tis/screens/main_screen.dart';
 import 'package:tis/views/top.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'dart:ui' as ui;

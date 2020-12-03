@@ -6,6 +6,7 @@ import 'package:tis/model/article.dart';
 import 'package:tis/model/article_response.dart';
 // import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
+import 'package:tis/views/nusingSearch.dart';
 import 'package:tis/views/search.dart';
 import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -225,7 +226,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                               ]
                           ),
                           // Center(child: Text("ニュース")),
-                          Center(child: Text("介護施設検索")),
+                          //Center(child: Text("介護施設検索")),
+                          NusingSearch(),
                           Center(child: Text("病院検索")),
                           Center(child: Text("求人検索")),
                         ],
@@ -272,6 +274,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(color: Colors.grey[200], width: 1.0),
+                    
                   ),
                   color: Colors.white,
                 ),          

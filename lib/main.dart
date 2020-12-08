@@ -9,11 +9,12 @@ import 'dart:ui' as ui;
 
 
 void main() {
-  runApp(DevicePreview(     
+  runApp(
+    DevicePreview(     
     builder: (context)=>MyApp(),
     enabled:!kReleaseMode,
-  ) );
-   
+  )
+  );   
 }
 
 class MyApp extends StatelessWidget {
@@ -33,8 +34,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home:SplashPage(),//TopPage(), MainScreen
-      // HomePage(),
-      
+      // HomePage(),      
     );
   }
 }
@@ -57,7 +57,7 @@ class SplashPage extends StatelessWidget {
         ],
       )
       ),textScaleFactor: 2,),
-      image: new Image.asset('assets/images/logo.PNG'),     //network('https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png'),
+      image: new Image.asset('assets/images/logo.PNG'),     
       backgroundColor: Colors.white,
       styleTextUnderTheLoader: new TextStyle(),
       loadingText: Text("Loading"),

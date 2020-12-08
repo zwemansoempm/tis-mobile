@@ -1,16 +1,22 @@
+import 'dart:convert';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:tis/bloc/get_source_news_bloc.dart';
+import 'package:tis/bloc/get_hotnews_bloc.dart';
+import 'package:tis/bloc/get_postsnews_bloc.dart';
+// import 'package:tis/bloc/get_source_news_bloc.dart';
 import 'package:tis/elements/loader.dart';
 import 'package:tis/model/article.dart';
 import 'package:tis/model/article_response.dart';
+import 'package:tis/model/posts.dart';
+import 'package:tis/model/posts_response.dart';
 // import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
 import 'package:tis/views/nusingSearch.dart';
 import 'package:tis/views/search.dart';
 import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:html/parser.dart';
 
 class HomeWidget extends StatefulWidget {
 //  final SourceModel source;
@@ -36,23 +42,33 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     super.initState(); 
     double devprev=DevicePreview.of(context).mediaQuery.size.width;
     _tabData = [
-      TabData(title: 'ニュース', color: Colors.red),
-      TabData(title: '介護施設検索', color: Colors.green),
-      TabData(title: '病院検索', color: Colors.blue),
-      TabData(title: '求人検索', color: Colors.orange),
+      TabData(title: '  トップ  ', color: Color(0xff287db4)),
+      TabData(title: '  病院・医療  ', color:Color(0xffa3774a)),
+      TabData(title: '  特養・介護  ', color:Color(0xff9579ef)),
+      TabData(title: '  有料老人ホーム  ', color: Color(0xff20d1de)),
+
+      TabData(title: '  訪問介護・看護  ', color: Color(0xffd1281c)),
+      TabData(title: '  テストカテゴリー  ', color: Color(0xff287db4)),
+      TabData(title: '  デイサービス  ', color: Color(0xffa3774a)),
+      TabData(title: '  グループホーム  ', color: Color(0xff9579ef)),
+      TabData(title: '  新型コロナ  ', color: Color(0xff20d1de)),
+      TabData(title: '  その他  ', color: Color(0xffd1281c)),
     ];
     _activeColor = _tabData.first.color;
     _tabData.forEach((data) {
       final tab = Tab(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-            color: data.color,
-          ),
-          constraints: BoxConstraints.expand(),
-          
-          child: Center(
-            child: Text(data.title,style: TextStyle(fontSize:(devprev==768 || (devprev>768 && devprev<1024 ))?20:(devprev>=1024)?24:12) ),
+        child: PreferredSize(
+                  preferredSize: Size.fromWidth(150),
+                  child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+              color: data.color,
+            ),
+            // constraints: BoxConstraints(maxHeight: 50,maxWidth:70 ),
+            
+            child: Center(
+              child: Text(data.title,style: TextStyle(fontSize:(devprev==768 || (devprev>768 && devprev<1024 ))?20:(devprev>=1024)?24:15) ),
+            ),
           ),
         ),
       );
@@ -69,13 +85,15 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
           _activeColor = _tabData[_controller.index].color;
         });
       });
-    getSourceNewsBloc..getSourceNews("abc-news");
+    // getSourceNewsBloc..getSourceNews("abc-news");
+    getPostsNewsBloc..getPostsNews();
   }
 
   @override
   void dispose() {
     _controller?.dispose();
-    getSourceNewsBloc.drainStream();
+    // getSourceNewsBloc.drainStream();
+    getPostsNewsBloc.drainStream();
     super.dispose();
   } 
 
@@ -135,6 +153,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                         ),
                       
                       bottom: TabBar(
+                        isScrollable: true,
                         indicator: UnderlineTabIndicator(
                           borderSide: BorderSide(width: 5,color: _activeColor),
                           insets: EdgeInsets.symmetric(horizontal:800.0),
@@ -144,7 +163,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                         // ),
                         
                         indicatorColor: _activeColor,
-                        labelPadding: EdgeInsets.zero,
+                        labelPadding: EdgeInsets.fromLTRB(1,0,1.0,0),
                         labelColor: Colors.white,
                         controller: _controller,
                         tabs: _tabs,
@@ -164,8 +183,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       // flexibleSpace: Placeholder(),
                       // Make the initial height of the SliverAppBar larger than normal.
                       // expandedHeight: 100,
-                  ),   
-                         
+                  ),  
+             
                   // Next, create a SliverList
                   //SliverList(
                     // Use a delegate to build items as they're scrolled on screen.
@@ -207,29 +226,42 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                 //       ]
                                 //     ),
                                 // ),   
-                                Expanded(child: StreamBuilder<ArticleResponse>(
-                                    stream: getSourceNewsBloc.subject.stream,
-                                    builder: (context, AsyncSnapshot<ArticleResponse> snapshot) {
+                                Container(
+                                  height: 300,
+                                  child: StreamBuilder<PostsResponse>(//ArticleResponse
+                                   
+                                    stream: getPostsNewsBloc.subject.stream,
+                                    builder: (context, AsyncSnapshot<PostsResponse> snapshot) {//ArticleResponse
                                       if (snapshot.hasData) {
                                         if (snapshot.data.error != null &&
                                             snapshot.data.error.length > 0) {
                                           return Container();
                                         }
-                                        return _buildSourceNewsWidget(snapshot.data);                                 
+                                        return  _buildSourceNewsWidget(snapshot.data);                                 
                                       } else if (snapshot.hasError) {
                                         return Container();
                                       } else {
                                         return buildLoadingWidget();
                                       }
                                     },
-                                ))                            
+                                )),
+                                Container(child: Text('sdfsdf'),),      
+                                        Container(child: Text('sdfsdf'),),      
+                                                Container(child: Text('sdfsdf'),),      
+                                                        Container(child: Text('ddeeee'),),                
                               ]
                           ),
                           // Center(child: Text("ニュース")),
                           //Center(child: Text("介護施設検索")),
                           NusingSearch(),
-                          Center(child: Text("病院検索")),
-                          Center(child: Text("求人検索")),
+                          Center(child: Text("")),
+                          Center(child: Text("")),
+                           Center(child: Text("")),
+                            Center(child: Text("")),
+                          Center(child: Text("")),
+                           Center(child: Text("")),
+                             Center(child: Text("")),
+                           Center(child: Text("")),
                         ],
                       ),
                     ),
@@ -240,10 +272,15 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   }
 
 
-  Widget _buildSourceNewsWidget(ArticleResponse data) {
-    List<ArticleModel> articles = data.articles;
-
-    if (articles.length == 0) {
+  Widget _buildSourceNewsWidget(PostsResponse data) {//ArticleResponse
+    List<PostsModel> posts = data.posts;//ArticleModel  articles
+    final document = parse(posts[0].body);
+    final String parsedString = parse(document.body.text).documentElement.text;
+      print('testing');
+      print(posts);
+      print(posts[0].body);
+       print(parsedString);
+    if (posts.length == 0) { //articles
       return Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -259,17 +296,17 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
       );
     } else
       return ListView.builder(
-          itemCount: articles.length,
+          itemCount: 1,//articles
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: () {
-               Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailNews(
-                                article: articles[index],
-                              )));
-              },
+              // onTap: () {
+              //  Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => DetailNews(
+              //                   // article: articles[index],
+              //                 )));
+              // },
               child: Container(
                 decoration: BoxDecoration(
                   border: Border(
@@ -278,63 +315,214 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                   ),
                   color: Colors.white,
                 ),          
-                height: 150,
+                height: 250,
+            
                 child: Row(
+                  
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(
-                          top: 10.0, left: 10.0, bottom: 10.0, right: 10.0),
-                      width:captionSize(context),// MediaQuery.of(context).size.width * 3 / 5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          
-                          Text(
-                              articles[index].title,
+                     Column(
+                       children: [
+                          (index == 0 && posts[0] !=null ) ?  Container(
+                        margin: const EdgeInsets.only(left: 0.0, top: 10.0, right: 0.0,bottom: 0.0),
+                        padding:EdgeInsets.only(left: 10),//EdgeInsets.all(10.0),
+                        width:fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
+                        height: 150,
+                        child: 
+                          FadeInImage.assetNetwork(
+                            alignment: Alignment.topRight,
+                            placeholder: 'assets/img/placeholder.jpg',
+                            image: posts[0].photo == null
+                                ? 'assets/img/placeholder.jpg'
+                                :"https://test.t-i-s.jp/upload/news/"+posts[0].photo,
+                            fit: BoxFit.fitHeight,
+                            width: double.maxFinite,
+                            height: MediaQuery.of(context).size.height)
+                            ) : Container() ,
+
+                          Container(
+                                padding: EdgeInsets.only(
+                               top: 10.0, left: 10.0, bottom: 10.0, right: 10.0),
+                                width:captionSize(context),
+                               child:   Text(
+                              posts[index].main_point,//articles
                               maxLines: 3,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                   fontSize: 14.0)),
-                          Expanded(
-                              child: Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
+                          ),
+                            Container(
+                              padding: EdgeInsets.only(
+                              top: 0.0, left: 10.0, bottom: 0.0, right: 10.0),
+                              width:captionSize(context),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [                                  
+                                    Icon(
+                                              Icons.date_range,
+                                              color: Colors.black26,
+                                    ),
+                                    SizedBox(width: 20,),
                                     Text(
                                         timeUntil(
-                                            DateTime.parse(articles[index].date)),
+                                            DateTime.parse(posts[index].created_at)),
                                         style: TextStyle(
                                             color: Colors.black26,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 10.0))
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ))
-                        ],
-                      ),
+                                            fontSize: 12.0))
+                                ],
+                              ),                                                           
+                            ),                        
+                          // )
+
+                       ],
+                     ),
+                    //  SizedBox(
+                    //    width: 20,
+                    //  ),
+                    Column(
+                       children: <Widget>[
+        Expanded(
+              // margin: const EdgeInsets.only(left: 0.0, top: 10.0, right: 0.0,bottom: 0.0),
+              //           padding:EdgeInsets.only(left: 10),//EdgeInsets.all(10.0),
+          child: SizedBox(
+            
+            width: 170,
+            height: 70.0,
+            child: new ListView.builder(
+        //       scrollDirection: Axis.vertical,
+              itemCount: posts.length-1,
+              itemBuilder: (BuildContext ctxt, int index) {
+                return  Container(
+                  
+                    margin: const EdgeInsets.only(left: 0.0, top: 10.0, right: 0.0,bottom: 0.0),
+                    padding:EdgeInsets.only(left: 10),
+                    child:Wrap(
+                          direction: Axis.vertical,
+                          spacing: 8.0, // gap between adjacent chips
+                          runSpacing: 0.0, // gap between lines
+                          children: <Widget>[
+                               Text(posts[index+1].main_point),                          
+                          ]
                     ),
-                    Container(
-                        padding:EdgeInsets.only(right: 10.0),//EdgeInsets.all(10.0),
-                        width:fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
-                        height: 130,
-                        child: 
-                        FadeInImage.assetNetwork(
-                            alignment: Alignment.topRight,
-                            placeholder: 'assets/img/placeholder.jpg',
-                            image: articles[index].img == null
-                                ? "http://to-let.com.bd/operator/images/noimage.png"
-                                : articles[index].img,
-                            fit: BoxFit.fitHeight,
-                            width: double.maxFinite,
-                            height: MediaQuery.of(context).size.height)
-                            )
+                         decoration: BoxDecoration(
+            
+                               border: Border(
+                                  bottom: BorderSide(color: Colors.grey[200], width: 2.0),
+                                  
+                                ),
+                                color: Colors.white,
+                              ),
+                    
+                ) ;//new Text(posts[index+1].main_point);
+              },
+            ),
+          ),
+        ),      
+      ],
+
+  //                        children: [
+  //                          Container(
+  //                             margin: const EdgeInsets.only(left: 0.0, top: 10.0, right: 0.0,bottom: 0.0),
+  //                             padding:EdgeInsets.only(left: 10),
+  //                           child:Wrap(
+  //                    direction: Axis.vertical,
+  // spacing: 8.0, // gap between adjacent chips
+  // runSpacing: 0.0, // gap between lines
+  // children: <Widget>[
+  //    ListView.builder(
+       
+  //       itemCount: 8,//articles
+  //      itemBuilder: (BuildContext context, int index) {
+  //                   return  Container(
+  //         width: 150,
+  //         height: 200,
+  //           //  width: MediaQuery.of(context).size.width,
+  //         child: Text('aaa'),       decoration: BoxDecoration(
+            
+  //                 border: Border(
+  //                   bottom: BorderSide(color: Colors.grey[200], width: 2.0),
+                    
+  //                 ),
+  //                 color: Colors.white,
+  //               ), );
+  //        },
+       
+  //    ),
+//         // Container(
+//         //   width: 150,
+//         //   child: Text('aaa'),       decoration: BoxDecoration(
+            
+//         //           border: Border(
+//         //             bottom: BorderSide(color: Colors.grey[200], width: 2.0),
+                    
+//         //           ),
+//         //           color: Colors.white,
+//         //         ), ),
+//         // Text('bb'),
+//         // Text('cc'),
+//         // Text('dd'),
+//   ],
+// )
+   
+//                               ),
+//                         ],
+                    ),
+                 // Container(
+                    //   padding: EdgeInsets.only(
+                    //       top: 10.0, left: 10.0, bottom: 10.0, right: 10.0),
+                    //   width:captionSize(context),// MediaQuery.of(context).size.width * 3 / 5,
+                    //   child: Column(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: <Widget>[
+                          
+                    //       Text(
+                    //           posts[index].main_point,//articles
+                    //           maxLines: 3,
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.bold,
+                    //               color: Colors.black,
+                    //               fontSize: 14.0)),
+                    //       Expanded(
+                    //           child: Align(
+                    //         alignment: Alignment.bottomLeft,
+                    //         child: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: <Widget>[
+                    //             Row(
+                    //               children: <Widget>[
+                    //                 // Text(
+                    //                 //     timeUntil(
+                    //                 //         DateTime.parse(articles[index].date)),
+                    //                 //     style: TextStyle(
+                    //                 //         color: Colors.black26,
+                    //                 //         fontWeight: FontWeight.bold,
+                    //                 //         fontSize: 10.0))
+                    //               ],
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ))
+                    //     ],
+                    //   ),
+                    // ),
+                    // Container(
+                    //     padding:EdgeInsets.only(right: 10.0),//EdgeInsets.all(10.0),
+                    //     width:fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
+                    //     height: 130,
+                    //     // child: 
+                    //     // FadeInImage.assetNetwork(
+                    //     //     alignment: Alignment.topRight,
+                    //     //     placeholder: 'assets/img/placeholder.jpg',
+                    //     //     // image: "http://to-let.com.bd/operator/images/noimage.png",
+                    //     //     // articles[index].img == null
+                    //     //     //     ? "http://to-let.com.bd/operator/images/noimage.png"
+                    //     //     //     : articles[index].img,
+                    //     //     fit: BoxFit.fitHeight,
+                    //     //     width: double.maxFinite,
+                    //     //     height: MediaQuery.of(context).size.height)
+                    //         )
                   ],
                 ),
               ),

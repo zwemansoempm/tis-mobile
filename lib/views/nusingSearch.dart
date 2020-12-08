@@ -21,19 +21,19 @@ class _NusingSearchState extends State<NusingSearch> {
            children: [
 
             Row(
-               children: [
-                 SizedBox(width: 5.0),
-                 Icon(Icons.map),
-                 SizedBox(width: 5.0),
-                 Text("地図検索")
-               ]
+              children: [
+                SizedBox(width: 5.0),
+                Icon(Icons.map),
+                SizedBox(width: 5.0),
+                Text("地図検索"),
+                Text("「全国の介護施設 6件」"),
+              ]
             ),
             DottedLine(),
-            Text("あなたらしい暮らしができる。そんな老人ホームが見つかります。"),
             
             Card(
               color: Colors.blue,
-             
+              margin: EdgeInsets.only(top: 10.0),
               elevation: 0.0,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
               child: Padding(
@@ -173,6 +173,7 @@ class _NusingSearchState extends State<NusingSearch> {
                 ),
               ],
             ),
+            SizedBox(height: 10.0),
 
             Text("地域で絞り込む"),
             
@@ -193,7 +194,7 @@ class _NusingSearchState extends State<NusingSearch> {
               )
             ),
             
-            
+            SizedBox(height: 10.0),
             Text("料金で絞り込む"),
             Card(
               color: Colors.grey[300],
@@ -212,6 +213,7 @@ class _NusingSearchState extends State<NusingSearch> {
                 ]
               )
             ),
+            SizedBox(height: 15.0),
 
             Container(
               alignment: Alignment.center,
@@ -239,7 +241,10 @@ class _NusingSearchState extends State<NusingSearch> {
                       Card(
                         margin: EdgeInsets.all(10.0),
                         color: Colors.blue,
-                        child: Text("64室(全室個室)", style: TextStyle(color: Colors.white),),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text("64室(全室個室)", style: TextStyle(color: Colors.white),),
+                        ),
                       ),
                       Container(
                         margin: EdgeInsets.only(right: 10.0),
@@ -247,22 +252,7 @@ class _NusingSearchState extends State<NusingSearch> {
                       )
                     ],
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                    ), 
-                    margin: EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_circle, color: Colors.green,),
-                        SizedBox(width: 7),
-                        Text(
-                          'お気に入りに追加',
-                        ),
-                      ],
-                    ),
-                  ),
+                  
                   Container(
                     padding: EdgeInsets.all(5.0),
                     margin: EdgeInsets.all(10.0),
@@ -304,7 +294,7 @@ class _NusingSearchState extends State<NusingSearch> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 10.0),
+                    margin: EdgeInsets.only(left: 10.0,bottom: 10.0),
                     child: RaisedButton(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       onPressed: () {},
@@ -342,6 +332,7 @@ class _NusingSearchState extends State<NusingSearch> {
                       ]
                     )
                   ),
+                  SizedBox(height: 10.0),
 
                   Container(
                     margin: EdgeInsets.all(10.0),
@@ -389,7 +380,7 @@ class _NusingSearchState extends State<NusingSearch> {
                 ],       
               ),         
             ),
-
+            SizedBox(height: 20.0),
             Text("もっと探す条件"),
             Row(children: [ 
               SizedBox(
@@ -451,8 +442,7 @@ class _NusingSearchState extends State<NusingSearch> {
                     Icon(Icons.search),
                     Text('検索', style: TextStyle(fontSize: 16,)),
                 ],)
-                
-                
+
               ),
             ),
 
@@ -513,7 +503,10 @@ class _NusingSearchState extends State<NusingSearch> {
                   Card(
                     margin: EdgeInsets.all(10.0),
                     color: Colors.blue,
-                    child: Text("64室(全室個室)", style: TextStyle(color: Colors.white),),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text("64室(全室個室)", style: TextStyle(color: Colors.white),),
+                    ),
                   ),
                   Center(
                     child: Image.asset("assets/logos/bbc-news.png", width: 200, height: 150,),
@@ -614,7 +607,6 @@ class _NusingSearchState extends State<NusingSearch> {
                         backgroundColor: Colors.grey[200],
                         child: Icon(Icons.apartment ,color: Colors.blue,)
                       ),
-                      //leading: Icon(Icons.apartment, color: Colors.blue,),
                       title: Text("運営事業者名"),
                     )
                   ),
@@ -625,24 +617,11 @@ class _NusingSearchState extends State<NusingSearch> {
                     ), 
                     child: ListTile(title: Text("株式会社アスモ介護サービス"),),
                   ),
+                  SizedBox(height: 10.0),
                   Text("こだわりの特長"),
                   DottedLine(dashColor: Colors.blue,),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                    ), 
-                    margin: EdgeInsets.only(top: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_circle, color: Colors.green,),
-                        SizedBox(width: 7),
-                        Text(
-                          'お気に入りに追加',
-                        ),
-                      ],
-                    ),
-                  ),
+                  
+                  SizedBox(height: 10.0),
                   RaisedButton(
                     onPressed: () {},
                     color: Colors.blue,
@@ -687,7 +666,7 @@ class _NusingSearchState extends State<NusingSearch> {
             Row(
               children: [
                 RaisedButton(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                   onPressed: () {},
                   color: Colors.grey,
                   child: Center(child: Text("2020年"),),

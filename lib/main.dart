@@ -10,10 +10,11 @@ import 'dart:ui' as ui;
 
 void main() {
   runApp(
-    DevicePreview(     
-    builder: (context)=>MyApp(),
-    enabled:!kReleaseMode,
-  )
+    MyApp(),
+  //   DevicePreview(     
+  //   builder: (context)=>MyApp(),
+  //   enabled:!kReleaseMode,
+  // )
   );   
 }
 
@@ -24,8 +25,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return MaterialApp(
-      locale: DevicePreview.of(context).locale, // <--- /!\ Add the locale
-      builder: DevicePreview.appBuilder, // <--- /!\ Add the builder
+      // locale: DevicePreview.of(context).locale, // <--- /!\ Add the locale
+      // builder: DevicePreview.appBuilder, // <--- /!\ Add the builder
       title: 'TIS Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

@@ -239,7 +239,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                       Container(
                                
                                             margin: EdgeInsets.symmetric(vertical: 10.0),
-                                            height: 200.0,
+                                            height: 202.0,
                                             child: new ListView(
                                             scrollDirection: Axis.horizontal,
                                             children: <Widget>[
@@ -317,14 +317,14 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                         child: 
                                           Wrap(
                                             direction: Axis.horizontal,
-                                            spacing: 1.0, // gap between adjacent chips
+                                            spacing: 0.0, // gap between adjacent chips
                                             runSpacing: 0.0, // gap between lines
                                             children: <Widget>[
                                                   Row(
                                                        mainAxisAlignment: MainAxisAlignment.start,                                  
                                                        children: [
                                                           ( medical[index] !=null ) ?  Container(   
-                                                          margin: const EdgeInsets.only(left: 0.0, top: 0, right: 0.0,bottom: 14.0),
+                                                          margin: const EdgeInsets.only(left: 0.0, top: 0, right: 0.0,bottom: 0.0),
                                                           padding:EdgeInsets.only(right:10),//EdgeInsets.all(10.0),                               
                                                           width:70,//fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
                                                           height: 50,
@@ -379,7 +379,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
 
     return  Container(
               width:160,
-              height: 200,
+              height: 202,
               child: SizedBox(
                 child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -391,6 +391,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       children: [
                         Container(
                             width: 160.0,
+                            height: 202,
                             child: Card(
                               child: Wrap(
                                 children: [

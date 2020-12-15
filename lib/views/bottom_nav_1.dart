@@ -1,14 +1,17 @@
-import 'dart:convert';
-
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:tis/bloc/get_all_news_search_bloc.dart';
 import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
+import 'package:tis/bloc/get_medical_2_bloc.dart';
 import 'package:tis/bloc/get_postsnews_bloc.dart';
 // import 'package:tis/bloc/get_source_news_bloc.dart';
 import 'package:tis/elements/loader.dart';
 import 'package:tis/model/article.dart';
 import 'package:tis/model/article_response.dart';
+import 'package:tis/model/medical.dart';
+import 'package:tis/model/medical_response.dart';
+import 'package:tis/model/medical_response2.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
 // import 'package:tis/model/source.dart';
@@ -79,6 +82,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     // getSourceNewsBloc..getSourceNews("abc-news");
     getPostsNewsBloc..getPostsNews();
     getLatestPostAllCatBloc..getLatestPostAllCat();
+    getAllNewsSearchBloc..getAllNewsSearch();
+    getMedical2Bloc..getMedical2();
   }
 
   @override
@@ -86,7 +91,9 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     _controller?.dispose();
     // getSourceNewsBloc.drainStream();
     getPostsNewsBloc.drainStream();
-    getLatestPostAllCatBloc..drainStream();
+    getLatestPostAllCatBloc.drainStream();
+    getAllNewsSearchBloc.drainStream();
+    getMedical2Bloc.drainStream();
     super.dispose();
   } 
 
@@ -152,20 +159,17 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                         )
                       ],                     
                   ), 
-             
+                    
                     SliverFillRemaining(
+                 
                       child: TabBarView(
                         controller: _controller,
                         children: [
-                          Column(
-                                //  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                 children: [
-                              
-                                      Expanded(
-                                        // height: 300,
-                                        child:Column(
-                                        children: [
-                                          StreamBuilder<PostsResponse>(
+                          ListView(
+                           children:[                              
+                                      Container(
+                                     
+                                         child: StreamBuilder<PostsResponse>(
                                               stream: getPostsNewsBloc.subject.stream,
                                               builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
                                                     if (snapshot.hasData) {
@@ -180,10 +184,10 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                       return buildLoadingWidget();
                                                     }
                                                   },
-                                          ),     
-                                          // Expanded(                                           
-                                          //    child:
-                                             StreamBuilder<PostsResponse>(
+                                          ),                                         
+                                      ), 
+                                      Container(
+                                            child:  StreamBuilder<PostsResponse>(
                                                stream: getLatestPostAllCatBloc.subject.stream,
                                                builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
                                                   if (snapshot.hasData) {
@@ -198,14 +202,84 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                     return Container();//buildLoadingWidget();
                                                   }
                                                },
-                                             ),
-                                          // ),  
-
-                                        ],
+                                          ),
+                                      ),  
+                                      Container(                                        //  height: 30, 
+                                         decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border(
+                                                top: BorderSide(
+                                                    color:Color(0xffd1281c),
+                                                    width: 1.0
+                                                ),
+                                            )
                                         ),
-                                      ),                                             
-                                 ]
-                                ),                       
+                                        child:  Row(                                                                                
+                                          children: [
+                                            SizedBox(                                            
+                                               width:MediaQuery.of(context).size.width/4,
+                                               child:  Text('病院・医療',textScaleFactor: 1,style:TextStyle( 
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Color(0xffd1281c),                                                          // fontSize: 10.0
+                                                      ),textAlign: TextAlign.center,
+                                                ),
+                                            ),
+                                              SizedBox(
+                                              width:150 ),
+                                           SizedBox(
+                                              width: MediaQuery.of(context).size.width/3,
+                                              child:  Text('新着ニュース一覧',textScaleFactor: 0.7,style:TextStyle( 
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Color(0xff999999),                                                          // fontSize: 10.0
+                                                      ),textAlign: TextAlign.center,
+                                            ),) 
+                                          ],
+                                        ),                                       
+                                      ) ,
+                                      Container(
+                               
+                                            margin: EdgeInsets.symmetric(vertical: 10.0),
+                                            height: 200.0,
+                                            child: new ListView(
+                                            scrollDirection: Axis.horizontal,
+                                            children: <Widget>[
+                                              StreamBuilder<MedicalResponse>(
+                                                stream: getAllNewsSearchBloc.subject.stream,
+                                                builder: (context, AsyncSnapshot<MedicalResponse> snapshot) {
+                                                    if (snapshot.hasData) {
+                                                      if (snapshot.data.error != null &&
+                                                              snapshot.data.error.length > 0) {
+                                                        return Container();
+                                                      }                                                     
+                                                      return  _getMedicalWidget(snapshot.data);                                 
+                                                    } else if (snapshot.hasError) {
+                                                      return Container();
+                                                    } else {
+                                                      return Container();//buildLoadingWidget();
+                                                    }
+                                                },
+                                            ),
+                                             StreamBuilder<MedicalResponse2>(
+                                                stream: getMedical2Bloc.subject.stream,
+                                                builder: (context, AsyncSnapshot<MedicalResponse2> snapshot) {
+                                                    if (snapshot.hasData) {
+                                                      if (snapshot.data.error != null &&
+                                                              snapshot.data.error.length > 0) {
+                                                        return Container();
+                                                      }                                                    
+                                                      return  _getMedical2Widget(snapshot.data);                                 
+                                                    } else if (snapshot.hasError) {
+                                                      return Container();
+                                                    } else {
+                                                      return Container();//buildLoadingWidget();
+                                                    }
+                                                },
+                                            ),                                             
+                                            ],
+                                          ) 
+                                       ), 
+                           ]                          
+                         ),                          
                           NusingSearch(),
                           Center(child: Text("")),
                           Center(child: Text("")),
@@ -222,14 +296,151 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
             ),
         ); 
   }
+  Widget _getMedical2Widget(MedicalResponse2 data){
+       List<MedicalModel> medical = data.medical;  
+
+       return  Container(
+            width:200,
+            height: 200,
+            child: SizedBox(
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical, 
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                         return GestureDetector(
+                              child:  Column(
+                                children: [
+                                    Container(
+                                      width: 200.0,
+                                      child: Card(
+                                        child: 
+                                          Wrap(
+                                            direction: Axis.horizontal,
+                                            spacing: 1.0, // gap between adjacent chips
+                                            runSpacing: 0.0, // gap between lines
+                                            children: <Widget>[
+                                                  Row(
+                                                       mainAxisAlignment: MainAxisAlignment.start,                                  
+                                                       children: [
+                                                          ( medical[index] !=null ) ?  Container(   
+                                                          margin: const EdgeInsets.only(left: 0.0, top: 0, right: 0.0,bottom: 14.0),
+                                                          padding:EdgeInsets.only(right:10),//EdgeInsets.all(10.0),                               
+                                                          width:70,//fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
+                                                          height: 50,
+                                                          child: 
+                                                            FadeInImage.assetNetwork(
+                                                            fadeInDuration: const Duration(seconds: 2),
+                                                            alignment: Alignment.topLeft,
+                                                            placeholder: 'assets/img/placeholder.jpg',
+                                                            image: "https://test.t-i-s.jp/upload/news/"+medical[index].photo,
+                                                            fit: BoxFit.fitHeight,
+                                                            width: double.maxFinite,
+                                                            height: MediaQuery.of(context).size.height,
+                                                            imageErrorBuilder: (context, error, stackTrace) {                                         
+                                                                return Image.asset(
+                                                                      "assets/img/placeholder.jpg",
+                                                                );
+                                                            },                                                                           
+                                                            )
+                                                        ) : Container(),                              
+                                                       SizedBox(width: 5,),
+                                                       Padding(       
+                                                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+                                                          child: SizedBox(
+                                                            width: 70,
+                                                            child: Text(                                            
+                                                                medical[index].mainPoint.toString().length>=20?medical[index].mainPoint.toString().substring(0,10)+"...":medical[index].mainPoint,   //allPosts[index].mainPoint.toString().length.toString(),// allPosts[index].mainPoint.toString().substring(1,2),   
+                                                                // textAlign: TextAlign.left,                                                                       
+                                                                style: TextStyle(
+                                                                      fontSize: 8.0
+                                                                )
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ), 
+                                              ]
+                                            ),                                           
+                                          )
+                                      )                                 
+                                ],
+                              )
+                         );
+                  }
+                )
+            )
+       );
+  }
+
+
+  Widget _getMedicalWidget(MedicalResponse data){
+    List<MedicalModel> medical = data.medical;   
+
+    return  Container(
+              width:160,
+              height: 200,
+              child: SizedBox(
+                child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.horizontal, 
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    child:  Column(
+                      children: [
+                        Container(
+                            width: 160.0,
+                            child: Card(
+                              child: Wrap(
+                                children: [
+                                  Column(
+                                    children: [
+                                         Image.network( "https://test.t-i-s.jp/upload/news/"+medical[0].photo),
+                                         Container(
+                                            padding: EdgeInsets.only(
+                                            top: 10.0, left: 10.0, bottom: 10.0, right: 10.0),
+                                            width:captionSize(context),
+                                            child:   Text(
+                                            medical[0].mainPoint,
+                                            maxLines: 3,
+                                            style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize: 10.0)
+                                                  ),
+                                         ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ),
+                        // Container(
+                        //     width: 160.0,
+                        //     child: Card(
+
+                        //     )
+                        // ),
+                      ],
+                    )  ,
+                  );
+                }                 
+        //  ),
+      // ),
+            ),
+              ),
+      );
+  }
 
   Widget _getLatestPostAllCatWidget(PostsResponse data){
 
   List<PostsModel> allPosts = data.posts;
 
-  return  Flexible( 
+  return  Container( 
     child:GridView.count(
-      shrinkWrap: false,
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       padding:EdgeInsets.only(top: 5),
       childAspectRatio:4,
         // Create a grid with 2 columns. If you change the scrollDirection to
@@ -248,19 +459,26 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,                                  
                                 children: [
-                                  ( allPosts[index] !=null ) ?  Container(                                  
+                                  ( allPosts[index] !=null ) ?  Container(   
+                                  margin: const EdgeInsets.only(left: 0.0, top: 0, right: 0.0,bottom: 14.0),
+                                  padding:EdgeInsets.only(right:10),//EdgeInsets.all(10.0),                               
                                   width:70,//fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
                                   height: 50,
                                   child: 
                                         FadeInImage.assetNetwork(
+                                        fadeInDuration: const Duration(seconds: 2),
                                         alignment: Alignment.topLeft,
                                         placeholder: 'assets/img/placeholder.jpg',
-                                        image: allPosts[index].photo == null
-                                            ? 'assets/img/placeholder.jpg'
-                                            :"https://test.t-i-s.jp/upload/news/"+allPosts[index].photo,
+                                        image: "https://test.t-i-s.jp/upload/news/"+allPosts[index].photo,
                                         fit: BoxFit.fitHeight,
                                         width: double.maxFinite,
-                                        height: MediaQuery.of(context).size.height)
+                                        height: MediaQuery.of(context).size.height,
+                                        imageErrorBuilder: (context, error, stackTrace) {                                         
+                                            return Image.asset(
+                                                  "assets/img/placeholder.jpg",
+                                            );
+                                        },                                                                           
+                                        )
                                   ) : Container(),                              
                                   SizedBox(width: 5,),
                                   Padding(

@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:tis/views/nusing_comment.dart';
 import 'package:tis/views/nusing_favourite_mail.dart';
 
 
@@ -426,7 +427,9 @@ class _NusingDetailState extends State<NusingDetail> {
                 children: [
                   RaisedButton(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingComment()));
+                    },
                     color: Colors.green,
                     textColor: Colors.white,
                     child: Row(

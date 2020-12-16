@@ -176,7 +176,7 @@ class _NusingMailState extends State<NusingMail> {
                   child: Column(
                     children: <Widget>[
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('男性'),
                         value: 1,
                         groupValue: selectedRadio,
@@ -185,14 +185,14 @@ class _NusingMailState extends State<NusingMail> {
                         },
                       ),
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('女性'),
                         value: 2,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('夫婦'),
                         value: 3,
                         groupValue: selectedRadio,
@@ -470,7 +470,7 @@ class _NusingMailState extends State<NusingMail> {
                   child: Column(
                     children: <Widget>[
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('男性'),
                         value: 1,
                         groupValue: selectedRadio,
@@ -479,14 +479,14 @@ class _NusingMailState extends State<NusingMail> {
                         },
                       ),
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('女性'),
                         value: 2,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('夫婦'),
                         value: 3,
                         groupValue: selectedRadio,
@@ -572,7 +572,7 @@ class _NusingMailState extends State<NusingMail> {
                   child: Column(
                     children: <Widget>[
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('あり'),
                         value: 1,
                         groupValue: selectedRadio,
@@ -581,14 +581,14 @@ class _NusingMailState extends State<NusingMail> {
                         },
                       ),
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('なし'),
                         value: 2,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
                       RadioListTile(
-                        contentPadding: EdgeInsets.zero,
+                        //contentPadding: EdgeInsets.zero,
                         title: const Text('わからない'),
                         value: 3,
                         groupValue: selectedRadio,

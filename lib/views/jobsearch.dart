@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:tis/views/jobdetail.dart';
+import 'package:tis/views/test1.dart';
 
 class JobType {
   String title;
@@ -296,7 +298,9 @@ class _JobSearchState extends State<JobSearch> {
                       decoration: TextDecoration.underline,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    
+                  },
                 ),
 
                 // Text('介護職【正社員】アスモ介護サービス薬園台',
@@ -432,7 +436,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -462,16 +466,36 @@ class _JobSearchState extends State<JobSearch> {
                   child: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => JobDetail()),
+                        );
+                      },
                       color: Colors.grey,
                       textColor: Colors.white,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          // InkWell(
+                          //   child:  Text('詳細を見る',
+                          //      style: TextStyle(
+                          //       fontSize: 16,
+                          //      )),
+                          //   onTap: (){
+                          //     // Navigator.push(context, MaterialPageRoute(builder: (context)=> JobDetail()));
+                          //       //  Navigator.push(context, MaterialPageRoute(builder: (context)=> TestCB()));
+                          //   },
+                          // ),
+
                           Text('詳細を見る',
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.amber,
                               )),
+
+                          
+
                         ],
                       )),
                 ),
@@ -646,7 +670,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -860,7 +884,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -1074,7 +1098,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -1289,7 +1313,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -1503,7 +1527,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -1717,7 +1741,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -1931,7 +1955,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -2145,7 +2169,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -2359,7 +2383,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -2573,7 +2597,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -2787,7 +2811,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -3001,7 +3025,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),
@@ -3215,7 +3239,7 @@ class _JobSearchState extends State<JobSearch> {
                         radius: 18.0,
                         backgroundColor: Colors.grey[200],
                         child: Icon(
-                          Icons.cases,
+                          Icons.home_repair_service,
                           color: Colors.blue,
                         ),
                       ),

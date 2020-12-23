@@ -138,17 +138,6 @@ class _NusingCommentState extends State<NusingComment> {
 
                       Text("生まれた年"),
                       SizedBox(height: 5),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: '',
-                            contentPadding: EdgeInsets.all(8),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-
-                      Text("郵便番号(半角数字)"),
-                      SizedBox(height: 5),
                       Container(
                       //padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(

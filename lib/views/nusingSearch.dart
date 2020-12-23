@@ -622,7 +622,9 @@ class _NusingSearchState extends State<NusingSearch> {
                   
                   SizedBox(height: 10.0),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                       Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail()));
+                    },
                     color: Colors.blue,
                     textColor: Colors.white,
                     child: Center(child: Text("詳細を見る"),),

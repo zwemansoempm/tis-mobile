@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:tis/screens/hospital/hospital_detail.dart';
 
 class HospitalSearch extends StatefulWidget {
   @override
@@ -431,7 +432,7 @@ class _HospitalSearchState extends State<HospitalSearch> {
                           decoration: TextDecoration.underline)
                       ),
                       onTap: (){
-                        //Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDetail()));
                       },
                     ),
                     Row(
@@ -668,7 +669,9 @@ class _HospitalSearchState extends State<HospitalSearch> {
                                    
                     SizedBox(height: 10.0),
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDetail()));
+                      },
                       color: Colors.blue,
                       textColor: Colors.white,
                       child: Center(child: Text("詳細を見る"),),

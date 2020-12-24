@@ -397,15 +397,15 @@ class _NusingDetailState extends State<NusingDetail> {
               SizedBox(height: 10.0),
               _mailButton(),
 
-              SizedBox(height: 10.0),
+              //SizedBox(height: 10.0),
               //Map
-              Container(
-                alignment: Alignment.center,
-                height: 200,
-                width: 300,
-                child: Text("Map"),
-                color: Colors.blueGrey,
-              ),
+              // Container(
+              //   alignment: Alignment.center,
+              //   height: 200,
+              //   width: 300,
+              //   child: Text("Map"),
+              //   color: Colors.blueGrey,
+              // ),
 
               SizedBox(height: 20.0),
               _itemHeader("公式サイト"),

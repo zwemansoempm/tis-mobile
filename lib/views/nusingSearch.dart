@@ -214,13 +214,13 @@ class _NusingSearchState extends State<NusingSearch> {
             ),
             SizedBox(height: 15.0),
 
-            Container(
-              alignment: Alignment.center,
-              height: 200,
-              width: 300,
-              child: Text("Map"),
-              color: Colors.blueGrey,
-            ),
+            // Container(
+            //   alignment: Alignment.center,
+            //   height: 200,
+            //   width: 300,
+            //   child: Text("Map"),
+            //   color: Colors.blueGrey,
+            // ),
 
             Container(
               //padding: EdgeInsets.all(10.0),

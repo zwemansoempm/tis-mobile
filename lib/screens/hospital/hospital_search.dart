@@ -533,6 +533,7 @@ class _HospitalSearchState extends State<HospitalSearch> {
                           ), 
                           child: Text("土曜診療",style: TextStyle(color: Colors.blue),),
                         ),
+                        SizedBox(width: 3),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
                           decoration: BoxDecoration(
@@ -541,6 +542,7 @@ class _HospitalSearchState extends State<HospitalSearch> {
                           ), 
                           child: Text("日曜祝日診療",style: TextStyle(color: Colors.blue),),
                         ),
+                        SizedBox(width: 3),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
                           decoration: BoxDecoration(
@@ -572,8 +574,8 @@ class _HospitalSearchState extends State<HospitalSearch> {
                         TableRow(
                           children: [
                             _column("日付" ,Color(0xff80919a), Colors.white),
-                            _column("午前" ,Color(0xffffffff), Colors.black),
-                            _column("午後" ,Color(0xffffffff), Colors.black),
+                            _column("午前" ,Color(0xffecf8ff), Colors.black),
+                            _column("午後" ,Color(0xffecf8ff), Colors.black),
                           ]
                         ),
                         TableRow(

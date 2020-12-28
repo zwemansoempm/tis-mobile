@@ -233,8 +233,8 @@ class _HospitalDetailState extends State<HospitalDetail> {
                   TableRow(
                     children: [
                       _column("日付" ,Color(0xff80919a), Colors.white),
-                      _column("午前" ,Color(0xffffffff), Colors.black),
-                      _column("午後" ,Color(0xffffffff), Colors.black),
+                      _column("午前" ,Color(0xffecf8ff), Colors.black),
+                      _column("午後" ,Color(0xffecf8ff), Colors.black),
                     ]
                   ),
                   TableRow(
@@ -336,20 +336,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
               SizedBox(height: 20.0),
               _subHeader("動画"),
               _noData(),
-            
-              SizedBox(height: 20.0),
-              _header("地図"),
-              //SizedBox(height: 10.0),
               
-              //Map
-              // Container(
-              //   alignment: Alignment.center,
-              //   height: 200,
-              //   width: 300,
-              //   child: Text("Map"),
-              //   color: Colors.blueGrey,
-              // ),
-
               SizedBox(height: 20.0),
               _itemHeader("公式サイト"),
               _itemData("www.google.com"),

@@ -50,8 +50,9 @@ class _NusingDetailState extends State<NusingDetail> {
               _mailButton(),
               SizedBox(height: 10.0),
 
-              Center(
-                child: Image.asset("assets/logos/bbc-news.png",),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset("assets/logos/bbc-news.png"),
               ),
               SizedBox(height: 10.0),
               Container(
@@ -391,21 +392,6 @@ class _NusingDetailState extends State<NusingDetail> {
               _staffItem("",Colors.white),
               _staffItem("看護職員数",Colors.grey[200]),
               _staffItem("",Colors.white),
-            
-              SizedBox(height: 20.0),
-              _header("地図"),
-              SizedBox(height: 10.0),
-              _mailButton(),
-
-              SizedBox(height: 10.0),
-              //Map
-              Container(
-                alignment: Alignment.center,
-                height: 200,
-                width: 300,
-                child: Text("Map"),
-                color: Colors.blueGrey,
-              ),
 
               SizedBox(height: 20.0),
               _itemHeader("公式サイト"),

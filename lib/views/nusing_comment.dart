@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tis/views/send_completely.dart';
+import 'package:tis/views/comment_completely.dart';
 
 class NusingComment extends StatefulWidget {
   @override
@@ -243,7 +243,7 @@ class _NusingCommentState extends State<NusingComment> {
                           RaisedButton(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=> SendCompletely()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> CommentCompletely()));
                             },
                             color: Colors.green,
                             textColor: Colors.white,

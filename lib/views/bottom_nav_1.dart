@@ -15,7 +15,7 @@ import 'package:tis/model/medical_response2.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
 import 'package:tis/screens/hospital/hospital_search.dart';
-import 'package:tis/screens/hospital/test.dart';
+// import 'package:tis/screens/hospital/test.dart';
 // import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
 import 'package:tis/views/nusingSearch.dart';
@@ -24,7 +24,7 @@ import 'package:tis/views/jobsearch.dart';
 import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:html/parser.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'jobsearch.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -49,16 +49,16 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     // double devprev=DevicePreview.of(context).mediaQuery.size.width;
     _tabData = [
       TabData(title: '  トップ  ', color: Color(0xff287db4)),
-      TabData(title: '  病院・医療  ', color:Color(0xffa3774a)),
+      TabData(title: '  病院・医療  ', color:Color(0xffd1281c)),
       TabData(title: '  特養・介護  ', color:Color(0xff9579ef)),
       TabData(title: '  有料老人ホーム  ', color: Color(0xff20d1de)),
 
-      TabData(title: '  訪問介護・看護  ', color: Color(0xffd1281c)),
-      TabData(title: '  テストカテゴリー  ', color: Color(0xff287db4)),
-      TabData(title: '  デイサービス  ', color: Color(0xffa3774a)),
-      TabData(title: '  グループホーム  ', color: Color(0xff9579ef)),
-      TabData(title: '  新型コロナ  ', color: Color(0xff20d1de)),
-      TabData(title: '  その他  ', color: Color(0xffd1281c)),
+      TabData(title: '  訪問介護・看護  ', color: Color(0xffa3774a)),   
+      TabData(title: '  デイサービス  ', color: Color(0xffFDCE00)),
+      TabData(title: '  グループホーム  ', color: Color(0xff211E55)),
+      TabData(title: '  新型コロナ  ', color: Color(0xffA01C38)),
+      TabData(title: '  その他  ', color: Color(0xffAAAAAA)),
+      TabData(title: '  コラム  ', color: Color(0xff29905e)),
     ];
     _activeColor = _tabData.first.color;
     _tabData.forEach((data) {
@@ -165,126 +165,101 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       ],                     
                   ), 
                     
-                    SliverFillRemaining(
-                 
+                    SliverFillRemaining(                 
                       child: TabBarView(
                         controller: _controller,
                         children: [
-                          ListView(
-                           children:[                              
-                                      Container(
-                                     
-                                         child: StreamBuilder<PostsResponse>(
-                                              stream: getPostsNewsBloc.subject.stream,
-                                              builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      if (snapshot.data.error != null &&
-                                                          snapshot.data.error.length > 0) {
-                                                        return Container();
-                                                      }  //return Container();
-                                                      return _buildSourceNewsWidget(snapshot.data);                                 
-                                                    } else if (snapshot.hasError) {
-                                                      return Container();
-                                                    } else {
-                                                      return buildLoadingWidget();
-                                                    }
-                                                  },
-                                          ),                                         
-                                      ), 
-                                      Container(
-                                            child:  StreamBuilder<PostsResponse>(
-                                               stream: getLatestPostAllCatBloc.subject.stream,
-                                               builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
-                                                  if (snapshot.hasData) {
-                                                    if (snapshot.data.error != null &&
-                                                        snapshot.data.error.length > 0) {
-                                                      return Container();
-                                                    }
-                                                    return  _getLatestPostAllCatWidget(snapshot.data);                                 
-                                                  } else if (snapshot.hasError) {
+                          MediaQuery.removePadding(
+                                context: context,
+                                removeTop: true,
+                                child: ListView(    
+                                children:[
+                                  Container(
+                                      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                      child: StreamBuilder<PostsResponse>(
+                                        stream: getLatestPostAllCatBloc.subject.stream,
+                                        builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
+                                          if (snapshot.hasData) {
+                                            if (snapshot.data.error != null &&
+                                                  snapshot.data.error.length > 0) {
                                                     return Container();
-                                                  } else {
+                                            }
+                                                    return  _getLatestPostAllCatWidget(snapshot.data);                                 
+                                          } else if (snapshot.hasError) {
+                                                    return Container();
+                                          } else {
                                                     return Container();//buildLoadingWidget();
-                                                  }
-                                               },
-                                          ),
-                                      ),  
-                                      Container(                                        //  height: 30, 
-                                         decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border(
-                                                top: BorderSide(
-                                                    color:Color(0xffd1281c),
-                                                    width: 1.0
-                                                ),
-                                            )
-                                        ),
-                                        child:  Row(                                                                                
-                                          children: [
-                                            SizedBox(                                            
-                                               width:MediaQuery.of(context).size.width/4,
-                                               child:  Text('病院・医療',textScaleFactor: 1,style:TextStyle( 
-                                                                fontWeight: FontWeight.bold,
-                                                                color: Color(0xffd1281c),                                                          // fontSize: 10.0
-                                                      ),textAlign: TextAlign.center,
-                                                ),
-                                            ),
-                                              SizedBox(
-                                              width:150 ),
-                                           SizedBox(
-                                              width: MediaQuery.of(context).size.width/3,
-                                              child:  Text('新着ニュース一覧',textScaleFactor: 0.7,style:TextStyle( 
-                                                                fontWeight: FontWeight.normal,
-                                                                color: Color(0xff999999),                                                          // fontSize: 10.0
-                                                      ),textAlign: TextAlign.center,
-                                            ),) 
-                                          ],
-                                        ),                                       
-                                      ) ,
-                                      Container(
-                               
-                                            margin: EdgeInsets.symmetric(vertical: 10.0),
-                                            height: 202.0,
-                                            child: new ListView(
-                                            scrollDirection: Axis.horizontal,
-                                            children: <Widget>[
-                                              StreamBuilder<MedicalResponse>(
-                                                stream: getAllNewsSearchBloc.subject.stream,
-                                                builder: (context, AsyncSnapshot<MedicalResponse> snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      if (snapshot.data.error != null &&
-                                                              snapshot.data.error.length > 0) {
-                                                        return Container();
-                                                      }                                                     
-                                                      return  _getMedicalWidget(snapshot.data);                                 
-                                                    } else if (snapshot.hasError) {
-                                                      return Container();
-                                                    } else {
-                                                      return Container();//buildLoadingWidget();
-                                                    }
-                                                },
-                                            ),
-                                             StreamBuilder<MedicalResponse2>(
-                                                stream: getMedical2Bloc.subject.stream,
-                                                builder: (context, AsyncSnapshot<MedicalResponse2> snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      if (snapshot.data.error != null &&
-                                                              snapshot.data.error.length > 0) {
-                                                        return Container();
-                                                      }                                                    
-                                                      return  _getMedical2Widget(snapshot.data);                                 
-                                                    } else if (snapshot.hasError) {
-                                                      return Container();
-                                                    } else {
-                                                      return Container();//buildLoadingWidget();
-                                                    }
-                                                },
-                                            ),                                             
-                                            ],
-                                          ) 
-                                       ), 
-                           ]                          
-                         ),                          
+                                          }
+                                        }                                      
+                                      )
+                                  )
+                                ]      
+                            ),
+                          ),
+
+                          //  Column(
+                          //    children: [
+                          //      SizedBox(height: 10,),
+                          //      Container(
+                          //        height: 150.0,
+                          //       //  width: 900,
+                          //       child: CarouselSlider(
+                          //         items: [
+                          //           'http://pic3.16pic.com/00/55/42/16pic_5542988_b.jpg',
+                          //           'http://photo.16pic.com/00/38/88/16pic_3888084_b.jpg',
+                          //           'http://pic3.16pic.com/00/55/42/16pic_5542988_b.jpg',
+                          //           'http://photo.16pic.com/00/38/88/16pic_3888084_b.jpg'
+                          //         ].map((i) {
+                          //           return Builder(
+                          //             builder: (BuildContext context) {
+                          //               return Container(
+                          //                   width: MediaQuery.of(context).size.width,
+                          //                   margin: EdgeInsets.symmetric(horizontal: 10.0),
+                          //                   decoration: BoxDecoration(color: Colors.white),
+                          //                   child: GestureDetector(
+                          //                       child:Stack(
+                          //                           fit:StackFit.expand,
+                          //                           children: <Widget>[
+                          //                             Image.network(i, fit: BoxFit.fill),
+                          //                              new Positioned(
+                          //                                 left: 0.0,
+                          //                                 top: 100.0,
+                          //                                 child: Container(   
+                          //                                     height: 150,   
+                          //                                     width:  MediaQuery.of(context).size.width,                                                      
+                          //                                     child: Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',
+                          //                                       style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold)
+                          //                                      ),
+                          //                                     decoration: BoxDecoration(
+                          //                                     border: Border(
+                          //                                         // top: BorderSide(color: Colors.black87, width: 1.0),
+                          //                                     ),
+                          //                                     color: Colors.black87.withOpacity(0.5),
+                          //                                     ), 
+                          //                                 ), 
+                          //                               ),
+                          //                               // Align(
+                          //                               //   alignment: Alignment.bottomLeft,
+                          //                               //   child: Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold),)
+                          //                               // )
+                          //                           ]
+                          //                       ),                                             
+                          //                       onTap: () {
+                          //                         // Navigator.push<Widget>(
+                          //                         //   context,
+                          //                         //   MaterialPageRoute(
+                          //                         //     // builder: (context) => ImageScreen(i),
+                          //                         //   ),
+                          //                         // );
+                          //                       }));
+                          //             },
+                          //           );
+                          //         }).toList(), 
+                          //         options: CarouselOptions(height: 150.0, viewportFraction:1,initialPage: 0,autoPlay: true),
+                          //       )
+                          //     ),
+                          //   ],
+                          //  ),                          
                           NusingSearch(),
                           HospitalSearch(),
                           Center(child: Text("")),
@@ -442,73 +417,80 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   Widget _getLatestPostAllCatWidget(PostsResponse data){
 
   List<PostsModel> allPosts = data.posts;
-
-  return  Container( 
-    child:GridView.count(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      padding:EdgeInsets.only(top: 5),
-      childAspectRatio:4,
-        // Create a grid with 2 columns. If you change the scrollDirection to
-        // horizontal, this produces 2 rows.
-      crossAxisCount: 2,
-      // Generate 100 widgets that display their index in the List.
-      children: List.generate(allPosts.length, (index) {
-       
-      return  Card(
-                child: 
-                    Wrap(
-                        direction: Axis.horizontal,
-                        spacing: 1.0, // gap between adjacent chips
-                        runSpacing: 0.0, // gap between lines
-                        children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,                                  
-                                children: [
-                                  ( allPosts[index] !=null ) ?  Container(   
-                                  margin: const EdgeInsets.only(left: 0.0, top: 0, right: 0.0,bottom: 14.0),
-                                  padding:EdgeInsets.only(right:10),//EdgeInsets.all(10.0),                               
-                                  width:70,//fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
-                                  height: 50,
-                                  child: 
-                                        FadeInImage.assetNetwork(
-                                        fadeInDuration: const Duration(seconds: 2),
-                                        alignment: Alignment.topLeft,
-                                        placeholder: 'assets/img/placeholder.jpg',
-                                        image: "https://test.t-i-s.jp/upload/news/"+allPosts[index].photo,
-                                        fit: BoxFit.fitHeight,
-                                        width: double.maxFinite,
-                                        height: MediaQuery.of(context).size.height,
-                                        imageErrorBuilder: (context, error, stackTrace) {                                         
-                                            return Image.asset(
-                                                  "assets/img/placeholder.jpg",
-                                            );
-                                        },                                                                           
-                                        )
-                                  ) : Container(),                              
-                                  SizedBox(width: 5,),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                                      child: SizedBox(
-                                        width: 70,
-                                        child: Text(                                            
-                                            allPosts[index].mainPoint.toString().length>=20?allPosts[index].mainPoint.toString().substring(0,10)+"...":allPosts[index].mainPoint,   //allPosts[index].mainPoint.toString().length.toString(),// allPosts[index].mainPoint.toString().substring(1,2),   
-                                            // textAlign: TextAlign.left,                                                                       
-                                            style: TextStyle(
-                                                  fontSize: 8.0
-                                            )
-                                        ),
-                                      ),
-                                    ),    
-                                ],
-                              ) ,                  
-                        ]
-                    )      
-                );
-      }),
-    )       
-  );
-
+  List<dynamic> result = [];
+  for (var j = 0; j < allPosts.length; j++) {
+    result.add(allPosts[j]);
+  }
+    return  Container( 
+              height: 150.0,
+              child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      // padding:EdgeInsets.only(top: 0),
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                      return GestureDetector(
+                          child: CarouselSlider(  
+                          items: result.map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                                    decoration: BoxDecoration(color: Colors.white),
+                                    child: GestureDetector(
+                                        child:Stack(
+                                            fit:StackFit.expand,
+                                            children: <Widget>[
+                                              Image.network("https://test.t-i-s.jp/upload/news/"+i.photo, fit: BoxFit.fitHeight),
+                                                new Positioned(
+                                                  left: 0.0,
+                                                  top: 100.0,
+                                                  child: Container(   
+                                                      height: 200,   
+                                                      width:  MediaQuery.of(context).size.width,                                                      
+                                                      child: Text(                                            
+                                                          i.mainPoint.toString().length>=90?allPosts[index].mainPoint.toString().substring(0,60)+"...":i.mainPoint.toString(),   //allPosts[index].mainPoint.toString().length.toString(),// allPosts[index].mainPoint.toString().substring(1,2),   
+                                                                                                              
+                                                          style: TextStyle(
+                                                                fontSize: 10.0,color: Colors.white,fontWeight: FontWeight.bold
+                                                          )
+                                                      ),
+                                                      
+                                                      // Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',
+                                                      //   style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold)
+                                                      //   ),
+                                                      decoration: BoxDecoration(
+                                                      border: Border(
+                                                          // top: BorderSide(color: Colors.black87, width: 1.0),
+                                                      ),
+                                                      color: Colors.black87.withOpacity(0.5),
+                                                      ), 
+                                                  ), 
+                                                ),
+                                                // Align(
+                                                //   alignment: Alignment.bottomLeft,
+                                                //   child: Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold),)
+                                                // )
+                                            ]
+                                        ),                                             
+                                        onTap: () {
+                                          // Navigator.push<Widget>(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     // builder: (context) => ImageScreen(i),
+                                          //   ),
+                                          // );
+                                        }));
+                              },
+                            );
+                          }).toList(), 
+                            options: CarouselOptions(height: 150.0, viewportFraction:1,initialPage: 0,autoPlay: true),
+                         )
+                      );                                
+                }
+            ),       
+     );
+    
   }
 
   Widget _buildSourceNewsWidget(PostsResponse data) {

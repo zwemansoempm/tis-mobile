@@ -38,13 +38,13 @@ dependencies:
   bloc: ^6.0.1
   rxdart: ^0.24.1
   dio: ^3.0.10
-  eva_icons_flutter: ^2.0.1
-  carousel_slider: ^2.2.1
+  eva_icons_flutter: ^2.0.1 
   timeago: ^2.0.26
   flutter_html: ^0.11.1
   url_launcher: ^5.5.0
   dotted_line: ^2.0.2
   google_maps_flutter: ^1.0.6
+  carousel_slider: ^2.3.1
 
 
 dev_dependencies:

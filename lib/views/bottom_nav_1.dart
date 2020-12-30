@@ -16,6 +16,10 @@ import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
 // import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
+import 'package:tis/views/jobapply.dart';
+import 'package:tis/views/jobapplythree.dart';
+import 'package:tis/views/jobapplytwo.dart';
+import 'package:tis/views/jobsearch.dart';
 import 'package:tis/views/nusingSearch.dart';
 import 'package:tis/views/search.dart';
 import 'package:tis/views/jobsearch.dart';
@@ -24,8 +28,7 @@ import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:html/parser.dart';
 
-import 'jobdetail.dart';
-import 'jobsearch.dart';
+
 
 class HomeWidget extends StatefulWidget {
 
@@ -289,11 +292,11 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                           Center(child: Text("")),
                           Center(child: Text("")),
                           Center(child: Text("")),
-                          Center(child: Text("")),
-                          Center(child: Text("")),
-                          Center(child: Text("")),
                           // Center(child: Text("")),
-                          JobDetail(),
+                          Center(child: Text("")),
+                          Center(child: Text("")),
+                          Center(child: Text("")),
+                          Center(child: Text("")),
                           JobSearch(),
                         ],
                       ),

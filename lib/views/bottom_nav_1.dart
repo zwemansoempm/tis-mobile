@@ -15,7 +15,6 @@ import 'package:tis/model/medical_response2.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
 import 'package:tis/screens/hospital/hospital_search.dart';
-// import 'package:tis/screens/hospital/test.dart';
 // import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
 import 'package:tis/views/nusingSearch.dart';

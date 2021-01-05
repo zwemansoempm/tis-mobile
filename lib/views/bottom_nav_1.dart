@@ -17,6 +17,7 @@ import 'package:tis/model/posts_response.dart';
 import 'package:tis/screens/hospital/hospital_search.dart';
 // import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
+import 'package:tis/screens/top/top_detail.dart';
 import 'package:tis/views/nusingSearch.dart';
 import 'package:tis/views/search.dart';
 import 'package:tis/views/jobsearch.dart';
@@ -440,7 +441,21 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                         child:Stack(
                                             fit:StackFit.expand,
                                             children: <Widget>[
-                                              Image.network("https://test.t-i-s.jp/upload/news/"+i.photo, fit: BoxFit.fitHeight),
+                                                FadeInImage.assetNetwork(
+                                                            fadeInDuration: const Duration(seconds: 2),
+                                                            // alignment: Alignment.topLeft,
+                                                            placeholder: 'assets/img/placeholder.jpg',
+                                                            image: "https://test.t-i-s.jp/upload/news/"+i.photo,
+                                                            fit: BoxFit.fitHeight,
+                                                            width: double.maxFinite,
+                                                            height: MediaQuery.of(context).size.height,
+                                                            imageErrorBuilder: (context, error, stackTrace) {                                         
+                                                                return Image.asset(
+                                                                      "assets/img/placeholder.jpg",
+                                                                );
+                                                            },                                                                           
+                                                ),
+                                            //  Image.network("https://test.t-i-s.jp/upload/news/"+i.photo, fit: BoxFit.fitHeight),
                                                 new Positioned(
                                                   left: 0.0,
                                                   top: 100.0,
@@ -473,17 +488,17 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                             ]
                                         ),                                             
                                         onTap: () {
-                                          // Navigator.push<Widget>(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     // builder: (context) => ImageScreen(i),
-                                          //   ),
-                                          // );
+                                          Navigator.push<Widget>(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => TopDetailScreen(top:i),
+                                            ),
+                                          );
                                         }));
                               },
                             );
                           }).toList(), 
-                            options: CarouselOptions(height: 150.0, viewportFraction:1,initialPage: 0,autoPlay: true),
+                            options: CarouselOptions(height: 150.0, viewportFraction:1,initialPage: 0,autoPlay: true,autoPlayInterval:const Duration(seconds: 8) ),
                          )
                       );                                
                 }

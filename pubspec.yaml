@@ -40,11 +40,11 @@ dependencies:
   dio: ^3.0.10
   eva_icons_flutter: ^2.0.1 
   timeago: ^2.0.26
-  flutter_html: ^0.11.1
   url_launcher: ^5.5.0
   dotted_line: ^2.0.2
   google_maps_flutter: ^1.0.6
   carousel_slider: ^2.3.1
+  flutter_html: ^1.1.1
 
 
 dev_dependencies:
@@ -65,6 +65,7 @@ flutter:
     - family: CustomApp
       fonts:
         - asset: assets/fonts/RefreshIcon.ttf   
+        - asset: assets/fonts/CalendarIcon.ttf   
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/

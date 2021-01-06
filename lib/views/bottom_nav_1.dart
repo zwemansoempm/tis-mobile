@@ -441,8 +441,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                         child:Stack(
                                             fit:StackFit.expand,
                                             children: <Widget>[
-                                                FadeInImage.assetNetwork(
-                                                            fadeInDuration: const Duration(seconds: 2),
+                                               (i.photo!=null || i.photo!='' ) ? FadeInImage.assetNetwork(
+                                                            fadeInDuration: const Duration(seconds: 3),
                                                             // alignment: Alignment.topLeft,
                                                             placeholder: 'assets/img/placeholder.jpg',
                                                             image: "https://test.t-i-s.jp/upload/news/"+i.photo,
@@ -454,7 +454,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                                       "assets/img/placeholder.jpg",
                                                                 );
                                                             },                                                                           
-                                                ),
+                                                ) :Container(),
                                             //  Image.network("https://test.t-i-s.jp/upload/news/"+i.photo, fit: BoxFit.fitHeight),
                                                 new Positioned(
                                                   left: 0.0,
@@ -498,7 +498,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                               },
                             );
                           }).toList(), 
-                            options: CarouselOptions(height: 150.0, viewportFraction:1,initialPage: 0,autoPlay: true,autoPlayInterval:const Duration(seconds: 8) ),
+                            options: CarouselOptions(height: 150.0, viewportFraction:1,initialPage: 0,autoPlay: true,autoPlayInterval:const Duration(seconds: 10) ),
                          )
                       );                                
                 }

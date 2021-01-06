@@ -65,7 +65,7 @@ flutter:
     - family: CustomApp
       fonts:
         - asset: assets/fonts/RefreshIcon.ttf   
-        - asset: assets/fonts/CalendarIcon.ttf   
+       
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/

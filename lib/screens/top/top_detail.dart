@@ -1,20 +1,46 @@
 
 import 'package:flutter/material.dart';
+import 'package:tis/bloc/get_newdetails_bloc.dart';
+import 'package:tis/bloc/get_related_news_bloc.dart';
+import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/posts.dart';
+import 'package:tis/model/posts_response2.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/html_parser.dart';
 import 'package:flutter_html/style.dart';
 
 
-class TopDetailScreen extends StatelessWidget {
-  final PostsModel top;
-  TopDetailScreen({Key key,@required this.top}) : super(key: key);
+class TopDetailScreen extends StatefulWidget {
+
+  final PostsModel top;  
+  final String news;
+  TopDetailScreen({Key key,@required this.top,this.news}) : super(key: key);
+ @override
+  _TopDetailState createState() => _TopDetailState();
+}
+
+class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderStateMixin { 
+
+  @override
+  void initState() {  
+    super.initState();     
+    // ignore: unnecessary_statements
+    getNewdetailsBloc..getNewsDetails(widget.top.id.toString());
+    getRelatedNewsBloc..getRelatedNews(widget.top.id.toString());
+    // widget.news=='news'? (getNewdetailsBloc..getNewsDetails(widget.top.id.toString())):(getRelatedNewsBloc..getRelatedNews(widget.top.id.toString()));   
+  }
+  @override
+  void dispose() {
+    // widget.news=='news'? getNewdetailsBloc.drainStream():getRelatedNewsBloc.drainStream();   
+    getRelatedNewsBloc.drainStream();
+    getNewdetailsBloc.drainStream();
+    super.dispose();
+  }
   @override
     Widget build(BuildContext context) {   
-        var htmlData = this.top.body;  
-        // print(this.top.mainPoint.toString());
-        print(htmlData);
+        var htmlData = widget.top.body;     
+        
         return Scaffold(
            body: Center(
              child: CustomScrollView(
@@ -35,7 +61,7 @@ class TopDetailScreen extends StatelessWidget {
                               Center(
                                     child:Container(
                                     padding: EdgeInsets.fromLTRB(20, 20, 20,10),
-                                    child: Text(this.top.title.toString(), 
+                                    child: Text(widget.top.title.toString(), 
                                           style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,)
                                           )
                                     )
@@ -57,7 +83,7 @@ class TopDetailScreen extends StatelessWidget {
                               Center(
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                                  child: Text(this.top.createdByCompany.toString()),
+                                  child: Text(widget.top.createdByCompany.toString()),
                                 )
                               ),
                               Row(
@@ -67,9 +93,9 @@ class TopDetailScreen extends StatelessWidget {
                                           padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
                                           decoration:BoxDecoration(                                               
                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5),bottomLeft:Radius.circular(5),bottomRight: Radius.circular(5) ),
-                                              color: Color(0xffd1281c)
+                                              // color:Color(int.parse(widget.top.colorCode.replaceFirst('#','0xff')))// widget.colorcode==null ? Color(int.parse(widget.top.colorCode.replaceFirst('#','0xff'))) : Color(int.parse(widget.colorcode.replaceFirst('#','0xff')))
                                           ),
-                                          child: Text(this.top.cName.toString(),style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Colors.white,)),
+                                          // child: Text(widget.news!='news'?widget.top.cName.toString():widget.top.catName.toString(),style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color: Colors.white,)),
                                     
                                     ),
                                     Container(
@@ -82,7 +108,7 @@ class TopDetailScreen extends StatelessWidget {
                                     ),
                                     Container(
                                         margin: const EdgeInsets.only(left: 10.0, top: 0, right: 0.0,bottom: 0.0),    
-                                        child:Text(this.top.createdAt.toString(),style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color:  Color(0xffaaaaab))),
+                                        child:Text(widget.top.createdAt.toString(),style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold,color:  Color(0xffaaaaab))),
                                     ),                           
                                 ],                      
                               ),
@@ -96,7 +122,7 @@ class TopDetailScreen extends StatelessWidget {
                                                                     fadeInDuration: const Duration(seconds: 2),
                                                                     // alignment: Alignment.topLeft,
                                                                     placeholder: 'assets/img/placeholder.jpg',
-                                                                    image: "https://test.t-i-s.jp/upload/news/"+this.top.photo,
+                                                                    image: "https://test.t-i-s.jp/upload/news/"+widget.top.photo,
                                                                     fit: BoxFit.fitHeight,
                                                                     width: double.maxFinite,
                                                                     height: MediaQuery.of(context).size.height,
@@ -110,12 +136,89 @@ class TopDetailScreen extends StatelessWidget {
                                       ),
                               ),
                               Container(
-                                    margin: const EdgeInsets.only(left: 0.0, top: 10, right: 0.0,bottom: 0.0),     
-                                    child:Text(this.top.mainPoint.toString(),style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.black)), 
+                                    margin: const EdgeInsets.only(left: 10.0, top: 10, right: 10.0,bottom: 0.0),     
+                                    child:Text(widget.top.mainPoint.toString(),style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color:Colors.black)), 
                               ),  
                               Html(
-                                  data: htmlData,
-                              ),                                    
+                                    data: htmlData,
+                              ),  
+                              Container(
+                                    margin: const EdgeInsets.only(left: 10.0, top: 10, right: 10.0,bottom: 10.0), 
+                                    child:Text(widget.top.createdBy.toString(),style: TextStyle(fontSize: 10,fontWeight: FontWeight.normal,color:Colors.black45)),
+                              ),
+                              Center(
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20,10),
+                                  child: Row(
+                                        children: List.generate(800~/10, (index) => Expanded(
+                                        child: Container(
+                                          color: index%2==0?Colors.transparent
+                                          :Colors.black26,
+                                          height: 1,
+                                        ),
+                                        )),
+                                  ),
+                                ),
+                              ),    
+                              (widget.top.relatedNews!=null) ? Container(    
+                                    height: 50.0,
+                                    margin: const EdgeInsets.only(left: 20.0, top: 10, right: 20.0,bottom: 0.0),   
+                                    child:Row(
+                                      children: [
+                                        Container(
+                                          width:5 ,
+                                          height: 40.0,
+                                           decoration: BoxDecoration(
+                                              border: Border.all(color:Color(0xff2980b9)) ,
+                                              color: Color(0xff2980b9),
+                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                           ),                                          
+                                        ),    
+                                        Container(
+                                          margin: const EdgeInsets.only(left: 20.0, top: 0, right: 0.0,bottom: 0.0),  
+                                          child: Text("関連ニュース",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color:Colors.black87)),
+                                        ),                                                        
+                                      ],
+                                    ),
+                              ):Container(),
+                               Container(    
+                                margin: EdgeInsets.symmetric(vertical: 5.0),                                 
+                                child: StreamBuilder<PostsResponse2>(
+                                stream: getRelatedNewsBloc.subject.stream,
+                                builder: (context, AsyncSnapshot<PostsResponse2> snapshot) {
+                                        if (snapshot.hasData) {
+                                          if (snapshot.data.error != null &&
+                                                snapshot.data.error.length > 0) {
+                                                  return Container();
+                                          }
+                                                  return  _getRelatedNewsWidget(snapshot.data);                                 
+                                        } else if (snapshot.hasError) {
+                                                  return Container();
+                                        } else {
+                                                  return Container();//buildLoadingWidget();
+                                        }
+                                    }                                      
+                                )
+                              ),
+                              // Container(
+                              //     margin: EdgeInsets.symmetric(vertical: 5.0),                                 
+                              //     child: StreamBuilder<NewdetailsResponse>(
+                              //     stream: getNewdetailsBloc.subject.stream,
+                              //     builder: (context, AsyncSnapshot<NewdetailsResponse> snapshot) {
+                              //             if (snapshot.hasData) {
+                              //               if (snapshot.data.error != null &&
+                              //                     snapshot.data.error.length > 0) {
+                              //                       return Container();
+                              //               }
+                              //                       return  _getNewsDetailWidget(snapshot.data);                                 
+                              //             } else if (snapshot.hasError) {
+                              //                       return Container();
+                              //             } else {
+                              //                       return Container();//buildLoadingWidget();
+                              //             }
+                              //         }     
+                              //   ),  
+                              // ),                            
                             ],
                      ),
                        ]
@@ -127,21 +230,85 @@ class TopDetailScreen extends StatelessWidget {
            ), 
         );
   }
-  // _TopDetailScreenState createState() => _TopDetailScreenState(top);
+  // Widget _getNewsDetailWidget(NewdetailsResponse data){
+  //   List<PostsModel> allPosts = data.posts;
+  //   return detailListWidget(allPosts);
+  // }
+  Widget _getRelatedNewsWidget(PostsResponse2 data){
+  List<PostsModel> allPosts = data.posts;
+    return detailListWidget(allPosts);
+  }
+
+  Widget detailListWidget(allPosts){
+            return 
+  Container(
+      height: 170.0*allPosts.length,
+      child: SizedBox(
+        child:
+         ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical, 
+            itemCount:allPosts.length,
+            itemBuilder: (context, index) {
+                return Container(
+                   margin: const EdgeInsets.only(left: 20.0, top: 0, right: 20.0,bottom: 20.0),  
+                   height: 150.0,           
+                  child: GestureDetector(
+                     child:Stack(
+                            fit:StackFit.expand,
+                            children: <Widget>[
+                                (allPosts[index].photo!=null || allPosts[index].photo!='' ) ? FadeInImage.assetNetwork(
+                                            fadeInDuration: const Duration(seconds: 3),
+                                            // alignment: Alignment.topLeft,
+                                            placeholder: 'assets/img/placeholder.jpg',
+                                            image: "https://test.t-i-s.jp/upload/news/"+allPosts[index].photo,
+                                            fit: BoxFit.fitHeight,
+                                            width: double.maxFinite,
+                                            height: MediaQuery.of(context).size.height,
+                                            imageErrorBuilder: (context, error, stackTrace) {                                         
+                                                return Image.asset(
+                                                      "assets/img/placeholder.jpg",
+                                                );
+                                            },                                                                           
+                                ) :Container(),                         
+                                new Positioned(
+                                  left: 0.0,
+                                  top: 100.0,
+                                  child: Container(   
+                                      height: 200,   
+                                      width:  MediaQuery.of(context).size.width,                                                      
+                                      child: Text(                                            
+                                          allPosts[index].mainPoint.toString().length>=90?allPosts[index].mainPoint.toString().substring(0,60)+"...":allPosts[index].mainPoint.toString(),   //allPosts[index].mainPoint.toString().length.toString(),// allPosts[index].mainPoint.toString().substring(1,2),   
+                                                                                              
+                                          style: TextStyle(
+                                                fontSize: 10.0,color: Colors.white,fontWeight: FontWeight.bold
+                                          )
+                                      ),                                   
+                                      decoration: BoxDecoration(
+                                      border: Border(
+                                          // top: BorderSide(color: Colors.black87, width: 1.0),
+                                      ),
+                                      color: Colors.black87.withOpacity(0.5),
+                                      ), 
+                                  ), 
+                                ),
+                               
+                            ]
+                          ),
+                    onTap: () {
+                      Navigator.push<Widget>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TopDetailScreen(top:allPosts[index],news:'news'),
+                        ),
+                      );
+                    }
+                  ),
+                );
+            }
+        ),
+      )
+  );
+  } 
 }
 
-
-
-
-// class _TopDetailScreenState extends State<TopDetailScreen> {
-//   final PostsModel top;
-//   _TopDetailScreenState(this.top);
-//   @override
-//   Widget build(BuildContext context) {     
-//         // print(this.top.mainPoint.toString());
-//         return Container(
-          
-//         );
-//   }
-  
-// }

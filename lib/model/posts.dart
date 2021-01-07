@@ -13,8 +13,10 @@ class PostsModel{
   final int blockId;
   final String createdAt;
   final String cName;
+  final String catName;
+  final String colorCode;
 
-  PostsModel(this.id,this.title,this.photo,this.mainPoint,this.body,this.categoryId,this.relatedNews,this.userId,this.recordStatus,this.createdBy,this.createdByCompany,this.blockId,this.createdAt,this.cName);
+  PostsModel(this.id,this.title,this.photo,this.mainPoint,this.body,this.categoryId,this.relatedNews,this.userId,this.recordStatus,this.createdBy,this.createdByCompany,this.blockId,this.createdAt,this.cName,this.catName,this.colorCode);//this.cName,
 
   PostsModel.fromJson(Map<String,dynamic> json)
   : id =json["id"],
@@ -30,6 +32,8 @@ class PostsModel{
     createdByCompany=json["created_by_company"],
     blockId=json["block_id"],
     createdAt=json["created_at"],
-    cName=json["cname"];
+    cName=json["cname"],
+    catName=json["cat_name"],
+    colorCode=json["color_code"];
 
 }

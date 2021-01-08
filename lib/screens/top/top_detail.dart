@@ -1,7 +1,11 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tis/bloc/get_newdetails_bloc.dart';
 import 'package:tis/bloc/get_related_news_bloc.dart';
+import 'package:tis/elements/loader.dart';
 import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response2.dart';
@@ -22,21 +26,23 @@ class TopDetailScreen extends StatefulWidget {
 
 class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderStateMixin { 
 
+  var stream; 
+ 
   @override
-  void initState() {  
+  void initState() {     
     super.initState();     
     // ignore: unnecessary_statements
-    getNewdetailsBloc..getNewsDetails(widget.top.id.toString());
-    getRelatedNewsBloc..getRelatedNews(widget.top.id.toString());
-    // widget.news=='news'? (getNewdetailsBloc..getNewsDetails(widget.top.id.toString())):(getRelatedNewsBloc..getRelatedNews(widget.top.id.toString()));   
+    // getNewdetailsBloc..getNewsDetails(widget.top.id.toString());
+    stream=getRelatedNewsBloc..getRelatedNews(widget.top.id.toString());
   }
   @override
   void dispose() {
-    // widget.news=='news'? getNewdetailsBloc.drainStream():getRelatedNewsBloc.drainStream();   
+    // widget.news=='news'? getNewdetailsBloc.drainStream():getRelatedNewsBloc.drainStream();  
+    // getNewdetailsBloc.drainStream(); 
     getRelatedNewsBloc.drainStream();
-    getNewdetailsBloc.drainStream();
     super.dispose();
   }
+ 
   @override
     Widget build(BuildContext context) {   
         var htmlData = widget.top.body;     
@@ -48,6 +54,10 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                  SliverAppBar(
                    title:Text('ニュース詳細'),
                    backgroundColor:Colors.blueGrey[300],
+          //          automaticallyImplyLeading:false,
+          //         leading: BackButton(
+          //   onPressed: () => Navigator.pop(context),
+          // ),
                   //  expandedHeight: 350.0,
                   //  flexibleSpace: FlexibleSpaceBar(
                   //    background: ,
@@ -195,7 +205,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                         } else if (snapshot.hasError) {
                                                   return Container();
                                         } else {
-                                                  return Container();//buildLoadingWidget();
+                                                  return buildLoadingWidget(); //Container();//buildLoadingWidget();
                                         }
                                     }                                      
                                 )
@@ -299,9 +309,13 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                       Navigator.push<Widget>(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TopDetailScreen(top:allPosts[index],news:'news'),
+                          builder: (context) => new TopDetailScreen(top:allPosts[index],news:'news'),
                         ),
-                      );
+                      ).then((value) {
+                          setState(() {
+                            stream =getRelatedNewsBloc..getRelatedNews(widget.top.id.toString());
+                          });
+                      });
                     }
                   ),
                 );

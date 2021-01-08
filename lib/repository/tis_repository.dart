@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/medical_response2.dart';
+import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/posts_response.dart';
 import 'package:tis/model/posts_response2.dart';
@@ -17,6 +18,17 @@ class NewsRepository{
     var getAllNewsSearchUrl="$mainUrl/get_latest_posts_by_catId/all_news_search";
     var getRelatedNewsUrl="$mainUrl/relatednews";
     var getNewsDetailsUrl="$mainUrl/newdetails";
+    var getHomeUrl = "$mainUrl/home";
+
+    Future<NewsCategory> getNewscategorymobile() async {
+      try {
+        Response response = await _dio.get("$mainUrl/newscategorymobile/1");
+        return NewsCategory.fromJson(response.data);
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        return NewsCategory.withError("$error");
+      }
+    }
 
     Future<PostsResponse> getPostsNews() async {
       var params = {

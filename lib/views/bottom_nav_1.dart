@@ -436,7 +436,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                           items: result.map((i) {
                               var inputFormat = DateFormat('yyyy-MM-dd hh:mm:ss');
                               var inputDate = inputFormat.parse(i.createdAt.toString()); 
-                              var outputFormat = DateFormat('MM/dd hh:mm');
+                              var outputFormat = DateFormat('MM/dd HH:mm');
                             return Builder(
                               builder: (BuildContext context) {
                                 return Container(

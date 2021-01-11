@@ -268,7 +268,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                             fit:StackFit.expand,
                             children: <Widget>[
                                 (allPosts[index].photo!=null || allPosts[index].photo!='' ) ? FadeInImage.assetNetwork(
-                                            fadeInDuration: const Duration(seconds: 3),
+                                            fadeInDuration: const Duration(seconds: 2),
                                             // alignment: Alignment.topLeft,
                                             placeholder: 'assets/img/placeholder.jpg',
                                             image: "https://test.t-i-s.jp/upload/news/"+allPosts[index].photo,

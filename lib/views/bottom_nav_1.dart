@@ -197,71 +197,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                   )
                                 ]      
                             ),
-                          ),
-
-                          //  Column(
-                          //    children: [
-                          //      SizedBox(height: 10,),
-                          //      Container(
-                          //        height: 150.0,
-                          //       //  width: 900,
-                          //       child: CarouselSlider(
-                          //         items: [
-                          //           'http://pic3.16pic.com/00/55/42/16pic_5542988_b.jpg',
-                          //           'http://photo.16pic.com/00/38/88/16pic_3888084_b.jpg',
-                          //           'http://pic3.16pic.com/00/55/42/16pic_5542988_b.jpg',
-                          //           'http://photo.16pic.com/00/38/88/16pic_3888084_b.jpg'
-                          //         ].map((i) {
-                          //           return Builder(
-                          //             builder: (BuildContext context) {
-                          //               return Container(
-                          //                   width: MediaQuery.of(context).size.width,
-                          //                   margin: EdgeInsets.symmetric(horizontal: 10.0),
-                          //                   decoration: BoxDecoration(color: Colors.white),
-                          //                   child: GestureDetector(
-                          //                       child:Stack(
-                          //                           fit:StackFit.expand,
-                          //                           children: <Widget>[
-                          //                             Image.network(i, fit: BoxFit.fill),
-                          //                              new Positioned(
-                          //                                 left: 0.0,
-                          //                                 top: 100.0,
-                          //                                 child: Container(   
-                          //                                     height: 150,   
-                          //                                     width:  MediaQuery.of(context).size.width,                                                      
-                          //                                     child: Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',
-                          //                                       style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold)
-                          //                                      ),
-                          //                                     decoration: BoxDecoration(
-                          //                                     border: Border(
-                          //                                         // top: BorderSide(color: Colors.black87, width: 1.0),
-                          //                                     ),
-                          //                                     color: Colors.black87.withOpacity(0.5),
-                          //                                     ), 
-                          //                                 ), 
-                          //                               ),
-                          //                               // Align(
-                          //                               //   alignment: Alignment.bottomLeft,
-                          //                               //   child: Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold),)
-                          //                               // )
-                          //                           ]
-                          //                       ),                                             
-                          //                       onTap: () {
-                          //                         // Navigator.push<Widget>(
-                          //                         //   context,
-                          //                         //   MaterialPageRoute(
-                          //                         //     // builder: (context) => ImageScreen(i),
-                          //                         //   ),
-                          //                         // );
-                          //                       }));
-                          //             },
-                          //           );
-                          //         }).toList(), 
-                          //         options: CarouselOptions(height: 150.0, viewportFraction:1,initialPage: 0,autoPlay: true),
-                          //       )
-                          //     ),
-                          //   ],
-                          //  ),                          
+                          ),                         
                           TabNewsScreen(), //NusingSearch(),
                           HospitalSearch(),
                           Center(child: Text("")),
@@ -448,7 +384,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                             fit:StackFit.expand,
                                             children: <Widget>[
                                                (i.photo!=null || i.photo!='' ) ? FadeInImage.assetNetwork(
-                                                            fadeInDuration: const Duration(seconds: 3),
+                                                            fadeInDuration: const Duration(seconds: 2),
                                                             // alignment: Alignment.topLeft,
                                                             placeholder: 'assets/img/placeholder.jpg',
                                                             image: "https://test.t-i-s.jp/upload/news/"+i.photo,

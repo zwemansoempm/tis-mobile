@@ -27,6 +27,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:html/parser.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'jobsearch.dart';
+import 'package:intl/intl.dart';
 
 class HomeWidget extends StatefulWidget {
 
@@ -417,6 +418,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
 
   Widget _getLatestPostAllCatWidget(PostsResponse data){
 
+
   List<PostsModel> allPosts = data.posts;
   List<dynamic> result = [];
   for (var j = 0; j < allPosts.length; j++) {
@@ -432,6 +434,9 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       return GestureDetector(
                           child: CarouselSlider(  
                           items: result.map((i) {
+                              var inputFormat = DateFormat('yyyy-MM-dd hh:mm:ss');
+                              var inputDate = inputFormat.parse(i.createdAt.toString()); 
+                              var outputFormat = DateFormat('MM/dd hh:mm');
                             return Builder(
                               builder: (BuildContext context) {
                                 return Container(
@@ -463,17 +468,33 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                   child: Container(   
                                                       height: 200,   
                                                       width:  MediaQuery.of(context).size.width,                                                      
-                                                      child: Text(                                            
-                                                          i.mainPoint.toString().length>=90?allPosts[index].mainPoint.toString().substring(0,60)+"...":i.mainPoint.toString(),   //allPosts[index].mainPoint.toString().length.toString(),// allPosts[index].mainPoint.toString().substring(1,2),   
-                                                                                                              
-                                                          style: TextStyle(
-                                                                fontSize: 10.0,color: Colors.white,fontWeight: FontWeight.bold
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start, 
+                                                        children: [
+                                                            SizedBox(                                                            
+                                                                height: 30,
+                                                                child: Text(                                            
+                                                                i.mainPoint.toString().length>=90?allPosts[index].mainPoint.toString().substring(0,60)+"...":i.mainPoint.toString(),   //allPosts[index].mainPoint.toString().length.toString(),// allPosts[index].mainPoint.toString().substring(1,2),   
+                                                                                                                    
+                                                                style: TextStyle(
+                                                                      fontSize: 10.0,color: Colors.white,fontWeight: FontWeight.bold
+                                                                )
+                                                            ),
+                                                          ),
+                                                          SizedBox(                                                          
+                                                            width: 330,
+                                                            child: Align(
+                                                                alignment: Alignment.bottomRight,
+                                                                child: Text(
+                                                                outputFormat.format(inputDate),                                                              
+                                                                style: TextStyle(
+                                                                      fontSize: 10.0,color: Colors.white,fontWeight: FontWeight.bold
+                                                                )
+                                                              ),
+                                                            ),
                                                           )
-                                                      ),
-                                                      
-                                                      // Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',
-                                                      //   style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold)
-                                                      //   ),
+                                                        ],
+                                                      ), 
                                                       decoration: BoxDecoration(
                                                       border: Border(
                                                           // top: BorderSide(color: Colors.black87, width: 1.0),
@@ -481,11 +502,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                       color: Colors.black87.withOpacity(0.5),
                                                       ), 
                                                   ), 
-                                                ),
-                                                // Align(
-                                                //   alignment: Alignment.bottomLeft,
-                                                //   child: Text('相手の専門性に一歩踏み込み、お互いに学び理解し合う、',style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold),)
-                                                // )
+                                                ),                                              
                                             ]
                                         ),                                             
                                         onTap: () {

@@ -392,7 +392,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                         child:Stack(
                                             fit:StackFit.expand,
                                             children: <Widget>[
-                                               (i.photo!=null || i.photo!='' ) ? FadeInImage.assetNetwork(
+                                               (i.photo!=null && i.photo!='' ) ? FadeInImage.assetNetwork(
                                                             fadeInDuration: const Duration(seconds: 2),
                                                             // alignment: Alignment.topLeft,
                                                             placeholder: 'assets/img/placeholder.jpg',
@@ -405,7 +405,9 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                                       "assets/img/placeholder.jpg",
                                                                 );
                                                             },                                                                           
-                                                ) :Container(),
+                                                ):Image.asset(
+                                                      "assets/img/placeholder.jpg",
+                                                ),
                                             //  Image.network("https://test.t-i-s.jp/upload/news/"+i.photo, fit: BoxFit.fitHeight),
                                                 new Positioned(
                                                   left: 0.0,

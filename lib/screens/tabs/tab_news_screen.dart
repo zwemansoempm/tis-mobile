@@ -243,7 +243,9 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                         ),
                         color != null ? _newLogo(color) : Container(),
                     ]),
-                  ) :Container()
+                  ) :Image.asset(
+                              "assets/img/placeholder.jpg",
+                  )
               ),
               Container(
                 padding: EdgeInsets.only(

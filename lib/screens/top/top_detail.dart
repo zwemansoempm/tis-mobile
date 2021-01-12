@@ -142,7 +142,9 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                                                               "assets/img/placeholder.jpg",
                                                                         );
                                                                     },                                                                           
-                                              ):Container(),                                   
+                                              ):Image.asset(
+                                                  "assets/img/placeholder.jpg",
+                                              )                                   
                                           ]
                                       ),
                               ),
@@ -289,7 +291,9 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                                       "assets/img/placeholder.jpg",
                                                 );
                                             },                                                                           
-                                ) :Container(),                         
+                                ) :Image.asset(
+                                      "assets/img/placeholder.jpg",
+                                ),                         
                                 new Positioned(
                                   left: 0.0,
                                   top: 100.0,

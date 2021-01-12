@@ -229,17 +229,19 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                     padding: const EdgeInsets.all(8),
                     child: Stack(
                       children: [
-                        FadeInImage(
-                          fadeInDuration: const Duration(seconds: 2),
-                          placeholder: AssetImage('assets/img/placeholder.jpg'),
-                          image: NetworkImage(
-                            "https://test.t-i-s.jp/upload/news/"+post.photo,
+                        Center(
+                          child: FadeInImage(
+                            fadeInDuration: const Duration(seconds: 2),
+                            placeholder: AssetImage('assets/img/placeholder.jpg'),
+                            image: NetworkImage(
+                              "https://test.t-i-s.jp/upload/news/"+post.photo,
+                            ),
+                            imageErrorBuilder: (context, error, stackTrace) { 
+                              return Image.asset(
+                                "assets/img/placeholder.jpg",
+                              );
+                            },                                                                           
                           ),
-                          imageErrorBuilder: (context, error, stackTrace) { 
-                            return Image.asset(
-                              "assets/img/placeholder.jpg",
-                            );
-                          },                                                                           
                         ),
                         color != null ? _newLogo(color) : Container(),
                     ]),

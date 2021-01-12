@@ -262,7 +262,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                             placeholder: 'assets/img/placeholder.jpg',
                                                             image: "https://test.t-i-s.jp/upload/news/"+medical[index].photo,
                                                             fit: BoxFit.fitHeight,
-                                                            width: double.maxFinite,
+                                                            width: double.minPositive,
                                                             height: MediaQuery.of(context).size.height,
                                                             imageErrorBuilder: (context, error, stackTrace) {                                         
                                                                 return Image.asset(
@@ -398,7 +398,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                             placeholder: 'assets/img/placeholder.jpg',
                                                             image: "https://test.t-i-s.jp/upload/news/"+i.photo,
                                                             fit: BoxFit.fitHeight,
-                                                            width: double.maxFinite,
+                                                            width: double.minPositive,
                                                             height: MediaQuery.of(context).size.height,
                                                             imageErrorBuilder: (context, error, stackTrace) {                                         
                                                                 return Image.asset(
@@ -537,7 +537,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                   ? 'assets/img/placeholder.jpg'
                                                   :"https://test.t-i-s.jp/upload/news/"+posts[0].photo,
                                               fit: BoxFit.fitHeight,
-                                              width: double.maxFinite,
+                                              width: double.minPositive,
                                               height: MediaQuery.of(context).size.height)
                                               ) : Container() ,
 

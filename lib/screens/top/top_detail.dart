@@ -135,7 +135,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                                                     placeholder: 'assets/img/placeholder.jpg',
                                                                     image: "https://test.t-i-s.jp/upload/news/"+widget.top.photo,
                                                                     fit: BoxFit.fitHeight,
-                                                                    width: double.maxFinite,
+                                                                    width: double.minPositive,
                                                                     height: MediaQuery.of(context).size.height,
                                                                     imageErrorBuilder: (context, error, stackTrace) {                                         
                                                                         return Image.asset(
@@ -284,7 +284,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                             placeholder: 'assets/img/placeholder.jpg',
                                             image: "https://test.t-i-s.jp/upload/news/"+allPosts[index].photo,
                                             fit: BoxFit.fitHeight,
-                                            width: double.maxFinite,
+                                            width: double.minPositive,
                                             height: MediaQuery.of(context).size.height,
                                             imageErrorBuilder: (context, error, stackTrace) {                                         
                                                 return Image.asset(

@@ -128,6 +128,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                       child: Stack(
                                           fit:StackFit.expand,
                                           children: <Widget>[
+                                           (widget.top.photo!=null && widget.top.photo!='' && widget.top.id!=236 && widget.top.id!=272 && widget.top.id!=482 && widget.top.id!=312 && widget.top.id!=329 && widget.top.id!=359 && widget.top.id!=402 && widget.top.id!=403 && widget.top.id!=438 && widget.top.id!=418 && widget.top.id!=437 && widget.top.id!=453 && widget.top.id!=451 && widget.top.id!=445 && widget.top.id!=413 && widget.top.id!=214 )? 
                                             FadeInImage.assetNetwork(
                                                                     fadeInDuration: const Duration(seconds: 2),
                                                                     // alignment: Alignment.topLeft,
@@ -141,7 +142,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                                                               "assets/img/placeholder.jpg",
                                                                         );
                                                                     },                                                                           
-                                              ),                                   
+                                              ):Container(),                                   
                                           ]
                                       ),
                               ),
@@ -205,7 +206,15 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                         } else if (snapshot.hasError) {
                                                   return Container();
                                         } else {
-                                                  return buildLoadingWidget();
+                                                  return Container(
+                                                      child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [SizedBox(
+                                                          height: 35,
+                                                          width: 35,
+                                                          child: CircularProgressIndicator()),
+                                                      ]),
+                                                  );//return buildLoadingWidget();
                                         }
                                     }                                      
                                 )

@@ -182,7 +182,8 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
 
               ],
             );
-          }else  {
+          }          
+          else  {
             return Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -223,18 +224,18 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
         child: Row(
             children: [
               Expanded(
-                child: (post.photo!=null || post.photo!='' ) ? 
+                child: (post.photo!=null && post.photo!='' && post.id!=236 && post.id!=272 && post.id!=482 && post.id!=312 && post.id!=329 && post.id!=359 && post.id!=402 && post.id!=403 && post.id!=438 && post.id!=418 && post.id!=437 && post.id!=453 && post.id!=451 && post.id!=445 && post.id!=413 && post.id!=214 ) ? 
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Stack(
                       children: [
                         FadeInImage(
-                          //fadeInDuration: const Duration(seconds: 1),
+                          fadeInDuration: const Duration(seconds: 2),
                           placeholder: AssetImage('assets/img/placeholder.jpg'),
                           image: NetworkImage(
                             "https://test.t-i-s.jp/upload/news/"+post.photo,
                           ),
-                          imageErrorBuilder: (context, error, stackTrace) {                                         
+                          imageErrorBuilder: (context, error, stackTrace) { 
                             return Image.asset(
                               "assets/img/placeholder.jpg",
                             );

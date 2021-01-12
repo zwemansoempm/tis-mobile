@@ -3,7 +3,7 @@ import 'package:tis/model/posts.dart';
 class NewsCategory {
   String catId;
   List<PostsModel> bigNews;
-  List<PostsModel> moreNews;
+  //List<PostsModel> moreNews;
   Cat cat;
   List<List<List<PostsModel>>> newsList;
 
@@ -13,7 +13,7 @@ class NewsCategory {
     this.catId,
     this.cat,
     this.bigNews,
-    this.moreNews,
+    //this.moreNews,
     this.error,
     this.newsList
   });
@@ -33,7 +33,7 @@ class NewsCategory {
     catId = json["cat_id"],
     cat = Cat.fromJson(json["cat"]),
     bigNews = (json["bigNews"] as List).map((e) => PostsModel.fromJson(e)).toList(),
-    moreNews = (json["moreNews"] as List).map((e) => PostsModel.fromJson(e)).toList(),
+    //moreNews = (json["moreNews"] as List).map((e) => PostsModel.fromJson(e)).toList(),
     newsList = (json["newslist"] as List).map((e) => 
       (e as List).map((f) => (f as List).map((g) => PostsModel.fromJson(g)).toList() ).toList() ).toList(),
     error="";
@@ -42,7 +42,7 @@ class NewsCategory {
       : catId = "",
         cat = new Cat(),
         bigNews = List(),
-        moreNews = List(),
+        //moreNews = List(),
         newsList = List(),
         error = errorValue;
 

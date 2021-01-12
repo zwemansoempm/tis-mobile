@@ -167,14 +167,14 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                   },childCount: snapshot.data.newsList[0][0].length)
                 ),
 
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index){
-                    final post = snapshot.data.moreNews[index];
+                // SliverList(
+                //   delegate: SliverChildBuilderDelegate((context, index){
+                //     final post = snapshot.data.moreNews[index];
                     
-                    return _item(post, null);
+                //     return _item(post, null);
                     
-                  },childCount: snapshot.data.moreNews.length)
-                ),
+                //   },childCount: snapshot.data.moreNews.length)
+                // ),
 
                 SliverPadding(
                   padding: EdgeInsets.only(bottom: 10),

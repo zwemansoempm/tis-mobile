@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_news_category_mobile_bloc.dart';
 import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/posts.dart';
@@ -82,11 +83,11 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                                       width: double.maxFinite,
                                       height: MediaQuery.of(context).size.height/3,
                                     ),
-                                    Positioned(
+                                    dateToStringFormat(DateTime.now()) == bigNews.createdAt.split(" ")[0] ? Positioned(
                                       top: 8,
                                       left: 8,
                                       child: _newLogo(Color(int.parse("0xff"+snapshot.data.cat.colorCode.replaceAll("#", ""))))
-                                    )
+                                    ) : Container()
                                   ]
                                 ),
                                 SizedBox(height: 8),
@@ -135,7 +136,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _newLogo(Color(int.parse("0xff"+snapshot.data.cat.colorCode.replaceAll("#", "")))),
+                              dateToStringFormat(DateTime.now()) == post.createdAt.split(" ")[0] ?_newLogo(Color(int.parse("0xff"+snapshot.data.cat.colorCode.replaceAll("#", "")))) : Container(),
                               Text(
                                 post.mainPoint,
                                 maxLines: 2,
@@ -243,7 +244,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                             },                                                                           
                           ),
                         ),
-                        color != null ? _newLogo(color) : Container(),
+                        dateToStringFormat(DateTime.now()) == post.createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                     ]),
                   ) :Image.asset(
                               "assets/img/placeholder.jpg",

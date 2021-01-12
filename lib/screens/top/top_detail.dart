@@ -206,15 +206,15 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                         } else if (snapshot.hasError) {
                                                   return Container();
                                         } else {
-                                                   return Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: CircularProgressIndicator()),
-                ]),
-            );//return buildLoadingWidget();
+                                                  return Container(
+                                                      child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [SizedBox(
+                                                          height: 35,
+                                                          width: 35,
+                                                          child: CircularProgressIndicator()),
+                                                      ]),
+                                                  );//return buildLoadingWidget();
                                         }
                                     }                                      
                                 )

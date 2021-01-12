@@ -79,7 +79,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                                   children: [
                                     Image.network("https://test.t-i-s.jp/upload/news/${bigNews.photo}",
                                       //fit: BoxFit.fitHeight,
-                                      width: double.minPositive,
+                                      width: double.maxFinite,
                                       height: MediaQuery.of(context).size.height/3,
                                     ),
                                     Positioned(

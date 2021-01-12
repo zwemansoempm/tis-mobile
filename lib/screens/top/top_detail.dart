@@ -205,7 +205,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                         } else if (snapshot.hasError) {
                                                   return Container();
                                         } else {
-                                                  return buildLoadingWidget(); //Container();//buildLoadingWidget();
+                                                  return buildLoadingWidget();
                                         }
                                     }                                      
                                 )

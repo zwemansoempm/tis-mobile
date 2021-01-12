@@ -190,7 +190,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           } else if (snapshot.hasError) {
                                                     return Container();
                                           } else {
-                                                    return Container();//buildLoadingWidget();
+                                                    return buildLoadingWidget();
                                           }
                                         }                                      
                                       )

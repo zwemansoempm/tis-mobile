@@ -190,7 +190,16 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           } else if (snapshot.hasError) {
                                                     return Container();
                                           } else {
-                                                    return buildLoadingWidget();
+                                                    return Container(
+                                                      height:MediaQuery.of(context).size.height/1.5,
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [SizedBox(
+                                                          height: 35,
+                                                          width: 35,
+                                                          child: CircularProgressIndicator()),
+                                                        ]),
+                                                    );//return buildLoadingWidget();
                                           }
                                         }                                      
                                       )

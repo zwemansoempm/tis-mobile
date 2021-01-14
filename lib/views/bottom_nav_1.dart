@@ -2,8 +2,102 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:tis/bloc/get_all_news_search_bloc.dart';
 import 'package:tis/bloc/get_hotnews_bloc.dart';
+import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
+import 'package:tis/bloc/get_medical_2_bloc.dart';
+import 'package:tis/bloc/get_postsnews_bloc.dart';
+// import 'package:tis/bloc/get_source_news_bloc.dart';
+import 'package:tis/elements/loader.dart';
+import 'package:tis/model/article.dart';
+import 'package:tis/model/article_response.dart';
+import 'package:tis/model/medical.dart';
+import 'package:tis/model/medical_response.dart';
+import 'package:tis/model/medical_response2.dart';
+import 'package:tis/model/posts.dart';
+import 'package:tis/model/posts_response.dart';
+import 'package:tis/screens/hospital/hospital_search.dart';
+// import 'package:tis/model/source.dart';
+import 'package:tis/screens/news_detail.dart';
+import 'package:tis/screens/tabs/tab_news_screen.dart';
+import 'package:tis/screens/top/top_detail.dart';
+import 'package:tis/views/nusingSearch.dart';
+import 'package:tis/views/search.dart';
+import 'package:tis/views/jobsearch.dart';
+import 'package:tis/views/settingScreen.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:html/parser.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'jobsearch.dart';
+import 'package:intl/intl.dart';
 
+class HomeWidget extends StatefulWidget {
+ final List<String> list=List.generate(20, (index) => "Textto $index");
+  @override
+  _BottomNav1State createState() => _BottomNav1State();//source
 
+}  
+
+class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderStateMixin { 
+
+  TabController _controller;
+  List<TabData> _tabData;
+  List<Tab> _tabs = []; 
+  Color _activeColor;  
+  
+  @override
+  void initState() {    
+    super.initState(); 
+    // double devprev=DevicePreview.of(context).mediaQuery.size.width;    
+    _tabData = [
+      TabData(title: '  トップ  ', color: Color(0xff287db4)),
+      TabData(title: '  病院・医療  ', color:Color(0xffd1281c)),
+      TabData(title: '  特養・介護  ', color:Color(0xff9579ef)),
+      TabData(title: '  有料老人ホーム  ', color: Color(0xff20d1de)),
+
+      TabData(title: '  訪問介護・看護  ', color: Color(0xffa3774a)),   
+      TabData(title: '  デイサービス  ', color: Color(0xffFDCE00)),
+      TabData(title: '  グループホーム  ', color: Color(0xff211E55)),
+      TabData(title: '  新型コロナ  ', color: Color(0xffA01C38)),
+      TabData(title: '  その他  ', color: Color(0xffAAAAAA)),
+      TabData(title: '  コラム  ', color: Color(0xff29905e)),
+    ];
+    _activeColor = _tabData.first.color;
+    _tabData.forEach((data) {
+      final tab = Tab(
+        child: PreferredSize(
+                  preferredSize: Size.fromWidth(150),
+                  child: Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                  color: data.color,
+              ),
+            child: Center(
+              child: Text(data.title,style: TextStyle(fontSize:15)),//(devprev==768 || (devprev>768 && devprev<1024 ))?20:(devprev>=1024)?24:15) 
+            ),
+          ),
+        ),
+      );
+      _tabs.add(tab);
+    });
+    _controller = TabController(vsync: this, length: _tabData.length)
+      ..addListener(() {
+        setState(() {
+          _activeColor = _tabData[_controller.index].color;
+        });
+      });
+    // getSourceNewsBloc..getSourceNews("abc-news");
+    getPostsNewsBloc..getPostsNews();
+    getLatestPostAllCatBloc..getLatestPostAllCat();
+    getAllNewsSearchBloc..getAllNewsSearch();
+    getMedical2Bloc..getMedical2();
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    // getSourceNewsBloc.drainStream();
+    getPostsNewsBloc.drainStream();
+    getLatestPostAllCatBloc.drainStream();
+    getAllNewsSearchBloc.drainStream();
     getMedical2Bloc.drainStream();
     super.dispose();
   }  
@@ -30,8 +124,7 @@ import 'package:tis/bloc/get_hotnews_bloc.dart';
                     ),
                     centerTitle: true,
                     title: Row(
-                      
-                      AxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[ 
                           SizedBox(
                             child: new IconButton(                  
@@ -151,7 +244,6 @@ import 'package:tis/bloc/get_hotnews_bloc.dart';
                           HospitalSearch(),
                           Center(child: Text("")),
                           Center(child: Text("")),
-                          // Center(child: Text("")),
                           Center(child: Text("")),
                           Center(child: Text("")),
                           Center(child: Text("")),

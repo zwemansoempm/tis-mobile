@@ -94,9 +94,7 @@ class _SendCompletelyState extends State<SendCompletely> {
             Center(
               child: RaisedButton(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> SendCompletely()));
-                },
+                onPressed: () {},
                 color: Colors.blue[300],
                 textColor: Colors.white,
                 child: Text('確認ページに進む', style: TextStyle(fontSize: 16,)),

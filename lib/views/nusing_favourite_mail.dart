@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tis/views/send_completely.dart';
 
 class NusingMail extends StatefulWidget {
 
@@ -169,7 +170,6 @@ class _NusingMailState extends State<NusingMail> {
                 ),
                 _itemHeader("性別"),
                 Container(
-                  padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey)
                   ),
@@ -179,6 +179,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('男性'),
                         value: 1,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) {
                           setSelectedRadio(val);
@@ -188,6 +189,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('女性'),
                         value: 2,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
@@ -195,6 +197,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('夫婦'),
                         value: 3,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
@@ -244,11 +247,10 @@ class _NusingMailState extends State<NusingMail> {
                       ),
                       SizedBox(height: 10.0),
                       Container(
-                      //padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.white,
-                        border: Border.all()),
+                        border: Border.all(color: Colors.grey)),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton(
                             isExpanded: true,
@@ -281,7 +283,6 @@ class _NusingMailState extends State<NusingMail> {
                       ),
                       SizedBox(height: 10.0),
                       Container(
-                      //padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.white,
@@ -463,7 +464,6 @@ class _NusingMailState extends State<NusingMail> {
                 ),
                 _itemHeader("性別"),
                 Container(
-                  padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey)
                   ), 
@@ -473,6 +473,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('男性'),
                         value: 1,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) {
                           setSelectedRadio(val);
@@ -482,6 +483,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('女性'),
                         value: 2,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
@@ -489,6 +491,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('夫婦'),
                         value: 3,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
@@ -565,7 +568,6 @@ class _NusingMailState extends State<NusingMail> {
                 _itemHeader("認知症"),
                 
                 Container(
-                  padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey)
                   ), 
@@ -575,6 +577,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('あり'),
                         value: 1,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) {
                           setSelectedRadio(val);
@@ -584,6 +587,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('なし'),
                         value: 2,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
@@ -591,6 +595,7 @@ class _NusingMailState extends State<NusingMail> {
                         //contentPadding: EdgeInsets.zero,
                         title: const Text('わからない'),
                         value: 3,
+                        dense: true,
                         groupValue: selectedRadio,
                         onChanged: (val) { setSelectedRadio(val); },
                       ),
@@ -630,7 +635,7 @@ class _NusingMailState extends State<NusingMail> {
                     RaisedButton(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       onPressed: () {
-                        //Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingMail()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> SendCompletely()));
                       },
                       color: Colors.green,
                       textColor: Colors.white,

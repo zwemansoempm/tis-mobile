@@ -26,10 +26,12 @@ import 'package:flutter/widgets.dart';
 class CustomApp {
   CustomApp._();
 
-  static const _kFontFam = 'CustomApp';
+  static const _kFontFam = 'CustomApp'; 
   static const _kFontPkg = null;
 
-  static const IconData newspaper = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData arrows_ccw = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData newspaper_1 = IconData(0xf1ea, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData users = IconData(0xf0c0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData user_md = IconData(0xf0f0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData newspaper = IconData(0xf1ea, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData briefcase_medical = IconData(0xf469, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
+

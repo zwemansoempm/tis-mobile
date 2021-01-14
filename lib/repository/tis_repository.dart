@@ -3,16 +3,32 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/medical_response2.dart';
+import 'package:tis/model/newsCategory.dart';
+import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/posts_response.dart';
+import 'package:tis/model/posts_response2.dart';
 
 class NewsRepository{
    static String mainUrl="https://test.t-i-s.jp/api";
 
     final Dio _dio=Dio();
-
+   
     var getPostsUrl="$mainUrl/posts";
     var getLatestPostAllCatUrl="$mainUrl/get_latest_post_all_cat";
     var getAllNewsSearchUrl="$mainUrl/get_latest_posts_by_catId/all_news_search";
+    var getRelatedNewsUrl="$mainUrl/relatednews";
+    var getNewsDetailsUrl="$mainUrl/newdetails";
+    var getHomeUrl = "$mainUrl/home";
+
+    Future<NewsCategory> getNewscategorymobile() async {
+      try {
+        Response response = await _dio.get("$mainUrl/newscategorymobile/1");
+        return NewsCategory.fromJson(response.data);
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        return NewsCategory.withError("$error");
+      }
+    }
 
     Future<PostsResponse> getPostsNews() async {
       var params = {
@@ -63,6 +79,25 @@ class NewsRepository{
         print("Exception occured: $error stackTrace: $stacktrace");
         return MedicalResponse2.withError("$error");
       }
-    }
+    } 
+
+    Future<PostsResponse2> getRelatedNews(String id) async {         
+      try {
+        Response response = await _dio.get(getRelatedNewsUrl+"/"+id);         
+        return PostsResponse2.fromJson(response.data);
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        return PostsResponse2.withError("$error");
+      }
+  }
+    Future<NewdetailsResponse> getNewsDetails(String id) async {         
+      try {
+        Response response = await _dio.get(getNewsDetailsUrl+"/"+id);         
+        return NewdetailsResponse.fromJson(response.data);
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        return NewdetailsResponse.withError("$error");
+      }
+  }  
 
 }

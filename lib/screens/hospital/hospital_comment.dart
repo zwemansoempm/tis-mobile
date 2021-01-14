@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tis/views/comment_completely.dart';
 
-class NusingComment extends StatefulWidget {
+class HospitalComment extends StatefulWidget {
   @override
-  _NusingCommentState createState() => _NusingCommentState();
+  _HospitalCommentState createState() => _HospitalCommentState();
 }
 
-class _NusingCommentState extends State<NusingComment> {
+class _HospitalCommentState extends State<HospitalComment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,7 +230,6 @@ class _NusingCommentState extends State<NusingComment> {
                           RaisedButton(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             onPressed: () {
-                              //Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingMail()));
                               Navigator.pop(context);
                             },
                             color: Colors.redAccent,

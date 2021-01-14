@@ -9,7 +9,7 @@ Widget buildLoadingWidget() {
         SizedBox(
                       height: 35.0,
                       width: 35.0,
-                      child:CircularProgressIndicator(),// CupertinoActivityIndicator(),
+                      child:CircularProgressIndicator(),//   CupertinoActivityIndicator(),
         ),
         SizedBox(
           height: 10,

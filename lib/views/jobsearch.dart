@@ -1,15 +1,184 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:tis/views/jobdetail.dart';
+// import 'package:tis/views/multiselect.dart';
 
-class JobType {
-  String title;
-  bool value;
+class MultiSelectDialogItem<V> {
+  const MultiSelectDialogItem(this.value, this.label);
 
-  JobType({
-    @required this.title,
-    this.value = false,
-  });
+  final V value;
+  final String label;
+}
+
+class MultiSelectDialog<V> extends StatefulWidget {
+  MultiSelectDialog({Key key, this.items, this.initialSelectedValues}) : super(key: key);
+
+  final List<MultiSelectDialogItem<V>> items;
+  final Set<V> initialSelectedValues;
+
+  @override
+  State<StatefulWidget> createState() => _MultiSelectDialogState<V>();
+}
+
+class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
+  final _selectedValues = Set<V>();
+
+  void initState() {
+    super.initState();
+    if (widget.initialSelectedValues != null) {
+      _selectedValues.addAll(widget.initialSelectedValues);
+    }
+  }
+
+  void _onItemCheckedChange(V itemValue, bool checked) {
+    setState(() {
+      if (checked) {
+        _selectedValues.add(itemValue);
+      } else {
+        _selectedValues.remove(itemValue);
+      }
+    });
+  }
+
+  void _onCancelTap() {
+    Navigator.pop(context);
+  }
+
+  void _onSubmitTap() {
+    Navigator.pop(context, _selectedValues);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Select Item'),
+      contentPadding: EdgeInsets.only(top: 12.0),
+      content: SingleChildScrollView(
+        child: ListTileTheme(
+          contentPadding: EdgeInsets.fromLTRB(14.0, 0.0, 24.0, 0.0),
+          child: ListBody(
+            children: widget.items.map(_buildItem).toList(),
+          ),
+        ),
+        
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('CANCEL'),
+          onPressed: _onCancelTap,
+        ),
+        FlatButton(
+          child: Text('OK'),
+          onPressed: _onSubmitTap,
+        )
+      ],
+    );
+  }
+
+  Widget _buildItem(MultiSelectDialogItem<V> item) {
+    final checked = _selectedValues.contains(item.value);
+    return CheckboxListTile(
+      value: checked,
+      title: Text(item.label),
+      controlAffinity: ListTileControlAffinity.leading,
+      onChanged: (checked) => _onItemCheckedChange(item.value, checked),
+    );
+  }
+}
+
+
+class Checkbox extends StatefulWidget {
+  @override
+  _CheckboxState createState() => _CheckboxState();
+}
+
+class _CheckboxState extends State<Checkbox> {
+
+  String value = "";
+
+  List <MultiSelectDialogItem<int>> multiItem = List();
+
+  final valuestopopulate = {
+    1 : "One",
+    2 : "Two",
+    3 : "Three",
+    4 : "Four",
+  };
+
+  var selectedValues;
+
+  void populateMultiselect(){
+    for(int v in valuestopopulate.keys){
+      multiItem.add(MultiSelectDialogItem(v, valuestopopulate[v]));
+    }
+  }
+
+    void _showMultiSelect(BuildContext context) async {
+      multiItem = [];
+      populateMultiselect();
+      final items = multiItem;
+
+    final selectedValues = await showDialog<Set<int>>(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelectDialog(
+          items: items,
+        );
+      },
+    );
+
+    print(selectedValues);
+    getvaluefromkey(selectedValues);
+  }
+
+  void getvaluefromkey(Set selection){
+    if(selection != null){
+      for(int x in selection.toList()){
+        print(valuestopopulate[x]);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical:8.0, horizontal: 20),
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+            
+        children: <Widget>[
+
+              
+          RaisedButton(
+            color: Colors.grey[200],
+                
+            // icon: Icon(Icons.arrow_drop_down_rounded),
+            child: Column(
+                  
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:8.0, vertical: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(child: Text("医療技術職", style: TextStyle(fontSize: 18),)),
+                      Icon(Icons.arrow_drop_down, size: 30),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+            onPressed: () => _showMultiSelect(context),
+          ),
+
+        ],
+      ),
+    );
+  }
 }
 
 class JobSearch extends StatefulWidget {
@@ -19,12 +188,39 @@ class JobSearch extends StatefulWidget {
 }
 
 class _JobSearchState extends State<JobSearch> {
-  final occupation = [
-    JobType(title: '正社員(正職員) '),
-    JobType(title: '契約社員(職員) '),
-    JobType(title: '非常勤/パート '),
-    JobType(title: 'その他 ')
-  ];
+
+  String dropdownValue = '市区町村';
+
+  // To show Selected Item in Text.
+  String holder = '' ;
+
+  List <String> items = [
+    '市区町村', 
+    '北海道', 
+    '青森県', 
+    '岩手県', 
+    '宮城県'
+    ] ;
+
+  String dropdownValue1 = '市区町村';
+
+  // To show Selected Item in Text.
+  String holder1 = '' ;
+
+  List <String> items1 = [
+    '市区町村', 
+    '北海道', 
+    '青森県', 
+    '岩手県', 
+    '宮城県'
+    ] ;
+
+  void getDropDownItem(){
+
+    setState(() {
+      holder = dropdownValue ;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +262,7 @@ class _JobSearchState extends State<JobSearch> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.blue,
                 ),
                 width: 6.0,
                 height: 40.0,
@@ -75,7 +271,7 @@ class _JobSearchState extends State<JobSearch> {
                 width: MediaQuery.of(context).size.width - 25.0,
                 padding: EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: Colors.grey[100],
                 ),
                 child: Text(
                   '現在の検索条件',
@@ -125,22 +321,6 @@ class _JobSearchState extends State<JobSearch> {
             // color: Colors.amber[300],
             child: Column(
               children: [
-                Container(
-                  color: Colors.grey[300],
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, top: 10.0, bottom: 10),
-                        child: Text(
-                          '地域',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 // SizedBox(
                 //   child: Divider(
                 //     color: Colors.grey[300],
@@ -151,44 +331,18 @@ class _JobSearchState extends State<JobSearch> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 20.0),
-                      child: _dropDownBox("Testing"),
+                          horizontal: 15.0, vertical: 10.0),
+                      child: _buildSelectDropdown(),
                     ),
                   ],
                 ),
 
-                
-
-                // SizedBox(
-                //   child: Divider(
-                //     color: Colors.grey[300],
-                //     thickness: 0.9,
-                //   ),
-                // ),
-                Container(
-                  color: Colors.grey[300],
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, top: 10.0, bottom: 10.0),
-                        child: Text(
-                          '職種',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  
-                ),
                 Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 20.0),
-                      child: _dropDownCheckBox("Select"),
+                          horizontal: 15.0, vertical: 10.0),
+                      child: _buildSelectbox(),
                     ),
                   ],
                 ),
@@ -204,41 +358,52 @@ class _JobSearchState extends State<JobSearch> {
                     thickness: 0.9,
                   ),
                 ),
+
                 Container(
-                  color: Colors.grey[300],
+                  // color: Colors.grey[300],
                   child: Row(
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 10.0, top: 10.0, bottom: 10.0),
                         child: Text(
-                          '雇用形態',
+                          '職種',
                           style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
                   ),
                 ),
-                // SizedBox(
-                //   child: Divider(
-                //     color: Colors.grey[300],
-                //     thickness: 0.9,
-                //   ),
-                // ),
 
-                Column(
-                  children: [
-                    ...occupation.map(buildJobCheckbox).toList(),
-                    // Center(
-                    //   child: ListView(
-                    //       children: [
-                    //         // ...occupation.map(buildJobCheckbox).toList(),
-                    //       ],
-                    //     ),
-                    // )
-                  ],
-                )
+                SizedBox(
+                  child: Divider(
+                    color: Colors.grey[300],
+                    thickness: 0.9,
+                  ),
+                ),
+
+                // For Checkbox, selected values are displayed on Debug Console
+
+                Checkbox(),
+
+                Checkbox(),
+
+                Checkbox(),
+
+                Checkbox(),
+
+                SizedBox(
+                  child: Divider(
+                    color: Colors.grey[300],
+                    thickness: 0.9,
+                  ),
+                ),
+                
+                Padding(
+                  padding: const EdgeInsets.only(bottom:8.0),
+                  child: Checkbox(),
+                ),
               ],
             ),
           ),
@@ -251,18 +416,22 @@ class _JobSearchState extends State<JobSearch> {
                 onPressed: () {},
                 color: Colors.green,
                 textColor: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.search,
-                      size: 22.0,
-                    ),
-                    Text('検索',
-                        style: TextStyle(
-                          fontSize: 16,
-                        )),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.search,
+                        size: 22.0,
+                      ),
+                      SizedBox(width: 5,),
+                      Text('検索',
+                          style: TextStyle(
+                            fontSize: 16,
+                          )),
+                    ],
+                  ),
                 )),
           ),
           Container(
@@ -288,15 +457,17 @@ class _JobSearchState extends State<JobSearch> {
 
                 InkWell(
                   child: Text(
-                    '介護職【正社員】アスモ介護サービス薬園台',
+                    '介護職【正社員】アスモ介護サービス薬園台(船橋薬園台)★未経験の方も安心!',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                      // decoration: TextDecoration.underline,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    
+                  },
                 ),
 
                 // Text('介護職【正社員】アスモ介護サービス薬園台',
@@ -311,8 +482,13 @@ class _JobSearchState extends State<JobSearch> {
                 Card(
                   margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
                   color: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Colors.black),
+                      borderRadius: BorderRadius.circular(5),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                     child: Text(
                       "正職員",
                       style: TextStyle(color: Colors.white),
@@ -320,26 +496,9 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Divider(thickness: 1),
+                Divider(thickness: 2),
 
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
+                _buildColumnOne(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -355,21 +514,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
+                _buildColumnTwo(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -388,21 +533,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
+                _buildColumnThree(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -421,23 +552,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
+                _buildColumnFour(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -458,20 +573,40 @@ class _JobSearchState extends State<JobSearch> {
 
                 Container(
                   margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   child: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => JobDetail()),
+                        );
+                      },
+                      color: Colors.blue,
                       textColor: Colors.white,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          // InkWell(
+                          //   child:  Text('詳細を見る',
+                          //      style: TextStyle(
+                          //       fontSize: 16,
+                          //      )),
+                          //   onTap: (){
+                          //     // Navigator.push(context, MaterialPageRoute(builder: (context)=> JobDetail()));
+                          //       //  Navigator.push(context, MaterialPageRoute(builder: (context)=> TestCB()));
+                          //   },
+                          // ),
+
                           Text('詳細を見る',
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.white,
                               )),
+
+                          
+
                         ],
                       )),
                 ),
@@ -502,12 +637,11 @@ class _JobSearchState extends State<JobSearch> {
 
                 InkWell(
                   child: Text(
-                    '介護職【正社員】アスモ介護サービス三鷹(三',
+                    '介護職【正社員】アスモ介護サービス薬園台(船橋薬園台)★未経験の方も安心!',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
+                      color: Colors.black,
                     ),
                   ),
                   onTap: () {},
@@ -536,24 +670,7 @@ class _JobSearchState extends State<JobSearch> {
 
                 Divider(thickness: 1),
 
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
+                _buildColumnOne(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -569,21 +686,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
+                _buildColumnTwo(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -602,21 +705,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
+                _buildColumnThree(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -635,23 +724,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
+                _buildColumnFour(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -672,12 +745,17 @@ class _JobSearchState extends State<JobSearch> {
 
                 Container(
                   margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   child: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => JobDetail()),
+                        );
+                      },
+                      color: Colors.blue,
                       textColor: Colors.white,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -716,12 +794,11 @@ class _JobSearchState extends State<JobSearch> {
 
                 InkWell(
                   child: Text(
-                    '介護タクシードライバー【正社員】アスモ介護',
+                    '介護職【正社員】アスモ介護サービス薬園台(船橋薬園台)★未経験の方も安心!',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
+                      color: Colors.black,
                     ),
                   ),
                   onTap: () {},
@@ -750,24 +827,7 @@ class _JobSearchState extends State<JobSearch> {
 
                 Divider(thickness: 1),
 
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
+                _buildColumnOne(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -783,21 +843,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
+                _buildColumnTwo(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -816,21 +862,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
+                _buildColumnThree(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -849,23 +881,7 @@ class _JobSearchState extends State<JobSearch> {
                   ),
                 ),
 
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
+                _buildColumnFour(),
 
                 Container(
                   decoration: BoxDecoration(
@@ -886,2533 +902,29 @@ class _JobSearchState extends State<JobSearch> {
 
                 Container(
                   margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   child: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0002-0007"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '介護タクシードライバー【正社員】アスモ介護',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "正職員",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "京王線 仙川駅(中原小学校前バス停　下車　徒歩4分)",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "月給231,000円～250,000円 ( 運行手当含む 別途、夏季・冬季賞与　(約2ヶ月分) ) ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "（早番）7：00～16：00 (休憩1時間)（日勤）9：00～18：00 (休憩1時間) （遅番）10：00～19：00 (休憩1時間) ※時間外勤務有り 月平均10時間 / 月公休9日（2月16日～3月15日のシフトのみ8日とする） 年間休日111日 夏期休暇 冬期休暇 ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "業績手当10,000円~25,000円、年末年始手当、時間外勤務手当、資格手当 ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0004-0008"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '介護職【正社員】アスモ介護サービス釜利谷(金沢文庫Ⅱ)★未経験の方も安心!',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "正職員",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "京急本線「金沢文庫駅」徒歩4分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "月給24万3500円～28万7500円 ( 夜勤手当5回分と諸手当含む 別途、夏季・冬季賞与　(約2ヶ月分) ) ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "日勤／7:00～16:00（休憩1時間）　9:00～18:00（休憩1時間）　10:00～19:00（休憩1時間）　夜勤／16:00～翌10:00（休憩2時間） / 月公休9日（2月16日～3月15日のシフトのみ8日とする） 年間休日111日 夏期休暇 冬期休暇",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "夜勤手当、業績手当10,000円~25,000円、年末年始手当、時間外勤務手当、資格手当 交通費支給費：月2万1000円まで ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0004-0009"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '夜勤専門介護職【パート】アスモ介護サービス釜利谷(金沢文庫Ⅱ)★未経験の',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "正職員",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "京急本線「金沢文庫駅」徒歩4分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "時給1,130～1,270円＋6500円（夜勤手当）/1勤務 ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "16:00～翌10:00（休憩2時間） ※月に5～10回ほど入って頂ける方 　日数・曜日ご相談下さい。 / 週１日～OK! ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "夜勤手当、年末年始手当、資格手当 交通費支給費：月2万1000円まで",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0006-0010"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '介護職【正社員】アスモ介護サービス桜木(都賀)★未経験の方も安心!',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "正職員",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "千葉都市モノレール「桜木駅」徒歩13分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "月給24万3500円～28万7500円 ( 夜勤手当5回分と諸手当含む 別途、夏季・冬季賞与　(約2ヶ月分) ) ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "日勤／7:00～16:00（休憩1時間）　9:00～18:00（休憩1時間）　10:00～19:00（休憩1時間）　夜勤／16:00～翌10:00（休憩2時間） / 月公休9日（2月16日～3月15日のシフトのみ8日とする） 年間休日111日 夏期休暇 冬期休暇",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "夜勤手当、業績手当10,000円~25,000円、年末年始手当、時間外勤務手当、資格手当 交通費支給費：月2万1000円まで ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0006-0011"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '日勤介護職【正社員】アスモ介護サービス桜木(都賀)　★夜勤なし!',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "正職員",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "千葉都市モノレール「桜木駅」徒歩13分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "月給20万2000円～23万1000円 ( 諸手当含む 別途、夏季・冬季賞与　(約2ヶ月分) ) ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "日勤／7:00～16:00（休憩1時間）　9:00～18:00（休憩1時間）　10:00～19:00（休憩1時間） / 月公休9日（2月16日～3月15日のシフトのみ8日とする） 年間休日111日 夏期休暇 冬期休暇 ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "業績手当10,000円~25,000円、年末年始手当、時間外勤務手当、資格手当 交通費支給費：月2万1000円まで ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0006-0012"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '介護スタッフ【パート】アスモ介護サービス桜木(都賀)★未経験の方も安心!',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "非常勤",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "千葉都市モノレール「桜木駅」徒歩13分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "時給1,130～1,270円",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "早番／ 7:00～16:00 (休憩1時間) 中番／ 9:00～18:00 (休憩1時間) 遅番／10:00～19:00 (休憩1時間) ☆上記以外の時間帯もＯＫ！ 　１日４時間～ご相談に応じます。 ☆週１日～勤務日数・曜日ご相談に応じます / 週１日～OK! ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "夜勤手当、年末年始手当、資格手当 交通費支給費：月2万1000円まで ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0005-0013"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '介護スタッフ【パート】アスモ介護サービス鳩ヶ谷(鳩ヶ谷)★未経験の方も安心！',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "非常勤",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "埼玉高速鉄道「鳩ヶ谷駅」徒歩10分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "時給1,130～1,270円 ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "早番／ 7:00～16:00 (休憩1時間) 中番／ 9:00～18:00 (休憩1時間) 遅番／10:00～19:00 (休憩1時間) ☆上記以外の時間帯もＯＫ！ 　１日４時間～ご相談に応じます。 ☆週１日～勤務日数・曜日ご相談に応じます / 週１日～OK!",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "夜勤手当、年末年始手当、資格手当 交通費支給費：月2万1000円まで ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0003-0014"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '介護職【正社員】アスモ介護サービス豊中(豊中)★未経験の方も安心！',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "正職員",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "大阪モノレール「小路駅」徒歩10分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "月給23万3500円～27万7500円 ( 夜勤手当5回分と諸手当含む 別途、夏季・冬季賞与　(約2ヶ月分) )",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "日勤／7:00～16:00（休憩1時間）　9:00～18:00（休憩1時間）　10:00～19:00（休憩1時間）　夜勤／16:00～翌10:00（休憩2時間） / 月公休9日（2月16日～3月15日のシフトのみ8日とする） 年間休日111日 夏期休暇 冬期休暇 ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "夜勤手当、業績手当10,000円~25,000円、年末年始手当、時間外勤務手当、資格手当 交通費支給費：月2万1000円まで ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0003-0015"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '日勤介護職【正社員】アスモ介護サービス豊中(豊中)　★夜勤なし!',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "正職員",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "大阪モノレール「小路駅」徒歩10分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "月給19万2000円～22万1000円",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "日勤／7:00～16:00（休憩1時間）　9:00～18:00（休憩1時間）　10:00～19:00（休憩1時間）　夜勤／16:00～翌10:00（休憩2時間） / 月公休9日（2月16日～3月15日のシフトのみ8日とする） 年間休日111日 夏期休暇 冬期休暇 ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "業績手当10,000円~25,000円、年末年始手当、時間外勤務手当、資格手当 交通費支給費：月2万1000円まで ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500009-0003-0016"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '介護スタッフ【パート】アスモ介護サービス豊中(豊中)★未経験の方も安心！',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "非常勤",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "大阪モノレール「小路駅」徒歩10分",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "時給1,080～1,220円",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "早番／ 7:00～16:00 (休憩1時間) 中番／ 9:00～18:00 (休憩1時間) 遅番／10:00～19:00 (休憩1時間) ☆上記以外の時間帯もＯＫ！ 　１日４時間～ご相談に応じます。 ☆週１日～勤務日数・曜日ご相談に応じます / 週１日～OK! ",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "夜勤手当、年末年始手当、資格手当 交通費支給費：月2万1000円まで",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text("求人番号:500021-0001-0017"),
-                ),
-
-                InkWell(
-                  child: Text(
-                    '仕事',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-
-                // Text('介護職【正社員】アスモ介護サービス薬園台',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.grey,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
-
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10.0),
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "その他",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-
-                Divider(thickness: 1),
-
-                Container(
-                    margin: EdgeInsets.only(top: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("最寄り駅"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      "",
-                      style: TextStyle(
-                          // fontSize: 16,
-                          ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("¥",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("給料"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "23232",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Text("時",
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      ),
-                      title: Text("就業時間/休日休暇"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "dsadsa",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[500], width: 1.0),
-                      color: Colors.grey[300],
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        foregroundColor: Colors.black,
-                        radius: 18.0,
-                        backgroundColor: Colors.grey[200],
-                        child: Icon(
-                          Icons.cases,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      title: Text("特別な条件"),
-                    )),
-
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[500], width: 1.0),
-                  ),
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        "",
-                        style: TextStyle(
-                            // fontSize: 14,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                  child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      onPressed: () {},
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('詳細を見る',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            margin: EdgeInsets.only(top:10.0),
-
-            child: Row(
-              
-              children: [
-                
-                SizedBox(
-                  width: 10.0,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                  ),
-                  width: 6.0,
-                  height: 40.0,
-                ),
-                Container(
-                  height: 40.0,
-                  width: MediaQuery.of(context).size.width - 25.0,
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                  ),
-                  child: Text(
-                    'NEWS',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-
-
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Row(
-              children: [
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
-                  onPressed: () {},
-                  color: Colors.grey,
-                  child: Center(
-                    child: Text(
-                      "2020 年",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Row(children: [
-              Text(
-                "2020-06-18",
-                style: TextStyle(
-                  fontSize: 14,
-                  // fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 20.0),
-              Card(
-                color: Colors.blue,
-                child: Container(
-                    margin:
-                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                    child: Text(
-                      "お知らせ",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    )),
-              ),
-            ]),
-          ),
-          SizedBox(height: 5.0),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  Text(
-                    "aaaaaaaaaaaaaaaaaaaaaaaavvvvvvvvvvvvvvvvvvvvvvvvvvvvmmmmmmmmmmmmmmmm",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    "こちら",
-                    style: TextStyle(
-                      fontSize: 14,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => JobDetail()),
+                        );
+                      },
                       color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ],
-              )),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            child: SizedBox(
-              height: 30.0,
-              child: Divider(
-                color: Colors.black,
-                thickness: 0.5,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Row(children: [
-              Text(
-                "2020-06-18",
-                style: TextStyle(
-                  fontSize: 14,
-                  // fontWeight: FontWeight.bold,
+                      textColor: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('詳細を見る',
+                              style: TextStyle(
+                                fontSize: 16,
+                              )),
+                        ],
+                      )),
                 ),
-              ),
-              SizedBox(width: 20.0),
-              Card(
-                color: Colors.blue,
-                child: Container(
-                    margin:
-                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                    child: Text(
-                      "お知らせ",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    )),
-              ),
-            ]),
-          ),
-          SizedBox(height: 5.0),
-          Container(
-            margin: EdgeInsets.only(top: 10, bottom: 20),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16,),
-              child: Text(
-                "jb search",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              ],
             ),
           ),
         ],
@@ -3420,131 +932,271 @@ class _JobSearchState extends State<JobSearch> {
     );
   }
 
-  Widget buildJobCheckbox(JobType jobtype) => buildCheckbox(
-      jobtype: jobtype,
-      onClicked: () {
-        setState(() {
-          final occupation = !jobtype.value;
-          jobtype.value = occupation;
-        });
-      });
+  // Widget buildJobCheckbox(JobType jobtype) => buildCheckbox(
+  //     jobtype: jobtype,
+  //     onClicked: () {
+  //       setState(() {
+  //         final occupation = !jobtype.value;
+  //         jobtype.value = occupation;
+  //       });
+  //     });
 
-  Widget buildCheckbox({
-    @required JobType jobtype,
-    @required VoidCallback onClicked,
-  }) =>
-      ListTile(
-        onTap: onClicked,
-        leading: Transform.scale(
-          scale: 0.8,
-          child: Checkbox(
-            checkColor: Colors.white,
-            value: jobtype.value,
-            onChanged: (value) => onClicked(),
-          ),
-        ),
-        title: Text(
-          jobtype.title,
-          style: TextStyle(
-            fontSize: 14,
-          ),
-        ),
-      );
+  // Widget buildCheckbox({
+  //   @required JobType jobtype,
+  //   @required VoidCallback onClicked,
+  // }) =>
+  //     ListTile(
+  //       onTap: onClicked,
+  //       leading: Transform.scale(
+  //         scale: 0.8,
+  //         child: Checkbox(
+  //           checkColor: Colors.white,
+  //           value: jobtype.value,
+  //           onChanged: (value) => onClicked(),
+  //         ),
+  //       ),
+  //       title: Text(
+  //         jobtype.title,
+  //         style: TextStyle(
+  //           fontSize: 14,
+  //         ),
+  //       ),
+  //     );
 
-  Widget _dropDownBox(String hintText) {
+  Widget _buildColumnOne (){
     return Container(
-      //padding: EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          color: Colors.grey[200],
-          border: Border.all(color: Colors.grey[300])),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton(
-            isExpanded: true,
-            //value: _value,
-            hint: Row(
-              children: [
-                Icon(
-                  Icons.arrow_drop_down_outlined,
-                  size: 35.0,
-                ),
-                Text(hintText),
-              ],
-            ),
-            items: [
-              DropdownMenuItem(
-                child: Text("First Item"),
-                value: 1,
-              ),
-              DropdownMenuItem(
-                child: Text("Second Item"),
-                value: 2,
-              ),
-              DropdownMenuItem(child: Text("Third Item"), value: 3),
-              DropdownMenuItem(child: Text("Fourth Item"), value: 4)
-            ],
-            onChanged: (value) {
-              setState(() {
-                //_value = value;
-              });
-            }),
+    margin: EdgeInsets.only(top: 12.0),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey[500], width: 1.0),
+      color: Colors.grey[200],
+    ),
+    child: ListTile(
+      leading: CircleAvatar(
+        foregroundColor: Colors.black,
+        radius: 18.0,
+        backgroundColor: Colors.grey[200],
+        child: Icon(
+          Icons.location_on,
+          color: Colors.red,
+        ),
       ),
+      title: Text('最寄り駅', style: TextStyle(
+        fontWeight: FontWeight.bold,
+      ),),
+    ));
+  }
+
+  Widget _buildColumnTwo(){
+    return Container(
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey[500], width: 1.0),
+      color: Colors.grey[200],
+    ),
+    child: ListTile(
+      leading: CircleAvatar(
+                        
+        foregroundColor: Colors.black,
+        radius: 18.0,
+        backgroundColor: Colors.grey[200],
+                        
+        child: Text("¥",
+            style: TextStyle(fontSize: 20, color: Colors.grey[600])),
+      ),
+      title: Text("給料", style: TextStyle(
+        fontWeight: FontWeight.bold,
+      )),
+    ));
+  }
+
+  Widget _buildColumnThree(){
+    return Container(
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey[500], width: 1.0),
+      color: Colors.grey[200],
+    ),
+    child: ListTile(
+      leading: CircleAvatar(
+        foregroundColor: Colors.black,
+        radius: 18.0,
+        backgroundColor: Colors.grey[200],
+        // child: Text("時",
+        //     style: TextStyle(fontSize: 20, color: Colors.blue)),
+      ),
+      title: Text("就業時間/休日休暇", style: TextStyle(
+      fontWeight: FontWeight.bold,
+    )),
+    )
     );
   }
 
-  Widget _dropDownCheckBox(String hintText){
+  Widget _buildColumnFour(){
     return Container(
-      //padding: EdgeInsets.all(5.0),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey[500], width: 1.0),
+      color: Colors.grey[200],
+    ),
+    child: ListTile(
+      leading: CircleAvatar(
+        foregroundColor: Colors.black,
+        radius: 18.0,
+        backgroundColor: Colors.grey[200],
+        // child: Icon(
+        //   Icons.home_repair_service,
+        //   color: Colors.blue,
+        // ),
+      ),
+      title: Text("特別な条件", style: TextStyle(
+      fontWeight: FontWeight.bold,
+    )),
+    ));
+  }
+
+  Widget _buildSelectDropdown(){
+    return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+
+    Container(
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          color: Colors.grey[200],
-          border: Border.all(color: Colors.grey[300])),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton(
-            isExpanded: true,
-            //value: _value,
-            hint: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0),
-                  child: Text(hintText),
+      borderRadius: BorderRadius.circular(5.0),
+      color: Colors.grey[200],
+      border: Border.all(color: Colors.grey[300])),
+            
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Icon(Icons.arrow_drop_down, size: 30,),
+                  
+            Expanded(
+                                child: DropdownButton<String>(
+                      
+                itemHeight: 50,
+                dropdownColor: Colors.grey[100],
+                value: dropdownValue,
+                icon: Icon(Icons.arrow_drop_down),
+                iconSize: 0,
+                elevation: 16,
+                style: TextStyle(color: Colors.black, fontSize: 18),
+                underline: Container(
+                  height: 0,
                 ),
+                onChanged: (String data) {
+                  setState(() {
+                    holder = data;
+                    dropdownValue = data;
+                  });
+                },
+                items: items.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            Column(
+              children: [
+                Icon(Icons.arrow_drop_up, size: 20,),
+                Icon(Icons.arrow_drop_down, size: 20,),
+
               ],
             ),
-            items: [
-                 
-              DropdownMenuItem(
-                child: Text("Second Item"),
-                value: 2,
-              ),
-              DropdownMenuItem(
-                child: Text("Third Item"),
-                value: 3
-              ),
-              DropdownMenuItem(
-                  child: Text("Fourth Item"),
-                  value: 4
-              )
-            ],
-            onChanged: (value) {
-              setState(() {
-                //_value = value;
-              });
-            }),
+
+
+
+          ],
+        ),
       ),
-    );
+    ),
+    SizedBox(height: 20,),
+          
+      //Printing Item on Text Widget 
+      Text('Selected Item = ' + '$holder', 
+      style: TextStyle
+          (fontSize: 12, 
+          color: Colors.black)),
+
+    ]);
   }
+
+  Widget _buildSelectbox(){
+    return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+
+    Container(
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(5.0),
+      color: Colors.grey[200],
+      border: Border.all(color: Colors.grey[300])),
+            
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Icon(Icons.arrow_drop_down, size: 30,),
+                  
+            Expanded(
+                                child: DropdownButton<String>(
+                      
+                itemHeight: 50,
+                dropdownColor: Colors.grey[100],
+                value: dropdownValue1,
+                icon: Icon(Icons.arrow_drop_down),
+                iconSize: 0,
+                elevation: 16,
+                style: TextStyle(color: Colors.black, fontSize: 18),
+                underline: Container(
+                  height: 0,
+                ),
+                onChanged: (String data) {
+                  setState(() {
+                    holder1 = data;
+                    dropdownValue1 = data;
+                  });
+                },
+                items: items1.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            Column(
+              children: [
+                Icon(Icons.arrow_drop_down, size: 20,),
+
+              ],
+            ),
+
+
+
+          ],
+        ),
+      ),
+    ),
+    SizedBox(height: 20,),
+          
+      //Printing Item on Text Widget 
+      Text('Selected Item = ' + '$holder1', 
+      style: TextStyle
+          (fontSize: 12, 
+          color: Colors.black)),
+
+    ]);
+  }
+
+
+
 
 }
-
-// Card(
-//     color: Colors.white,
-//     child: Column(
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.symmetric(
-//               horizontal: 15.0, vertical: 5.0),
-//           child: _dropDownBox("Testing"),
-//         ),
-//       ],
-//     )),

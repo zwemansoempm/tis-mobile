@@ -31,6 +31,7 @@ class CustomApp {
 
   static const IconData users = IconData(0xf0c0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData user_md = IconData(0xf0f0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData building = IconData(0xf1ad, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData newspaper = IconData(0xf1ea, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData briefcase_medical = IconData(0xf469, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

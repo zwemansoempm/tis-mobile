@@ -15,10 +15,11 @@ class NewsRepository{
    
     var getPostsUrl="$mainUrl/posts";
     var getLatestPostAllCatUrl="$mainUrl/get_latest_post_all_cat";
-    var getAllNewsSearchUrl="$mainUrl/get_latest_posts_by_catId/all_news_search";
+    // var getAllNewsSearchUrl="$mainUrl/get_latest_posts_by_catId/all_news_search";
     var getRelatedNewsUrl="$mainUrl/relatednews";
     var getNewsDetailsUrl="$mainUrl/newdetails";
     var getHomeUrl = "$mainUrl/home";
+    var getAllNewsSearchUrl="$mainUrl/get_latest_posts_by_catId_mobile/all_news_search";
 
     Future<NewsCategory> getNewscategorymobile() async {
       try {
@@ -70,16 +71,16 @@ class NewsRepository{
     }
 
     
-    Future<MedicalResponse2> getMedical2() async {
-      try {
-        Response response = await _dio.get(getAllNewsSearchUrl);
-        return MedicalResponse2.fromJson(response.data);
-        // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
-      } catch (error, stacktrace) {
-        print("Exception occured: $error stackTrace: $stacktrace");
-        return MedicalResponse2.withError("$error");
-      }
-    } 
+    // Future<MedicalResponse2> getMedical2() async {
+    //   try {
+    //     Response response = await _dio.get(getAllNewsSearchUrl);
+    //     return MedicalResponse2.fromJson(response.data);
+    //     // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    //   } catch (error, stacktrace) {
+    //     print("Exception occured: $error stackTrace: $stacktrace");
+    //     return MedicalResponse2.withError("$error");
+    //   }
+    // } 
 
     Future<PostsResponse2> getRelatedNews(String id) async {         
       try {

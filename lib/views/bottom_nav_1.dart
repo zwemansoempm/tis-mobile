@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_all_news_search_bloc.dart';
 import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/medical_response2.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
+import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/screens/hospital/hospital_search.dart';
 // import 'package:tis/model/source.dart';
 import 'package:tis/screens/news_detail.dart';
@@ -42,7 +44,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   List<TabData> _tabData;
   List<Tab> _tabs = []; 
   Color _activeColor;  
-  
+  bool viewVisible = true ;
+
   @override
   void initState() {    
     super.initState(); 
@@ -88,7 +91,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     getPostsNewsBloc..getPostsNews();
     getLatestPostAllCatBloc..getLatestPostAllCat();
     getAllNewsSearchBloc..getAllNewsSearch();
-    getMedical2Bloc..getMedical2();
+    // getMedical2Bloc..getMedical2();
   }
 
   @override
@@ -98,9 +101,19 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     getPostsNewsBloc.drainStream();
     getLatestPostAllCatBloc.drainStream();
     getAllNewsSearchBloc.drainStream();
-    getMedical2Bloc.drainStream();
+    // getMedical2Bloc.drainStream();
     super.dispose();
   }  
+
+  void showHideWidget(){
+    setState(() {
+      if(viewVisible==true){
+          viewVisible = false ; 
+      }else{
+          viewVisible = true ; 
+      }    
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,68 +188,110 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                 child: ListView(    
                                 children:[
                                   Container(
-                                      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
-                                      child: StreamBuilder<PostsResponse>(
-                                        stream: getLatestPostAllCatBloc.subject.stream,
-                                        builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
-                                          if (snapshot.hasData) {
-                                            if (snapshot.data.error != null &&
-                                                  snapshot.data.error.length > 0) {
-                                                    return Container();
-                                            }    
-                                                    return  _getLatestPostAllCatWidget(snapshot.data);                                 
-                                          } else if (snapshot.hasError) {
-                                                    return Container();
-                                          } else {                                                
-                                                    return Container(
-                                                      height: 150,
-                                                      child:buildLoadingWidget()
-                                                    );                                        
-                                                    // return Container(
-                                                    //   height:MediaQuery.of(context).size.height/1.5,
-                                                    //   child: Column(
-                                                    //     mainAxisAlignment: MainAxisAlignment.center,
-                                                    //     children: [SizedBox(
-                                                    //       height: 35,
-                                                    //       width: 35,
-                                                    //       child: CircularProgressIndicator()),
-                                                    //     ]),
-                                                    // );//return buildLoadingWidget();
-                                          }
-                                        }                                      
-                                      )
+                                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                        child: StreamBuilder<PostsResponse>(
+                                          stream: getLatestPostAllCatBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
+                                            if (snapshot.hasData) {
+                                              if (snapshot.data.error != null &&
+                                                    snapshot.data.error.length > 0) {
+                                                      return Container();
+                                              }    
+                                                      return  _getLatestPostAllCatWidget(snapshot.data);                                 
+                                            } else if (snapshot.hasError) {
+                                                      return Container();
+                                            } else {                                               
+                                                                                         
+                                                      return Container(
+                                                        height:MediaQuery.of(context).size.height/1.5,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [SizedBox(
+                                                            height: 35,
+                                                            width: 35,
+                                                            child: CircularProgressIndicator()),
+                                                          ]),
+                                                      );//return buildLoadingWidget();
+                                            }
+                                          }                                      
+                                        )
+                                    ),                                 
+
+                                  Container(
+                                        // margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                        child: StreamBuilder<MedicalResponse>(
+                                          stream: getAllNewsSearchBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<MedicalResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                    snapshot.data.error.length > 0) {
+                                                      return Container();
+                                                  }    
+                                                      return  Column(
+                                                        children: [
+                                                            Container(
+                                                                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),      
+                                                                    child: Divider(
+                                                                      height:10,
+                                                                      color:Color(0xffd1281c),
+                                                                      thickness: 1.5,
+                                                                    ),
+                                                            ),
+                                                            Container(    
+                                                                height: 50.0,
+                                                                margin: const EdgeInsets.only(left: 10.0, top: 0, right: 20.0,bottom: 0.0),   
+                                                                child:Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      width:5 ,
+                                                                      height: 30.0,
+                                                                        decoration: BoxDecoration(
+                                                                          border: Border.all(color:Color(0xffd1281c)) ,
+                                                                          color: Color(0xffd1281c),
+                                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                        ),                                          
+                                                                    ),    
+                                                                      Container(
+                                                                        margin: const EdgeInsets.only(left: 20.0, top: 0, right: 0.0,bottom:3),  
+                                                                        child: Text("病院・医療 ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color:Color(0xffd1281c))),
+                                                                      ), 
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context).size.width/1.8,
+                                                                      ) ,
+                                                                      new IconButton(                  
+                                                                          icon:new Icon(
+                                                                            viewVisible==true?Icons.arrow_drop_down_sharp:Icons.arrow_right_sharp,
+                                                                            color:viewVisible==true?Colors.black87:Colors.redAccent ,
+                                                                            ), 
+                                                                          onPressed: showHideWidget,
+                                                                       ),                                                  
+                                                                  ],
+                                                                ),
+                                                          ),
+                                                          Visibility(
+                                                            maintainSize: true, 
+                                                            maintainAnimation: true,
+                                                            maintainState: true,
+                                                            visible: viewVisible,
+                                                            child:_getMedicalWidget(snapshot.data),  
+                                                          ),
+                                                         
+                                                        ],
+                                                      ); 
+                                                      // return  _getMedicalWidget(snapshot.data);          
+                                              }else if (snapshot.hasError) {
+                                                      return Container();
+                                              } else {                                                
+                                                        return Container(
+                                                          // height: 150,
+                                                          // child:buildLoadingWidget()
+                                                        ); 
+                                              }
+                                          } 
+                                        ),
                                   ),
 
-                                   Container(
-                                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),      
-                                            child: Divider(
-                                               height:10,
-                                               color:Color(0xffd1281c),
-                                               thickness: 1.5,
-                                            ),
-                                          ),
-                                         
-                                    Container(    
-                                    height: 50.0,
-                                    margin: const EdgeInsets.only(left: 10.0, top: 0, right: 20.0,bottom: 0.0),   
-                                    child:Row(
-                                      children: [
-                                        Container(
-                                          width:5 ,
-                                          height: 40.0,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color:Color(0xffd1281c)) ,
-                                              color: Color(0xffd1281c),
-                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                            ),                                          
-                                        ),    
-                                          Container(
-                                            margin: const EdgeInsets.only(left: 20.0, top: 0, right: 0.0,bottom: 0.0),  
-                                            child: Text("病院・医療 ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color:Colors.black87)),
-                                          ),                                                        
-                                       ],
-                                    ),
-                                  ),
+
                                 ]      
                             ),
                           ),                         
@@ -256,143 +311,191 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
             ),
         ); 
   }
-  // Widget _getMedical2Widget(MedicalResponse2 data){
-  //      List<MedicalModel> medical = data.medical;  
 
-  //      return  Container(
-  //           width:200,
-  //           height: 200,
-  //           child: SizedBox(
-  //               child: ListView.builder(
-  //                 physics: NeverScrollableScrollPhysics(),
-  //                 scrollDirection: Axis.vertical, 
-  //                 itemCount: 3,
-  //                 itemBuilder: (context, index) {
-  //                        return GestureDetector(
-  //                             child:  Column(
-  //                               children: [
-  //                                   Container(
-  //                                     width: 200.0,
-  //                                     child: Card(
-  //                                       child: 
-  //                                         Wrap(
-  //                                           direction: Axis.horizontal,
-  //                                           spacing: 0.0, // gap between adjacent chips
-  //                                           runSpacing: 0.0, // gap between lines
-  //                                           children: <Widget>[
-  //                                                 Row(
-  //                                                      mainAxisAlignment: MainAxisAlignment.start,                                  
-  //                                                      children: [
-  //                                                         ( medical[index] !=null ) ?  Container(   
-  //                                                         margin: const EdgeInsets.only(left: 0.0, top: 0, right: 0.0,bottom: 0.0),
-  //                                                         padding:EdgeInsets.only(right:10),//EdgeInsets.all(10.0),                               
-  //                                                         width:70,//fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
-  //                                                         height: 50,
-  //                                                         child: 
-  //                                                           FadeInImage.assetNetwork(
-  //                                                           fadeInDuration: const Duration(seconds: 2),
-  //                                                           alignment: Alignment.topLeft,
-  //                                                           placeholder: 'assets/img/placeholder.jpg',
-  //                                                           image: "https://test.t-i-s.jp/upload/news/"+medical[index].photo,
-  //                                                           fit: BoxFit.fitHeight,
-  //                                                           width: double.minPositive,
-  //                                                           height: MediaQuery.of(context).size.height,
-  //                                                           imageErrorBuilder: (context, error, stackTrace) {                                         
-  //                                                               return Image.asset(
-  //                                                                     "assets/img/placeholder.jpg",
-  //                                                               );
-  //                                                           },                                                                           
-  //                                                           )
-  //                                                       ) : Container(),                              
-  //                                                      SizedBox(width: 5,),
-  //                                                      Padding(       
-  //                                                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-  //                                                         child: SizedBox(
-  //                                                           width: 70,
-  //                                                           child: Text(                                            
-  //                                                               medical[index].mainPoint.toString().length>=20?medical[index].mainPoint.toString().substring(0,10)+"...":medical[index].mainPoint,   //allPosts[index].mainPoint.toString().length.toString(),// allPosts[index].mainPoint.toString().substring(1,2),   
-  //                                                               // textAlign: TextAlign.left,                                                                       
-  //                                                               style: TextStyle(
-  //                                                                     fontSize: 8.0
-  //                                                               )
-  //                                                           ),
-  //                                                         ),
-  //                                                       ),
-  //                                                   ],
-  //                                                 ), 
-  //                                             ]
-  //                                           ),                                           
-  //                                         )
-  //                                     )                                 
-  //                               ],
-  //                             )
-  //                        );
-  //                 }
-  //               )
-  //           )
-  //      );
-  // }
+  Widget _getMedicalWidget(MedicalResponse data){
+  List<MedicalModel> medical = data.medical;   
+  List<dynamic>  result = [];
+  for (var j = 0; j < medical.length; j++) {
+    result.add(medical[j]);
+  }
 
-
-  // Widget _getMedicalWidget(MedicalResponse data){
-  //   List<MedicalModel> medical = data.medical;   
-
-  //   return  Container(
-  //             width:160,
-  //             height: 202,
-  //             child: SizedBox(
-  //               child: ListView.builder(
-  //               physics: NeverScrollableScrollPhysics(),
-  //               scrollDirection: Axis.horizontal, 
-  //               itemCount: 1,
-  //               itemBuilder: (context, index) {
-  //                 return GestureDetector(
-  //                   child:  Column(
-  //                     children: [
-  //                       Container(
-  //                           width: 160.0,
-  //                           height: 202,
-  //                           child: Card(
-  //                             child: Wrap(
-  //                               children: [
-  //                                 Column(
-  //                                   children: [
-  //                                        Image.network( "https://test.t-i-s.jp/upload/news/"+medical[0].photo),
-  //                                        Container(
-  //                                           padding: EdgeInsets.only(
-  //                                           top: 10.0, left: 10.0, bottom: 10.0, right: 10.0),
-  //                                           width:captionSize(context),
-  //                                           child:   Text(
-  //                                           medical[0].mainPoint,
-  //                                           maxLines: 3,
-  //                                           style: TextStyle(
-  //                                                 fontWeight: FontWeight.bold,
-  //                                                 color: Colors.black,
-  //                                                 fontSize: 10.0)
-  //                                                 ),
-  //                                        ),
-  //                                   ],
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                       ),
-  //                       // Container(
-  //                       //     width: 160.0,
-  //                       //     child: Card(
-
-  //                       //     )
-  //                       // ),
-  //                     ],
-  //                   )  ,
-  //                 );
-  //               }                 
-  //       //  ),
-  //     // ),
-  //           ),
-  //             ),
-  //     );
-  // }
+   return  Container(
+       height:300 ,
+      //  width: 300,
+     child: ListView(
+         shrinkWrap: true,
+              //  physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.horizontal,              
+                children: <Widget>[
+                   Container(
+                      width:MediaQuery.of(context).size.width,
+                      // color: Colors.blue[500],
+                      child:   ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical, 
+                      itemCount: 3,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          child: Card(
+                                color:Color(0xfff7f7f7),
+                                child: GestureDetector(
+                                    onTap: (){
+                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => TopDetailScreen(top: medical),));
+                                    },
+                                    child: Container(
+                                    height: 90,
+                                    child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: (medical[index].photo!=null && medical[index].photo!='') ? 
+                                              Padding(
+                                                padding: const EdgeInsets.all(8),
+                                                child: Stack(
+                                                  children: [
+                                                    Center(
+                                                      child: FadeInImage(
+                                                        fadeInDuration: const Duration(seconds: 2),
+                                                        placeholder: AssetImage('assets/img/placeholder.jpg'),
+                                                        image: NetworkImage(
+                                                          "https://test.t-i-s.jp/upload/news/"+medical[index].photo,
+                                                        ),
+                                                        imageErrorBuilder: (context, error, stackTrace) { 
+                                                          return Image.asset(
+                                                            "assets/img/placeholder.jpg",
+                                                          );
+                                                        },                                                                           
+                                                      ),
+                                                    ),
+                                                    // dateToStringFormat(DateTime.now()) == medical[0].createdAt.split(" ")[0] ? _newLogo(color) : Container(),
+                                                ]),
+                                              ) :Image.asset(
+                                                          "assets/img/placeholder.jpg",
+                                              )
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.only(
+                                              top: 10.0, left: 4.0,  right: 10.0, bottom: 4.0),
+                                            width:MediaQuery.of(context).size.width/1.5,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  medical[index].mainPoint.toString().length>=60?medical[index].mainPoint.toString().substring(0,50)+"...":medical[index].mainPoint,  
+                                                  // medical[index].mainPoint,
+                                                  maxLines: 3,
+                                                  //overflow: TextOverflow.ellipsis,
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                  alignment: Alignment.bottomRight,
+                                                  child: Text(
+                                                    medical[index].createdAt,
+                                                    style: TextStyle(
+                                                      color: Colors.black38,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 12.0)),
+                                                ))
+                                              ],
+                                            )
+                                          ),
+                                        ],
+                                    ),
+                                  ),
+                                ),
+                            ),
+                        );
+                      }
+                  ) ,     
+                ),         
+                Container(
+                  width:MediaQuery.of(context).size.width,
+                  height: 300,
+                  // color: Colors.purple[500],
+                  
+                  child: ListView.builder(               
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical, 
+                      itemCount: 6,
+                      itemBuilder: (context, indexs) {
+                          return  Card(
+                                    color:Color(0xfff7f7f7),
+                                    child: GestureDetector(
+                                      onTap: (){
+                                          // Navigator.push(context, MaterialPageRoute(builder: (context) => TopDetailScreen(top: medical),));
+                                      },
+                                      child: Container(
+                                            height: 41,
+                                            child:Column(
+                                              children: [
+                                                Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child:
+                                                          Padding(
+                                                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                                            child: Stack(
+                                                              children: [                                                           
+                                                                  Icon(
+                                                                      CustomApp.building,
+                                                                      color: Colors.redAccent,
+                                                                      size: 15,                                                                    
+                                                                  ),
+                                                            ]),
+                                                          ) 
+                                                      ),
+                                                      Container(
+                                                        height: 25,
+                                                        // padding: EdgeInsets.only(
+                                                        //   top: 0.0, left: 0,  right: 0.0, bottom:0),
+                                                        width:MediaQuery.of(context).size.width/1.2,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              medical[indexs+3].mainPoint.toString().length>=35?medical[indexs+3].mainPoint.toString().substring(0,25)+"...":medical[indexs+3].mainPoint,  
+                                                              // medical[indexs+3].mainPoint,
+                                                              maxLines: 2,
+                                                              style: TextStyle(
+                                                                  color: Colors.black54,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 10.0
+                                                              )
+                                                              //overflow: TextOverflow.ellipsis,
+                                                            ),                                                           
+                                                          ],
+                                                        )
+                                                      ),
+                                                    ],
+                                                ),
+                                                Container(
+                                                      height: 10,
+                                                      margin: const EdgeInsets.only(left: 0.0, top: 0, right: 5.0,bottom: 1.0),
+                                                      child: Align(
+                                                      alignment: Alignment.bottomRight,
+                                                      child: Text(
+                                                        medical[indexs+3].createdAt,
+                                                        style: TextStyle(
+                                                          color: Colors.black38,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 10.0)),
+                                                    ),
+                                                  ),                                               
+                                              ],
+                                            ),
+                                      )
+                                    )
+                          );
+                      }
+                 ),
+                ),
+              ],
+      //  );
+                 
+     ),
+   ); 
+  }
 
   Widget _getLatestPostAllCatWidget(PostsResponse data){
 
@@ -404,6 +507,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   }
     return  Container( 
               height: 150.0,
+              color:Color(0xfff7f7f7),
               child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       // padding:EdgeInsets.only(top: 0),
@@ -527,165 +631,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     
   }
 
-  // Widget _buildSourceNewsWidget(PostsResponse data) {
-  //   List<PostsModel> posts = data.posts;
-  //   final document = parse(posts[0].body);
-  //   final String parsedString = parse(document.body.text).documentElement.text;
-     
-  //   if (posts.length == 0) {
-  //     return Container(
-  //       width: MediaQuery.of(context).size.width,
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         crossAxisAlignment: CrossAxisAlignment.center,
-  //         children: <Widget>[
-  //           Text(
-  //             "No more news",
-  //             style: TextStyle(color: Colors.black45),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //   } else
-  //     return Container(
-  //             height: 200.0,
-  //             child: SizedBox( 
-  //             // height: 150.0,
-  //             child:ListView.builder(
-  //             physics: NeverScrollableScrollPhysics(),
-  //             padding:EdgeInsets.only(top: 10),
-  //             itemCount: 1,
-  //             itemBuilder: (context, index) {
-  //               return GestureDetector(
-  //                 // onTap: () {
-  //                 //  Navigator.push(
-  //                 //         context,
-  //                 //         MaterialPageRoute(
-  //                 //             builder: (context) => DetailNews(
-  //                 //                   // article: articles[index],
-  //                 //                 )));
-  //                 // },
-  //                 child:
-  //               Container(
-  //                         decoration: BoxDecoration(
-  //                           border: Border(
-  //                               top: BorderSide(color: Colors.grey[200], width: 1.0),
-  //                           ),
-  //                           color: Colors.white,
-  //                         ),          
-  //                         height: 200,
-                
-  //                         child: Row(                      
-  //                             children: <Widget>[
-  //                                 Column(
-  //                                   children: [
-  //                                     (index == 0 && posts[0] !=null ) ?  Container(
-  //                                       margin: const EdgeInsets.only(left: 0.0, top: 5, right: 0.0,bottom: 0.0),
-  //                                       padding:EdgeInsets.only(right:20),//EdgeInsets.all(10.0),
-  //                                       width:fotoSize(context),//MediaQuery.of(context).size.width/ 0.7, //MediaQuery.of(context).size.width * 2 / 5,
-  //                                       height: 100,
-  //                                       child: 
-  //                                             FadeInImage.assetNetwork(
-  //                                             alignment: Alignment.topRight,
-  //                                             placeholder: 'assets/img/placeholder.jpg',
-  //                                             image: posts[0].photo == null
-  //                                                 ? 'assets/img/placeholder.jpg'
-  //                                                 :"https://test.t-i-s.jp/upload/news/"+posts[0].photo,
-  //                                             fit: BoxFit.fitHeight,
-  //                                             width: double.minPositive,
-  //                                             height: MediaQuery.of(context).size.height)
-  //                                             ) : Container() ,
-
-  //                                 Container(
-  //                                   padding: EdgeInsets.only(
-  //                                   top: 10.0, left: 10.0, bottom: 10.0, right: 10.0),
-  //                                   width:captionSize(context),
-  //                                   child:   Text(
-  //                                   posts[index].mainPoint,//articles
-  //                                   maxLines: 3,
-  //                                   style: TextStyle(
-  //                                         fontWeight: FontWeight.bold,
-  //                                         color: Colors.black,
-  //                                         fontSize: 10.0)
-  //                                         ),
-  //                                 ),
-  //                                 Container(
-  //                                   padding: EdgeInsets.only(
-  //                                   top: 0.0, left: 10.0, bottom: 0.0, right: 10.0),
-  //                                   width:captionSize(context),
-  //                                   child: Row(
-  //                                     mainAxisAlignment: MainAxisAlignment.start,
-  //                                     children: [                                  
-  //                                           Icon(
-  //                                               Icons.date_range,
-  //                                               color: Colors.black26,
-  //                                               size: 15,
-  //                                           ),
-  //                                           SizedBox(width: 20,),
-  //                                           Text(
-  //                                               timeUntil(
-  //                                                   DateTime.parse(posts[index].createdAt)
-  //                                               ),
-  //                                               style: TextStyle(
-  //                                                   color: Colors.black26,
-  //                                                   fontWeight: FontWeight.bold,
-  //                                                   fontSize: 8.0)
-  //                                               )
-  //                                       ],
-  //                                   ),                                                           
-  //                                 ),
-  //                             ],
-  //                        ),                    
-  //                        Column(
-  //                          children: <Widget>[
-  //                            Expanded(                 
-  //                              child: SizedBox(                                  
-  //                                 width: 170,
-  //                                 // height: 70.0,
-  //                                 child: new ListView.builder(
-  //                                   physics: NeverScrollableScrollPhysics(),
-  //                                   padding:EdgeInsets.only(top: 0),
-  //                                   itemCount: posts.length-1,
-  //                                   itemBuilder: (BuildContext ctxt, int index) {
-  //                                   return  Container(                        
-  //                                       margin: const EdgeInsets.only(left: 0.0, top: 2.5, right: 0.0,bottom: 0.0),
-  //                                       // padding:EdgeInsets.only(left: 10),
-  //                                       child:Wrap(
-  //                                             direction: Axis.vertical,
-  //                                             spacing: 5.0, // gap between adjacent chips
-  //                                             runSpacing: 0.0, // gap between lines
-  //                                             children: <Widget>[
-  //                                                 Text(
-  //                                                   posts[index+1].mainPoint,
-  //                                                   style: TextStyle( 
-  //                                                     fontSize: 10.0
-  //                                                   )
-  //                                                 ),                          
-  //                                             ]
-  //                                       ),
-  //                                       decoration: (index+1!=9) ? BoxDecoration(
-                            
-  //                                             border: Border(
-  //                                                 bottom: BorderSide(color: Colors.grey[200], width: 2.0),
-                                                  
-  //                                               ),
-  //                                               color: Colors.white,
-  //                                       ) : null,                        
-  //                                   ) ;//new Text(posts[index+1].mainPoint);
-  //                                   },
-  //                                 ),
-  //                              ),
-  //                             ),      
-  //                           ],
-  //                         ),                   
-  //                     ],
-  //                   ),   
-  //               ),          
-  //               );                
-  //             }),
-  //       ),
-  //     );
-  // }
+  
   fotoSize(BuildContext context) {  
        return MediaQuery.of(context).size.width/2;    
   }

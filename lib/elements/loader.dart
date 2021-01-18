@@ -9,12 +9,12 @@ Widget buildLoadingWidget() {
         SizedBox(
                       height: 35.0,
                       width: 35.0,
-                      child:CircularProgressIndicator(),//   CupertinoActivityIndicator(),
+                      child:CupertinoActivityIndicator(),// CircularProgressIndicator(),//   CupertinoActivityIndicator(),
         ),
         SizedBox(
           height: 10,
         ),
-        Text('Loading...',style: TextStyle(color: Colors.blueAccent),)
+        // Text('Loading...',style: TextStyle(color: Colors.blueAccent),)
       ],
     ));
   }

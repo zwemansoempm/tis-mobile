@@ -4,13 +4,13 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/repository/tis_repository.dart';
 
-class GetAllNewsSearchBloc {
+class GetMedicalBloc {
   final NewsRepository _repository = NewsRepository();
   final BehaviorSubject<MedicalResponse> _subject =
       BehaviorSubject<MedicalResponse>();
 
-  getAllNewsSearch() async {
-    MedicalResponse response = await _repository.getAllNewsSearch();
+  getMedicalNews() async {
+    MedicalResponse response = await _repository.getMedicalNews();
     _subject.sink.add(response);
   }
   void drainStream(){ _subject.value = null; }
@@ -23,4 +23,4 @@ class GetAllNewsSearchBloc {
   BehaviorSubject<MedicalResponse> get subject => _subject;
   
 }
-final getAllNewsSearchBloc = GetAllNewsSearchBloc();
+final getMedicalBloc = GetMedicalBloc();

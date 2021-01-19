@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tis/bloc/get_all_news_search_bloc.dart';
+import 'package:tis/app-format.dart';
+import 'package:tis/bloc/get_medical_bloc.dart';
+import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
+import 'package:tis/bloc/get_nurse_bloc.dart';
 import 'package:tis/bloc/get_postsnews_bloc.dart';
 import 'package:tis/model/medical.dart';
 import 'package:tis/model/medical_response.dart';
+import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
@@ -29,6 +34,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   List<Tab> _tabs = []; 
   Color _activeColor;  
   bool viewVisible = true ;
+  bool medicalVisible=true;
+  bool nurseVisible=true;
 
   @override
   void initState() {    
@@ -71,9 +78,10 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
         });
       });
     // getSourceNewsBloc..getSourceNews("abc-news");
-    getPostsNewsBloc..getPostsNews();
+    // getPostsNewsBloc..getPostsNews();
     getLatestPostAllCatBloc..getLatestPostAllCat();
-    getAllNewsSearchBloc..getAllNewsSearch();
+    getMedicalBloc..getMedicalNews();
+    getNurseBloc..getNurseNews();
     // getMedical2Bloc..getMedical2();
   }
 
@@ -81,20 +89,34 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   void dispose() {
     _controller?.dispose();
     // getSourceNewsBloc.drainStream();
-    getPostsNewsBloc.drainStream();
+    // getPostsNewsBloc.drainStream();
     getLatestPostAllCatBloc.drainStream();
-    getAllNewsSearchBloc.drainStream();
+    getMedicalBloc.drainStream();
+    getNurseBloc..getNurseNews();
     // getMedical2Bloc.drainStream();
     super.dispose();
   }  
 
-  void showHideWidget(){
+   showHideWidget(numb){
     setState(() {
-      if(viewVisible==true){
-          viewVisible = false ; 
-      }else{
-          viewVisible = true ; 
-      }    
+      if(numb==1){
+          if(medicalVisible==true){
+            medicalVisible = false ; 
+          }else{
+            medicalVisible = true ; 
+          }   
+      }else if(numb==2){
+          if(nurseVisible==true){
+            nurseVisible = false ; 
+          }else{
+            nurseVisible = true ; 
+          }   
+      }
+      // if(viewVisible==true){
+      //     viewVisible = false ; 
+      // }else{
+      //     viewVisible = true ; 
+      // }    
     });
   }
 
@@ -120,7 +142,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                     ),
                     centerTitle: true,
                     title: Row(
-                      mainAxisSize: MainAxisSize.min,
+                      
+                      AxisSize: MainAxisSize.min,
                       children: <Widget>[ 
                           SizedBox(
                             child: new IconButton(                  
@@ -203,77 +226,47 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                   Container(
                                         // margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
                                         child: StreamBuilder<MedicalResponse>(
-                                          stream: getAllNewsSearchBloc.subject.stream,
+                                          stream: getMedicalBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<MedicalResponse> snapshot) {
                                               if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                     snapshot.data.error.length > 0) {
                                                       return Container();
                                                   }    
-                                                      return  Column(
-                                                        children: [
-                                                            Container(
-                                                                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),      
-                                                                    child: Divider(
-                                                                      height:10,
-                                                                      color:Color(0xffd1281c),
-                                                                      thickness: 1.5,
-                                                                    ),
-                                                            ),
-                                                            Container(    
-                                                                height: 50.0,
-                                                                margin: const EdgeInsets.only(left: 10.0, top: 0, right: 20.0,bottom: 0.0),   
-                                                                child:Row(
-                                                                  children: [
-                                                                    Container(
-                                                                      width:5 ,
-                                                                      height: 30.0,
-                                                                        decoration: BoxDecoration(
-                                                                          border: Border.all(color:Color(0xffd1281c)) ,
-                                                                          color: Color(0xffd1281c),
-                                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                        ),                                          
-                                                                    ),    
-                                                                      Container(
-                                                                        margin: const EdgeInsets.only(left: 20.0, top: 0, right: 0.0,bottom:3),  
-                                                                        child: Text("病院・医療 ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color:Color(0xffd1281c))),
-                                                                      ), 
-                                                                      SizedBox(
-                                                                        width: MediaQuery.of(context).size.width/1.8,
-                                                                      ) ,
-                                                                      new IconButton(                  
-                                                                          icon:new Icon(
-                                                                            viewVisible==true?Icons.arrow_drop_down_sharp:Icons.arrow_right_sharp,
-                                                                            color:viewVisible==true?Colors.black87:Colors.redAccent ,
-                                                                            ), 
-                                                                          onPressed: showHideWidget,
-                                                                       ),                                                  
-                                                                  ],
-                                                                ),
-                                                          ),
-                                                          Visibility(
-                                                            maintainSize: true, 
-                                                            maintainAnimation: true,
-                                                            maintainState: true,
-                                                            visible: viewVisible,
-                                                            child:_getMedicalWidget(snapshot.data),  
-                                                          ),
-                                                         
-                                                        ],
-                                                      ); 
+                                                      return _getEachdata(snapshot.data,"病院・医療","0xffd1281c",1);
                                                       // return  _getMedicalWidget(snapshot.data);          
                                               }else if (snapshot.hasError) {
                                                       return Container();
                                               } else {                                                
                                                         return Container(
-                                                          // height: 150,
-                                                          // child:buildLoadingWidget()
+                                                          height: 150,
+                                                          child:buildLoadingWidget()
                                                         ); 
                                               }
                                           } 
                                         ),
                                   ),
-
+                                  Container(
+                                      child: StreamBuilder<NurseResponse>(
+                                      stream: getNurseBloc.subject.stream,
+                                      builder: (context, AsyncSnapshot<NurseResponse> snapshot) {
+                                          if (snapshot.hasData) {
+                                              if (snapshot.data.error != null &&
+                                                  snapshot.data.error.length > 0) {
+                                                  return Container();
+                                              } 
+                                               return _getEachdata(snapshot.data,"特養・介護 ","0xff9579ef",2);
+                                              }else if (snapshot.hasError) {
+                                                      return Container();
+                                              } else {                                                
+                                                        return Container(
+                                                          height: 150,
+                                                          child:buildLoadingWidget()
+                                                        ); 
+                                               }                                         
+                                      }
+                                      ),
+                                  ),
 
                                 ]      
                             ),
@@ -294,9 +287,66 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
             ),
         ); 
   }
+  // Widget _getEachNews1(MedicalResponse alldata,String textdata,String colorcode){
+  //   return _getEachdata(alldata,textdata,colorcode);        
+  // }
+  Widget _getEachdata(med,textdata,colorcode,numb){
 
-  Widget _getMedicalWidget(MedicalResponse data){
-  List<MedicalModel> medical = data.medical;   
+         return  Column(
+                    children: [
+                        Container(
+                            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),      
+                                child: Divider(
+                                  height:10,
+                                  color:Color(int.parse(colorcode)),//Color(0xffd1281c),
+                                  thickness: 1.5,
+                                ),
+                        ),
+                        Container(    
+                            height: 50.0,
+                            margin: const EdgeInsets.only(left: 10.0, top: 0, right: 20.0,bottom: 0.0),   
+                            child:Row(
+                              children: [
+                                Container(
+                                  width:5 ,
+                                  height: 30.0,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color:Color(int.parse(colorcode))) ,
+                                      color:Color(int.parse(colorcode)),
+                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                    ),                                          
+                                ),    
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 20.0, top: 0, right: 0.0,bottom:3),  
+                                    child: Text(textdata,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color:Color(int.parse(colorcode)),)),
+                                  ), 
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width/1.8,
+                                  ) ,
+                                  new IconButton(                  
+                                      icon:new Icon(                                       
+                                         (numb==1?medicalVisible:nurseVisible)==true?Icons.arrow_drop_down_sharp:Icons.arrow_right_sharp,
+                                        color:(numb==1?medicalVisible:nurseVisible)==true?Colors.black87:Colors.redAccent ,
+                                        ), 
+                                      onPressed: (){
+                                          showHideWidget(numb);
+                                      }//showHideWidget(numb),
+                                    ),                                                  
+                              ],
+                            ),
+                        ),
+                        Visibility(
+                          maintainSize: false, 
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible:numb==1?medicalVisible:nurseVisible,
+                          child:_getMedicalWidget(med),  
+                        ),                      
+                    ],
+                );
+  }
+  Widget _getMedicalWidget(data){
+  List<dynamic> medical = data.medical;   
   List<dynamic>  result = [];
   for (var j = 0; j < medical.length; j++) {
     result.add(medical[j]);
@@ -341,7 +391,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                 child: Stack(
                                                   children: [
                                                     Center(
-                                                      child: FadeInImage(
+                                                      child: 
+                                                      medical[index].pid!=410?FadeInImage(
                                                         fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
                                                         image: NetworkImage(
@@ -352,7 +403,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                             "assets/img/placeholder.jpg",
                                                           );
                                                         },                                                                           
-                                                      ),
+                                                      ):Container(),
                                                     ),
                                                     // dateToStringFormat(DateTime.now()) == medical[0].createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                                                 ]),

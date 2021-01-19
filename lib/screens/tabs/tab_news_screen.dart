@@ -66,7 +66,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                             Navigator.push<Widget>(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TopDetailScreen(top:bigNews),
+                                builder: (context) => TopDetailScreen(top:bigNews.id.toString()),
                               ),
                             );
                           },
@@ -127,7 +127,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           Navigator.push<Widget>(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TopDetailScreen(top:post),
+                              builder: (context) => TopDetailScreen(top:post.id.toString()),
                             ),
                           );
                         },
@@ -218,7 +218,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
     return Card(
       child: GestureDetector(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TopDetailScreen(top: post),));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => TopDetailScreen(top: post.id.toString()),));
         },
         child: Container(
         height: 90,

@@ -340,7 +340,12 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                 color:Color(0xfff7f7f7),
                                 child: GestureDetector(
                                     onTap: (){
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => TopDetailScreen(top: medical),));
+                                       Navigator.push<Widget>(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => TopDetailScreen(top:medical[index].pid.toString()),
+                                              ),
+                                        );
                                     },
                                     child: Container(
                                     height: 90,
@@ -612,7 +617,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                               Navigator.push<Widget>(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => TopDetailScreen(top:i),
+                                                  builder: (context) => TopDetailScreen(top:i.id.toString()),
                                                 ),
                                               );
                                             }

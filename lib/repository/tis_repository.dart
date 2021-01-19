@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:tis/model/category.dart';
+// import 'package:tis/model/category.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/newsCategory.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tis/bloc/get_all_news_search_bloc.dart';
 import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_medical_bloc.dart';
 import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
 import 'package:tis/bloc/get_nurse_bloc.dart';
 import 'package:tis/bloc/get_postsnews_bloc.dart';
+import 'package:tis/elements/loader.dart';
 import 'package:tis/model/medical.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
@@ -141,9 +141,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       onPressed: () {  },                 
                     ),
                     centerTitle: true,
-                    title: Row(
-                      
-                      AxisSize: MainAxisSize.min,
+                    title: Row(                      
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[ 
                           SizedBox(
                             child: new IconButton(                  
@@ -240,7 +239,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                               } else {                                                
                                                         return Container(
                                                           height: 150,
-                                                          child:buildLoadingWidget()
+                                                          child:buildLoadingWidget(),
                                                         ); 
                                               }
                                           } 

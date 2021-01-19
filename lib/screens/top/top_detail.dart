@@ -9,7 +9,7 @@ import 'package:tis/elements/loader.dart';
 import 'package:tis/model/medical.dart';
 import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/posts.dart';
-import 'package:tis/model/posts_response2.dart';
+import 'package:tis/model/related_news_response.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/html_parser.dart';
@@ -109,6 +109,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
   }
   Widget _getNewdetailsWidget(NewdetailsResponse data){
        List<PostsModel> allPosts = data.posts;
+
      return  Column( 
                   children: [
                     Center(
@@ -170,8 +171,8 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                             height: 150,
                             child: Stack(
                                 fit:StackFit.expand,
-                                children: <Widget>[
-                                  (allPosts[0].photo!=null && allPosts[0].photo!='' && allPosts[0].id!=236 && allPosts[0].id!=272 && allPosts[0].id!=482 && allPosts[0].id!=312 && allPosts[0].id!=329 && allPosts[0].id!=359 && allPosts[0].id!=402 && allPosts[0].id!=403 && allPosts[0].id!=438 && allPosts[0].id!=418 && allPosts[0].id!=437 && allPosts[0].id!=453 && allPosts[0].id!=451 && allPosts[0].id!=445 && allPosts[0].id!=413 && allPosts[0].id!=214 )? 
+                                children: <Widget>[                                 
+                                  (allPosts[0].photo!=null && allPosts[0].photo!=''  && allPosts[0].id!=311 && allPosts[0].id!=410 && allPosts[0].id!=236 && allPosts[0].id!=272 && allPosts[0].id!=482 && allPosts[0].id!=312 && allPosts[0].id!=329 && allPosts[0].id!=359 && allPosts[0].id!=402 && allPosts[0].id!=403 && allPosts[0].id!=438 && allPosts[0].id!=418 && allPosts[0].id!=437 && allPosts[0].id!=453 && allPosts[0].id!=451 && allPosts[0].id!=445 && allPosts[0].id!=413 && allPosts[0].id!=214 )? 
                                   FadeInImage.assetNetwork(
                                                           fadeInDuration: const Duration(seconds: 2),
                                                           // alignment: Alignment.topLeft,
@@ -239,9 +240,9 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                     ):Container(),
                       Container(    
                       margin: EdgeInsets.symmetric(vertical: 5.0),                                 
-                      child: StreamBuilder<PostsResponse2>(
+                      child: StreamBuilder<RelatedNewsResponse>(
                       stream: getRelatedNewsBloc.subject.stream,
-                      builder: (context, AsyncSnapshot<PostsResponse2> snapshot) {
+                      builder: (context, AsyncSnapshot<RelatedNewsResponse> snapshot) {
                               if (snapshot.hasData) {
                                 if (snapshot.data.error != null &&
                                       snapshot.data.error.length > 0) {
@@ -290,7 +291,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
   //   List<PostsModel> allPosts = data.posts;
   //   return detailListWidget(allPosts);
   // }
-  Widget _getRelatedNewsWidget(PostsResponse2 data){
+  Widget _getRelatedNewsWidget(RelatedNewsResponse data){
   List<PostsModel> allPosts = data.posts;
     return detailListWidget(allPosts);
   }
@@ -313,7 +314,8 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                      child:Stack(
                             fit:StackFit.expand,
                             children: <Widget>[
-                                (allPosts[index].photo!=null || allPosts[index].photo!='' ) ? FadeInImage.assetNetwork(
+                               (allPosts[index].photo!=null && allPosts[index].photo!=''  && allPosts[index].id!=311 && allPosts[index].id!=410 && allPosts[index].id!=236 && allPosts[index].id!=272 && allPosts[index].id!=482 && allPosts[index].id!=312 && allPosts[index].id!=329 && allPosts[index].id!=359 && allPosts[index].id!=402 && allPosts[index].id!=403 && allPosts[index].id!=438 && allPosts[index].id!=418 && allPosts[index].id!=437 && allPosts[index].id!=453 && allPosts[index].id!=451 && allPosts[index].id!=445 && allPosts[index].id!=413 && allPosts[index].id!=214 )? 
+                                 FadeInImage.assetNetwork(
                                             fadeInDuration: const Duration(seconds: 2),
                                             // alignment: Alignment.topLeft,
                                             placeholder: 'assets/img/placeholder.jpg',

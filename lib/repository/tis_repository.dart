@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:tis/model/medical_response.dart';
-import 'package:tis/model/medical_response2.dart';
+import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/posts_response.dart';
-import 'package:tis/model/posts_response2.dart';
+import 'package:tis/model/related_news_response.dart';
 
 class NewsRepository{
    static String mainUrl="https://test.t-i-s.jp/api";
@@ -59,7 +59,7 @@ class NewsRepository{
       }
     }
 
-    Future<MedicalResponse> getAllNewsSearch() async {
+    Future<MedicalResponse> getMedicalNews() async {
       try {
         Response response = await _dio.get(getAllNewsSearchUrl);
         return MedicalResponse.fromJson(response.data);
@@ -71,24 +71,24 @@ class NewsRepository{
     }
 
     
-    // Future<MedicalResponse2> getMedical2() async {
-    //   try {
-    //     Response response = await _dio.get(getAllNewsSearchUrl);
-    //     return MedicalResponse2.fromJson(response.data);
-    //     // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
-    //   } catch (error, stacktrace) {
-    //     print("Exception occured: $error stackTrace: $stacktrace");
-    //     return MedicalResponse2.withError("$error");
-    //   }
-    // } 
-
-    Future<PostsResponse2> getRelatedNews(String id) async {         
+    Future<NurseResponse> getNurseNews() async {
       try {
-        Response response = await _dio.get(getRelatedNewsUrl+"/"+id);         
-        return PostsResponse2.fromJson(response.data);
+        Response response = await _dio.get(getAllNewsSearchUrl);
+        return NurseResponse.fromJson(response.data);
+        // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
-        return PostsResponse2.withError("$error");
+        return NurseResponse.withError("$error");
+      }
+    } 
+
+    Future<RelatedNewsResponse> getRelatedNews(String id) async {         
+      try {
+        Response response = await _dio.get(getRelatedNewsUrl+"/"+id);         
+        return RelatedNewsResponse.fromJson(response.data);
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        return RelatedNewsResponse.withError("$error");
       }
   }
     Future<NewdetailsResponse> getNewsDetails(String id) async {         

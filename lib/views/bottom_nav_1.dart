@@ -333,23 +333,23 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       child:   ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical, 
-                      itemCount: 3,
+                      itemCount:medical.length>=3?3:medical.length,
                       itemBuilder: (context, index) {
                         return Container(
-                          child: Card(
-                                color:Color(0xfff7f7f7),
-                                child: GestureDetector(
-                                    onTap: (){
-                                       Navigator.push<Widget>(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => TopDetailScreen(top:medical[index].pid.toString()),
-                                              ),
-                                        );
-                                    },
-                                    child: Container(
-                                    height: 90,
-                                    child: Row(
+                          child: GestureDetector(
+                                  onTap: (){
+                                         Navigator.push<Widget>(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => TopDetailScreen(top:medical[index].pid.toString()),
+                                                ),
+                                          );
+                                  },
+                                  child: Card(  
+                                  color:Color(0xfff7f7f7),                                
+                                  child: Container(
+                                  height: 90,
+                                  child: Row(
                                         children: [
                                           Expanded(
                                             child: (medical[index].photo!=null && medical[index].photo!='') ? 
@@ -405,11 +405,12 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                             )
                                           ),
                                         ],
-                                    ),
+                                     ),
                                   ),
-                                ),
+                                  ) ,
                             ),
-                        );
+                          );
+                        // ),
                       }
                   ) ,     
                 ),         
@@ -421,77 +422,87 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                   child: ListView.builder(               
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical, 
-                      itemCount: 6,
+                      itemCount: medical.length>=9?6:(medical.length-3<0?0:medical.length-3),
                       itemBuilder: (context, indexs) {
-                          return  Card(
-                                    color:Color(0xfff7f7f7),
-                                    child: GestureDetector(
+                          return  GestureDetector(
                                       onTap: (){
-                                          // Navigator.push(context, MaterialPageRoute(builder: (context) => TopDetailScreen(top: medical),));
-                                      },
-                                      child: Container(
-                                            height: 41,
-                                            child:Column(
-                                              children: [
-                                                Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child:
-                                                          Padding(
-                                                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                                            child: Stack(
-                                                              children: [                                                           
-                                                                  Icon(
-                                                                      CustomApp.building,
-                                                                      color: Colors.redAccent,
-                                                                      size: 15,                                                                    
-                                                                  ),
-                                                            ]),
-                                                          ) 
-                                                      ),
-                                                      Container(
-                                                        height: 25,
-                                                        // padding: EdgeInsets.only(
-                                                        //   top: 0.0, left: 0,  right: 0.0, bottom:0),
-                                                        width:MediaQuery.of(context).size.width/1.2,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              medical[indexs+3].mainPoint.toString().length>=35?medical[indexs+3].mainPoint.toString().substring(0,25)+"...":medical[indexs+3].mainPoint,  
-                                                              // medical[indexs+3].mainPoint,
-                                                              maxLines: 2,
-                                                              style: TextStyle(
-                                                                  color: Colors.black54,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontSize: 10.0
-                                                              )
-                                                              //overflow: TextOverflow.ellipsis,
-                                                            ),                                                           
-                                                          ],
-                                                        )
-                                                      ),
-                                                    ],
+                                          Navigator.push<Widget>(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => TopDetailScreen(top:medical[indexs+3].pid.toString()),
                                                 ),
-                                                Container(
-                                                      height: 10,
-                                                      margin: const EdgeInsets.only(left: 0.0, top: 0, right: 5.0,bottom: 1.0),
-                                                      child: Align(
-                                                      alignment: Alignment.bottomRight,
-                                                      child: Text(
-                                                        medical[indexs+3].createdAt,
-                                                        style: TextStyle(
-                                                          color: Colors.black38,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 10.0)),
-                                                    ),
-                                                  ),                                               
-                                              ],
-                                            ),
-                                      )
-                                    )
-                          );
+                                          );
+                                      },
+                                      child: Card(
+                                      color:Color(0xfff7f7f7),
+                                      // child: GestureDetector(
+                                      //   onTap: (){
+                                      //       // Navigator.push(context, MaterialPageRoute(builder: (context) => TopDetailScreen(top: medical),));
+                                      //   },
+                                      child: Container(
+                                              height: 41,
+                                              child:Column(
+                                                children: [
+                                                  Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child:
+                                                            Padding(
+                                                              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                                              child: Stack(
+                                                                children: [                                                           
+                                                                    Icon(
+                                                                        CustomApp.building,
+                                                                        color: Colors.redAccent,
+                                                                        size: 15,                                                                    
+                                                                    ),
+                                                              ]),
+                                                            ) 
+                                                        ),
+                                                        Container(
+                                                          height: 25,
+                                                          // padding: EdgeInsets.only(
+                                                          //   top: 0.0, left: 0,  right: 0.0, bottom:0),
+                                                          width:MediaQuery.of(context).size.width/1.2,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Text(
+                                                                medical[indexs+3].mainPoint.toString().length>=35?medical[indexs+3].mainPoint.toString().substring(0,25)+"...":medical[indexs+3].mainPoint,  
+                                                                // medical[indexs+3].mainPoint,
+                                                                maxLines: 2,
+                                                                style: TextStyle(
+                                                                    color: Colors.black54,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 10.0
+                                                                )
+                                                                //overflow: TextOverflow.ellipsis,
+                                                              ),                                                           
+                                                            ],
+                                                          )
+                                                        ),
+                                                      ],
+                                                  ),
+                                                  Container(
+                                                        height: 10,
+                                                        margin: const EdgeInsets.only(left: 0.0, top: 0, right: 5.0,bottom: 1.0),
+                                                        child: Align(
+                                                        alignment: Alignment.bottomRight,
+                                                        child: Text(
+                                                          medical[indexs+3].createdAt,
+                                                          style: TextStyle(
+                                                            color: Colors.black38,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 10.0)),
+                                                      ),
+                                                    ),                                               
+                                                ],
+                                              ),
+                                       )
+                                      ),
+                                  );
+                          // );
                       }
                  ),
                 ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:tis/model/category.dart';
 import 'package:tis/model/column_respons.dart';
 import 'package:tis/model/corona_response.dart';
 import 'package:tis/model/day_service_response.dart';
@@ -35,17 +36,26 @@ class NewsRepository {
       "$mainUrl/get_latest_posts_by_catId_mobile/all_news_search";
   var getCityUrl = "$mainUrl/auth/getCities";
 
-
-    Future<NewsCategory> getNewscategorymobile(String id) async {
-      try {
-        Response response = await _dio.get("$mainUrl/newscategorymobile/"+ id);
-        return NewsCategory.fromJson(response.data);
-      } catch (error, stacktrace) {
-        print("Exception occured: $error stackTrace: $stacktrace");
-        return NewsCategory.withError("$error");
-      }
-
+  Future<Categories> getHome() async {
+    try {
+      Response response = await _dio.get(getHomeUrl);
+      return Categories.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      //return NewsCategory.withError("$error");
     }
+  }
+
+
+  Future<NewsCategory> getNewscategorymobile(String id) async {
+    try {
+      Response response = await _dio.get("$mainUrl/newscategorymobile/"+ id);
+      return NewsCategory.fromJson(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return NewsCategory.withError("$error");
+    }
+  }
   
 
   Future<PostsResponse> getPostsNews() async {

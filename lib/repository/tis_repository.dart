@@ -2,15 +2,23 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:tis/model/category.dart';
+import 'package:tis/model/column_respons.dart';
+import 'package:tis/model/corona_response.dart';
+import 'package:tis/model/day_service_response.dart';
+import 'package:tis/model/group_response.dart';
+// import 'package:tis/model/category.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/newdetails_response.dart';
+import 'package:tis/model/old_people_response.dart';
+import 'package:tis/model/other_response.dart';
 import 'package:tis/model/posts_response.dart';
 import 'package:tis/model/related_news_response.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/model/occupation_response.dart';
+import 'package:tis/model/visit_nurse_response.dart';
 
 class NewsRepository {
   static String mainUrl = "https://test.t-i-s.jp/api";
@@ -96,6 +104,84 @@ class NewsRepository {
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
       return NurseResponse.withError("$error");
+    }
+  }
+
+  Future<OldPeopleResponse> getPaidOldPeopleNews() async {
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      return OldPeopleResponse.fromJson(response.data);
+      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return OldPeopleResponse.withError("$error");
+    }
+  }
+
+  Future<VisitNurseResponse> getVisitNurseNews() async {
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      return VisitNurseResponse.fromJson(response.data);
+      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return VisitNurseResponse.withError("$error");
+    }
+  }
+
+  Future<DayServiceResponse> getdayServiceNews() async {
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      return DayServiceResponse.fromJson(response.data);
+      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return DayServiceResponse.withError("$error");
+    }
+  }
+
+  
+   Future<GroupResponse> getGroupNews() async {
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      return GroupResponse.fromJson(response.data);
+      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return GroupResponse.withError("$error");
+    }
+  }
+
+  Future<CoronaResponse> getCoronaNews() async {
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      return CoronaResponse.fromJson(response.data);
+      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CoronaResponse.withError("$error");
+    }
+  }
+
+  Future<OtherResponse> getOtherNews() async {
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      return OtherResponse.fromJson(response.data);
+      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return OtherResponse.withError("$error");
+    }
+  }
+
+  Future<ColumnResponse> getColumnNews() async {
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      return ColumnResponse.fromJson(response.data);
+      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return ColumnResponse.withError("$error");
     }
   }
 

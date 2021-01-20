@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:tis/app-format.dart';
+import 'package:tis/bloc/get_column_bloc.dart';
+import 'package:tis/bloc/get_corona_bloc.dart';
+import 'package:tis/bloc/get_dayservice_bloc.dart';
+import 'package:tis/bloc/get_group_news_bloc.dart';
 import 'package:tis/bloc/get_medical_bloc.dart';
 import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
 import 'package:tis/bloc/get_nurse_bloc.dart';
+import 'package:tis/bloc/get_oldpeople_news_bloc.dart';
+import 'package:tis/bloc/get_other_bloc.dart';
 import 'package:tis/bloc/get_postsnews_bloc.dart';
+import 'package:tis/bloc/get_visit_nurse_bloc.dart';
 import 'package:tis/elements/loader.dart';
+import 'package:tis/model/column_respons.dart';
+import 'package:tis/model/corona_response.dart';
+import 'package:tis/model/day_service_response.dart';
+import 'package:tis/model/group_response.dart';
 import 'package:tis/model/medical.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
+import 'package:tis/model/old_people_response.dart';
+import 'package:tis/model/other_response.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
+import 'package:tis/model/visit_nurse_response.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/screens/tabs/tab_news_screen.dart';
 import 'package:tis/screens/top/top_detail.dart';
@@ -33,9 +47,16 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   List<TabData> _tabData;
   List<Tab> _tabs = []; 
   Color _activeColor;  
-  bool viewVisible = true ;
+  bool visitNurse = true ;
   bool medicalVisible=true;
   bool nurseVisible=true;
+  bool oldPeople=true;
+  bool dayService=true;
+  bool groupNews=true;
+  bool coronaNews=true;
+  bool otherNews=true;
+  bool columnNews=true;
+
 
   @override
   void initState() {    
@@ -82,6 +103,13 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     getLatestPostAllCatBloc..getLatestPostAllCat();
     getMedicalBloc..getMedicalNews();
     getNurseBloc..getNurseNews();
+    getOldPeopleBloc..getPaidOldPeopleNews();
+    getVisitNurseBloc..getVisitNurseNews();
+    getDayServiceeBloc..getdayServiceNews();
+    getGroupBloc..getGroupNews();
+    getCoronaBloc..getCoronaNews();
+    getOtherBloc..getOtherNews();
+    getColumnBloc..getColumnNews();
     // getMedical2Bloc..getMedical2();
   }
 
@@ -92,7 +120,14 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     // getPostsNewsBloc.drainStream();
     getLatestPostAllCatBloc.drainStream();
     getMedicalBloc.drainStream();
-    getNurseBloc..getNurseNews();
+    getNurseBloc..drainStream();
+    getOldPeopleBloc..drainStream();
+    getVisitNurseBloc..drainStream();
+    getDayServiceeBloc..drainStream();
+    getGroupBloc..drainStream();
+    getCoronaBloc..drainStream();
+    getOtherBloc..drainStream();
+    getColumnBloc..drainStream();
     // getMedical2Bloc.drainStream();
     super.dispose();
   }  
@@ -112,11 +147,53 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
             nurseVisible = true ; 
           }   
       }
-      // if(viewVisible==true){
-      //     viewVisible = false ; 
-      // }else{
-      //     viewVisible = true ; 
-      // }    
+      else if(numb==3){
+          if(oldPeople==true){
+            oldPeople = false ; 
+          }else{
+            oldPeople = true ; 
+          }  
+      }else if(numb==4){
+          if(visitNurse==true){
+            visitNurse = false ; 
+          }else{
+            visitNurse = true ; 
+          } 
+      }else if(numb==5){
+         if(dayService==true){
+            dayService = false ; 
+          }else{
+            dayService = true ; 
+          }         
+      }else if(numb==6){        
+        if(groupNews==true){
+            groupNews = false ; 
+          }else{
+            groupNews = true ; 
+          } 
+      }
+      else if(numb==7){        
+        if(coronaNews==true){
+            coronaNews = false ; 
+          }else{
+            coronaNews = true ; 
+          } 
+      }
+      else if(numb==8){        
+        if(otherNews==true){
+            otherNews = false ; 
+          }else{
+            otherNews = true ; 
+          } 
+      }
+      else if(numb==9){        
+        if(columnNews==true){
+            columnNews = false ; 
+          }else{
+            columnNews = true ; 
+          } 
+      }
+     
     });
   }
 
@@ -190,84 +267,239 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                           MediaQuery.removePadding(
                                 context: context,
                                 removeTop: true,
-                                child: ListView(    
-                                children:[
-                                  Container(
-                                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
-                                        child: StreamBuilder<PostsResponse>(
-                                          stream: getLatestPostAllCatBloc.subject.stream,
-                                          builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
-                                            if (snapshot.hasData) {
-                                              if (snapshot.data.error != null &&
-                                                    snapshot.data.error.length > 0) {
-                                                      return Container();
-                                              }    
-                                                      return  _getLatestPostAllCatWidget(snapshot.data);                                 
-                                            } else if (snapshot.hasError) {
-                                                      return Container();
-                                            } else {                                               
-                                                                                         
-                                                      return Container(
-                                                        height:MediaQuery.of(context).size.height/1.5,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [SizedBox(
-                                                            height: 35,
-                                                            width: 35,
-                                                            child: CircularProgressIndicator()),
-                                                          ]),
-                                                      );//return buildLoadingWidget();
-                                            }
-                                          }                                      
-                                        )
-                                    ),                                 
-
-                                  Container(
-                                        // margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
-                                        child: StreamBuilder<MedicalResponse>(
-                                          stream: getMedicalBloc.subject.stream,
-                                          builder: (context, AsyncSnapshot<MedicalResponse> snapshot) {
+                                child: ListView.builder(                              
+                                itemCount: 1,
+                                itemBuilder: (context, index) {
+                                // children:[
+                                return Column(
+                                    children: [
+                                      Container(
+                                          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                          child: StreamBuilder<PostsResponse>(
+                                            stream: getLatestPostAllCatBloc.subject.stream,
+                                            builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
+                                                        return Container();
+                                                }    
+                                                        return  _getLatestPostAllCatWidget(snapshot.data);                                 
+                                              } else if (snapshot.hasError) {
+                                                        return Container();
+                                              } else {                                               
+                                                                                          
+                                                        return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                        );//return buildLoadingWidget();
+                                              }
+                                            }                                      
+                                          )
+                                      ), 
+                                      Container(
+                                            // margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                            child: StreamBuilder<MedicalResponse>(
+                                              stream: getMedicalBloc.subject.stream,
+                                              builder: (context, AsyncSnapshot<MedicalResponse> snapshot) {
+                                                  if (snapshot.hasData) {
+                                                      if (snapshot.data.error != null &&
+                                                        snapshot.data.error.length > 0) {
+                                                          return Container();
+                                                      }    
+                                                          return _getEachdata(snapshot.data,"病院・医療","0xffd1281c",1);
+                                                          // return  _getMedicalWidget(snapshot.data);          
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget(),
+                                                            ); 
+                                                  }
+                                              } 
+                                            ),
+                                      ),
+                                      Container(
+                                          child: StreamBuilder<NurseResponse>(
+                                          stream: getNurseBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<NurseResponse> snapshot) {
                                               if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
-                                                    snapshot.data.error.length > 0) {
+                                                      snapshot.data.error.length > 0) {
                                                       return Container();
-                                                  }    
-                                                      return _getEachdata(snapshot.data,"病院・医療","0xffd1281c",1);
-                                                      // return  _getMedicalWidget(snapshot.data);          
-                                              }else if (snapshot.hasError) {
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"特養・介護 ","0xff9579ef",2);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
+                                      ),                                        
+                                      Container(
+                                          child: StreamBuilder<OldPeopleResponse>(
+                                          stream: getOldPeopleBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<OldPeopleResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
                                                       return Container();
-                                              } else {                                                
-                                                        return Container(
-                                                          height: 150,
-                                                          child:buildLoadingWidget(),
-                                                        ); 
-                                              }
-                                          } 
-                                        ),
-                                  ),
-                                  Container(
-                                      child: StreamBuilder<NurseResponse>(
-                                      stream: getNurseBloc.subject.stream,
-                                      builder: (context, AsyncSnapshot<NurseResponse> snapshot) {
-                                          if (snapshot.hasData) {
-                                              if (snapshot.data.error != null &&
-                                                  snapshot.data.error.length > 0) {
-                                                  return Container();
-                                              } 
-                                               return _getEachdata(snapshot.data,"特養・介護 ","0xff9579ef",2);
-                                              }else if (snapshot.hasError) {
-                                                      return Container();
-                                              } else {                                                
-                                                        return Container(
-                                                          height: 150,
-                                                          child:buildLoadingWidget()
-                                                        ); 
-                                               }                                         
-                                      }
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"有料老人ホーム","0xff20d1de",3);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
                                       ),
-                                  ),
+                                      Container(
+                                          child: StreamBuilder<VisitNurseResponse>(
+                                          stream: getVisitNurseBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<VisitNurseResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
+                                                      return Container();
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"訪問介護・看護","0xffa3774a",4);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
+                                      ),
+                                      Container(
+                                          child: StreamBuilder<DayServiceResponse>(
+                                          stream: getDayServiceeBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<DayServiceResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
+                                                      return Container();
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"デイサービス","0xffFDCE00",5);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
+                                      ),
+                                      Container(
+                                          child: StreamBuilder<GroupResponse>(
+                                          stream: getGroupBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<GroupResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
+                                                      return Container();
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"グループホーム","0xff211E55",6);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
+                                      ), 
+                                      Container(
+                                          child: StreamBuilder<CoronaResponse>(
+                                          stream: getCoronaBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<CoronaResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
+                                                      return Container();
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"新型コロナ","0xffA01C38",7);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
+                                      ),  
+                                      Container(
+                                          child: StreamBuilder<OtherResponse>(
+                                          stream: getOtherBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<OtherResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
+                                                      return Container();
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"その他","0xffAAAAAA",8);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
+                                      ),  
+                                     Container(
+                                          child: StreamBuilder<ColumnResponse>(
+                                          stream: getColumnBloc.subject.stream,
+                                          builder: (context, AsyncSnapshot<ColumnResponse> snapshot) {
+                                              if (snapshot.hasData) {
+                                                  if (snapshot.data.error != null &&
+                                                      snapshot.data.error.length > 0) {
+                                                      return Container();
+                                                  } 
+                                                  return _getEachdata(snapshot.data,"コラム","0xff29905e",9);
+                                                  }else if (snapshot.hasError) {
+                                                          return Container();
+                                                  } else {                                                
+                                                            return Container(
+                                                              height: 150,
+                                                              child:buildLoadingWidget()
+                                                            ); 
+                                                  }                                         
+                                          }
+                                          ),
+                                      ),  
 
-                                ]      
+
+                                         
+                                  ],
+                                ); 
+                                // ]   
+                                }   
                             ),
                           ),                     
                           TabNewsScreen(categoryId: "1",), //NusingSearch()
@@ -290,6 +522,27 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   //   return _getEachdata(alldata,textdata,colorcode);        
   // }
   Widget _getEachdata(med,textdata,colorcode,numb){
+        bool checkShowHide;
+
+         if(numb==1){
+            checkShowHide=medicalVisible;
+         } else if(numb==2){
+            checkShowHide=nurseVisible;
+         }else if(numb==3){
+            checkShowHide=oldPeople;
+         }else if(numb==4){
+           checkShowHide=visitNurse;
+         }else if(numb==5){
+           checkShowHide=dayService;
+         }else if(numb==6){
+           checkShowHide=groupNews;
+         }else if(numb==7){
+           checkShowHide=coronaNews;
+         }else if(numb==8){
+           checkShowHide=otherNews;
+         }else if(numb==9){
+           checkShowHide=columnNews;
+         }
 
          return  Column(
                     children: [
@@ -316,16 +569,17 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                     ),                                          
                                 ),    
                                   Container(
+                                    width: 300,
                                     margin: const EdgeInsets.only(left: 20.0, top: 0, right: 0.0,bottom:3),  
                                     child: Text(textdata,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color:Color(int.parse(colorcode)),)),
                                   ), 
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width/1.8,
+                                    width:5,//numb!=3?MediaQuery.of(context).size.width/1.8:MediaQuery.of(context).size.width/2.03,
                                   ) ,
                                   new IconButton(                  
                                       icon:new Icon(                                       
-                                         (numb==1?medicalVisible:nurseVisible)==true?Icons.arrow_drop_down_sharp:Icons.arrow_right_sharp,
-                                        color:(numb==1?medicalVisible:nurseVisible)==true?Colors.black87:Colors.redAccent ,
+                                        checkShowHide==true?Icons.arrow_drop_down_sharp:Icons.arrow_right_sharp,//(numb==2?nurseVisible:oldPeople)
+                                        color:checkShowHide==true?Colors.black87:Colors.redAccent ,
                                         ), 
                                       onPressed: (){
                                           showHideWidget(numb);
@@ -333,12 +587,14 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                     ),                                                  
                               ],
                             ),
+
+
                         ),
                         Visibility(
                           maintainSize: false, 
                           maintainAnimation: true,
                           maintainState: true,
-                          visible:numb==1?medicalVisible:nurseVisible,
+                          visible:checkShowHide,
                           child:_getMedicalWidget(med),  
                         ),                      
                     ],
@@ -392,7 +648,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                     Center(
                                                       child: 
                                                       medical[index].pid!=410?FadeInImage(
-                                                        fadeInDuration: const Duration(seconds: 2),
+                                                        // fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
                                                         image: NetworkImage(
                                                           "https://test.t-i-s.jp/upload/news/"+medical[index].photo,
@@ -591,7 +847,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                 children: <Widget>[
                                                    (i.photo!=null && i.photo!='' ) ?                 
                                                    FadeInImage.assetNetwork(                                                          
-                                                                fadeInDuration: const Duration(seconds: 2),
+                                                                // fadeInDuration: const Duration(seconds: 2),
                                                                 // alignment: Alignment.topLeft,
                                                                 placeholder: 'assets/img/placeholder.jpg',
                                                                 image: "https://test.t-i-s.jp/upload/news/"+i.photo,

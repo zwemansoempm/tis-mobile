@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_medical_bloc.dart';
@@ -6,29 +5,19 @@ import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
 import 'package:tis/bloc/get_nurse_bloc.dart';
 import 'package:tis/bloc/get_postsnews_bloc.dart';
-// import 'package:tis/bloc/get_source_news_bloc.dart';
 import 'package:tis/elements/loader.dart';
-import 'package:tis/model/article.dart';
-import 'package:tis/model/article_response.dart';
 import 'package:tis/model/medical.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/posts_response.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
-import 'package:tis/screens/hospital/hospital_search.dart';
-// import 'package:tis/model/source.dart';
-import 'package:tis/screens/news_detail.dart';
 import 'package:tis/screens/tabs/tab_news_screen.dart';
 import 'package:tis/screens/top/top_detail.dart';
-import 'package:tis/views/nusingSearch.dart';
 import 'package:tis/views/search.dart';
-import 'package:tis/views/jobsearch.dart';
 import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:html/parser.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'jobsearch.dart';
 import 'package:intl/intl.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -57,7 +46,6 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
       TabData(title: '  病院・医療  ', color:Color(0xffd1281c)),
       TabData(title: '  特養・介護  ', color:Color(0xff9579ef)),
       TabData(title: '  有料老人ホーム  ', color: Color(0xff20d1de)),
-
       TabData(title: '  訪問介護・看護  ', color: Color(0xffa3774a)),   
       TabData(title: '  デイサービス  ', color: Color(0xffFDCE00)),
       TabData(title: '  グループホーム  ', color: Color(0xff211E55)),
@@ -153,7 +141,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       onPressed: () {  },                 
                     ),
                     centerTitle: true,
-                    title: Row(
+                    title: Row(                      
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[ 
                           SizedBox(
@@ -251,7 +239,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                               } else {                                                
                                                         return Container(
                                                           height: 150,
-                                                          child:buildLoadingWidget()
+                                                          child:buildLoadingWidget(),
                                                         ); 
                                               }
                                           } 
@@ -281,16 +269,16 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
 
                                 ]      
                             ),
-                          ),                         
-                          TabNewsScreen(), //NusingSearch(),
-                          HospitalSearch(),
-                          Center(child: Text("")),
-                          Center(child: Text("")),
-                          Center(child: Text("")),
-                          Center(child: Text("")),
-                          Center(child: Text("")),
-                          Center(child: Text("")),
-                          JobSearch(),
+                          ),                     
+                          TabNewsScreen(categoryId: "1",), //NusingSearch()
+                          TabNewsScreen(categoryId: "2",), //HospitalSearch(),
+                          TabNewsScreen(categoryId: "3",),
+                          TabNewsScreen(categoryId: "4",),
+                          TabNewsScreen(categoryId: "5",),
+                          TabNewsScreen(categoryId: "22",),
+                          TabNewsScreen(categoryId: "30",),
+                          TabNewsScreen(categoryId: "27",),
+                          TabNewsScreen(categoryId: "40",), //JobSearch(),
                         ],
                       ),
                     ),     

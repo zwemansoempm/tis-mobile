@@ -9,10 +9,11 @@ class GetNewsCategoryMobileBloc {
   final BehaviorSubject<NewsCategory> _subject =
       BehaviorSubject<NewsCategory>();
 
-  getNewsCategoryMobile() async {
-    NewsCategory response = await _repository.getNewscategorymobile();
+  getNewsCategoryMobile(String categoryId) async {
+    NewsCategory response = await _repository.getNewscategorymobile(categoryId);
     _subject.sink.add(response);
   }
+
   void drainStream(){ _subject.value = null; }
   @mustCallSuper
   void dispose() async{

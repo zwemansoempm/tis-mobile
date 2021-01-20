@@ -174,7 +174,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                 children: <Widget>[                                 
                                   (allPosts[0].photo!=null && allPosts[0].photo!=''  && allPosts[0].id!=311 && allPosts[0].id!=410 && allPosts[0].id!=236 && allPosts[0].id!=272 && allPosts[0].id!=482 && allPosts[0].id!=312 && allPosts[0].id!=329 && allPosts[0].id!=359 && allPosts[0].id!=402 && allPosts[0].id!=403 && allPosts[0].id!=438 && allPosts[0].id!=418 && allPosts[0].id!=437 && allPosts[0].id!=453 && allPosts[0].id!=451 && allPosts[0].id!=445 && allPosts[0].id!=413 && allPosts[0].id!=214 )? 
                                   FadeInImage.assetNetwork(
-                                                          fadeInDuration: const Duration(seconds: 2),
+                                                          // fadeInDuration: const Duration(seconds: 2),
                                                           // alignment: Alignment.topLeft,
                                                           placeholder: 'assets/img/placeholder.jpg',
                                                           image: "https://test.t-i-s.jp/upload/news/"+allPosts[0].photo,
@@ -316,7 +316,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                             children: <Widget>[
                                (allPosts[index].photo!=null && allPosts[index].photo!=''  && allPosts[index].id!=311 && allPosts[index].id!=410 && allPosts[index].id!=236 && allPosts[index].id!=272 && allPosts[index].id!=482 && allPosts[index].id!=312 && allPosts[index].id!=329 && allPosts[index].id!=359 && allPosts[index].id!=402 && allPosts[index].id!=403 && allPosts[index].id!=438 && allPosts[index].id!=418 && allPosts[index].id!=437 && allPosts[index].id!=453 && allPosts[index].id!=451 && allPosts[index].id!=445 && allPosts[index].id!=413 && allPosts[index].id!=214 )? 
                                  FadeInImage.assetNetwork(
-                                            fadeInDuration: const Duration(seconds: 2),
+                                            // fadeInDuration: const Duration(seconds: 2),
                                             // alignment: Alignment.topLeft,
                                             placeholder: 'assets/img/placeholder.jpg',
                                             image: "https://test.t-i-s.jp/upload/news/"+allPosts[index].photo,

@@ -39,7 +39,7 @@ class NewsRepository {
       }
 
     }
-  }
+  
 
   Future<PostsResponse> getPostsNews() async {
     var params = {

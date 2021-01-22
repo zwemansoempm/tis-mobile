@@ -127,39 +127,52 @@ class _BottomNav4State extends State<JobWidget> {
                         stream: getCityBloc.subject.stream,
                         builder:
                             (context, AsyncSnapshot<CityResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(
+                                        height:MediaQuery.of(context).size.height/1.5,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [SizedBox(
+                                            height: 35,
+                                            width: 35,
+                                            child: CircularProgressIndicator()),
+                                          ]),
+                                    );//
+                                }
+                                else if (snapshot.hasError) {
+                                    return Container();
+                                } 
+                                else if (snapshot.hasData) {
+                                    if (snapshot.data.error != null &&
+                                        snapshot.data.error.length > 0) {
+                                      return Container();
+                                    }
 
-                            return Container(
-                                child: DropdownButtonHideUnderline(
-                              child: new DropdownButton<String>(
-                                //isDense: true,
-                                isExpanded: true,
-                                hint: new Text("市区町"),
-                                value: _city,
-                                onChanged: (String newValue) {
-                                  setState(() => _city = newValue);
+                                      return Container(
+                                        child: DropdownButtonHideUnderline(
+                                        child: new DropdownButton<String>(
+                                          //isDense: true,
+                                          isExpanded: true,
+                                          hint: new Text("市区町"),
+                                          value: _city,
+                                          onChanged: (String newValue) {
+                                            setState(() => _city = newValue);
 
-                                  getTspBloc..getTownship(_city);
-                                  getOccBloc..getOccupation(_city);
-                                },
-                                items: snapshot.data.city
-                                    .toList()
-                                    .map((CityModel cityModel) =>
-                                        DropdownMenuItem(
-                                            value: cityModel.id.toString(),
-                                            child: Text(cityModel.city_name)))
-                                    .toList(),
-                              ),
-                            ));
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Container(); //buildLoadingWidget();
-                          }
+                                            getTspBloc..getTownship(_city);
+                                            getOccBloc..getOccupation(_city);
+                                          },
+                                          items: snapshot.data.city
+                                              .toList()
+                                              .map((CityModel cityModel) =>
+                                                  DropdownMenuItem(
+                                                      value: cityModel.id.toString(),
+                                                      child: Text(cityModel.city_name)))
+                                              .toList(),
+                                        ),
+                                      ));
+                                } else {
+                                    return Container(); //buildLoadingWidget();
+                                }
                         }),
                   ),
 
@@ -175,59 +188,72 @@ class _BottomNav4State extends State<JobWidget> {
                         stream: getTspBloc.subject.stream,
                         builder: (context,
                             AsyncSnapshot<TownshipResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(
+                                        height:MediaQuery.of(context).size.height/1.5,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [SizedBox(
+                                            height: 35,
+                                            width: 35,
+                                            child: CircularProgressIndicator()),
+                                          ]),
+                                    );//
+                                 }
+                                else if (snapshot.hasError) {
+                                            return Container();
+                                } 
+                                else if (snapshot.hasData) {
+                                          if (snapshot.data.error != null &&
+                                              snapshot.data.error.length > 0) {
+                                            return Container();
+                                          }
 
-                            return Container(
-                                child: DropdownButtonHideUnderline(
-                              child: new DropdownButton<String>(
-                                //isDense: true,
-                                isExpanded: true,
-                                hint: new Text("市から探す"),
-                                value: _township,
-                                onChanged: (String newValue) {
-                                  setState(() => _township = newValue);
-                                },
-                                items: snapshot.data.township
-                                    .toList()
-                                    .map((TownshipModel tspModel) =>
-                                        DropdownMenuItem(
-                                            value: tspModel.id.toString(),
-                                            child:
-                                                Text(tspModel.township_name)))
-                                    .toList(),
-                              ),
-                            ));
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Container(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                    isExpanded: true,
-                                    //value: _value,
-                                    hint: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_drop_down_outlined,
-                                          size: 35.0,
-                                        ),
-                                        Text("市から探す"),
-                                      ],
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        //_value = value;
-                                      });
-                                    }),
-                              ),
-                            ); //buildLoadingWidget();
-                          }
-                        }),
-                  ),
+                                            return Container(
+                                                child: DropdownButtonHideUnderline(
+                                              child: new DropdownButton<String>(
+                                                //isDense: true,
+                                                isExpanded: true,
+                                                hint: new Text("市から探す"),
+                                                value: _township,
+                                                onChanged: (String newValue) {
+                                                  setState(() => _township = newValue);
+                                                },
+                                                items: snapshot.data.township
+                                                    .toList()
+                                                    .map((TownshipModel tspModel) =>
+                                                        DropdownMenuItem(
+                                                            value: tspModel.id.toString(),
+                                                            child:
+                                                                Text(tspModel.township_name)))
+                                                    .toList(),
+                                              ),
+                                            ));
+                                  } else {
+                                            return Container(
+                                              child: DropdownButtonHideUnderline(
+                                                child: DropdownButton(
+                                                    isExpanded: true,
+                                                    //value: _value,
+                                                    hint: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.arrow_drop_down_outlined,
+                                                          size: 35.0,
+                                                        ),
+                                                        Text("市から探す"),
+                                                      ],
+                                                    ),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        //_value = value;
+                                                      });
+                                                    }),
+                                              ),
+                                            ); //buildLoadingWidget();
+                                   }
+                          }),
+                   ),
 
                   Divider(
                     color: Colors.grey[300],
@@ -261,20 +287,33 @@ class _BottomNav4State extends State<JobWidget> {
                         stream: getOccBloc.subject.stream,
                         builder: (context,
                             AsyncSnapshot<OccupationResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            } else {
-                              return Column(
-                                  children:
-                                      getTextWidgets(snapshot.data.occupation));
-                            }
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Container(); //buildLoadingWidget();
-                          }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Container(
+                                          height:MediaQuery.of(context).size.height/1.5,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [SizedBox(
+                                              height: 35,
+                                              width: 35,
+                                              child: CircularProgressIndicator()),
+                                            ]),
+                                      );//
+                                 }
+                                else if (snapshot.hasError) {
+                                            return Container();
+                                } 
+                                else if (snapshot.hasData) {
+                                  if (snapshot.data.error != null &&
+                                      snapshot.data.error.length > 0) {
+                                    return Container();
+                                  } else {
+                                    return Column(
+                                        children:
+                                            getTextWidgets(snapshot.data.occupation));
+                                  }
+                                } else {
+                                  return Container(); //buildLoadingWidget();
+                                }
                         }),
                   ),
 

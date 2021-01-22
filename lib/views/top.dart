@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,9 +31,11 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
+
   @override
   void initState() {
-    super.initState();
+    super.initState();   
+
      initConnectivity();
     _connectivitySubscription =
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -42,7 +44,7 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel();
+    _connectivitySubscription.cancel(); 
     _tabController.dispose();
     super.dispose();
   }
@@ -51,10 +53,16 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
   Future<void> initConnectivity() async {
     ConnectivityResult result;
     // Platform messages may fail, so we use a try/catch PlatformException.
+
     try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
+    }
+    on PlatformException catch (e) {
       print(e.toString());
+    } 
+    on SocketException catch(e){
+        print('socket error');
+        print(e.toString());
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -84,8 +92,8 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
     }
   }
 
-  int _selectedIndex = 0;
-  Widget tabCheck; 
+  int _selectedIndex = 0; 
+
   @override
   Widget build(BuildContext context) { 
 
@@ -93,7 +101,7 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
       length: 4, 
       initialIndex: 0, 
       child: Scaffold(       
-      body:
+      body:     
          _connectionStatus=="3"?  
         Center(child: Text('接続ステータス：接続を取得できませんでした。')):
         TabBarView(

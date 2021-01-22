@@ -31,7 +31,8 @@ class _BottomNav4State extends State<JobWidget> {
 
   static String _city;
   static String _township;
-  //static String _occupation;
+  bool valuefirst = true;
+  bool valuesecond = true;
 
   @override
   void initState() {
@@ -41,7 +42,6 @@ class _BottomNav4State extends State<JobWidget> {
 
   @override
   void dispose() {
-    // getSourceNewsBloc.drainStream();
     getCityBloc.drainStream();
     getTspBloc.drainStream();
 
@@ -54,37 +54,39 @@ class _BottomNav4State extends State<JobWidget> {
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (context, setState) {
-              return AlertDialog(
-                //title: Text('Preferred Location'),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context, cityList);
-                    },
-                    child: Text('Done'),
-                  ),
-                ],
-                content: Container(
-                  width: double.minPositive,
-                  height: 300,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: cityList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String _key = cityList.keys.elementAt(index);
-                      return CheckboxListTile(
-                        value: cityList[_key],
-                        title: Text(_key),
-                        onChanged: (val) {
-                          setState(() {
-                            cityList[_key] = val;
-                          });
-                        },
-                      );
-                    },
-                  ),
+              return
+                  // AlertDialog(
+                  //   //title: Text('Preferred Location'),
+                  //   actions: <Widget>[
+                  //     FlatButton(
+                  //       onPressed: () {
+                  //         Navigator.pop(context, cityList);
+                  //       },
+                  //       child: Text('Done'),
+                  //     ),
+                  //   ],
+                  //   content:
+                  Container(
+                width: double.minPositive,
+                height: 300,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: cityList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    String _key = cityList.keys.elementAt(index);
+                    return CheckboxListTile(
+                      value: cityList[_key],
+                      title: Text(_key),
+                      onChanged: (val) {
+                        setState(() {
+                          cityList[_key] = val;
+                        });
+                      },
+                    );
+                  },
                 ),
               );
+              //);
             },
           );
         });
@@ -148,15 +150,27 @@ class _BottomNav4State extends State<JobWidget> {
                                       return Container();
                                     }
 
-                                      return Container(
-                                        child: DropdownButtonHideUnderline(
-                                        child: new DropdownButton<String>(
-                                          //isDense: true,
-                                          isExpanded: true,
-                                          hint: new Text("市区町"),
-                                          value: _city,
-                                          onChanged: (String newValue) {
-                                            setState(() => _city = newValue);
+
+                            return Container(
+                                child: DropdownButtonHideUnderline(
+                              child: new DropdownButton<String>(
+                                //isDense: true,
+                                isExpanded: true,
+                                //hint: new Text("市区町"),
+                                hint: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_drop_down_outlined,
+                                      size: 35.0,
+                                    ),
+                                    Text("市区町村"),
+                                  ],
+                                ),
+
+                                value: _city,
+                                onChanged: (String newValue) {
+                                  setState(() => _city = newValue);
+
 
                                             getTspBloc..getTownship(_city);
                                             getOccBloc..getOccupation(_city);
@@ -209,51 +223,55 @@ class _BottomNav4State extends State<JobWidget> {
                                             return Container();
                                           }
 
-                                            return Container(
-                                                child: DropdownButtonHideUnderline(
-                                              child: new DropdownButton<String>(
-                                                //isDense: true,
-                                                isExpanded: true,
-                                                hint: new Text("市から探す"),
-                                                value: _township,
-                                                onChanged: (String newValue) {
-                                                  setState(() => _township = newValue);
-                                                },
-                                                items: snapshot.data.township
-                                                    .toList()
-                                                    .map((TownshipModel tspModel) =>
-                                                        DropdownMenuItem(
-                                                            value: tspModel.id.toString(),
-                                                            child:
-                                                                Text(tspModel.township_name)))
-                                                    .toList(),
-                                              ),
-                                            ));
-                                  } else {
-                                            return Container(
-                                              child: DropdownButtonHideUnderline(
-                                                child: DropdownButton(
-                                                    isExpanded: true,
-                                                    //value: _value,
-                                                    hint: Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.arrow_drop_down_outlined,
-                                                          size: 35.0,
-                                                        ),
-                                                        Text("市から探す"),
-                                                      ],
-                                                    ),
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        //_value = value;
-                                                      });
-                                                    }),
-                                              ),
-                                            ); //buildLoadingWidget();
-                                   }
-                          }),
-                   ),
+
+                            return Container(
+                                child: DropdownButtonHideUnderline(
+                              child: new DropdownButton<String>(
+                                //isDense: true,
+                                isExpanded: true,
+                                hint: new Text("市から探す"),
+                                value: _township,
+                                onChanged: (String newValue) {
+                                  setState(() => _township = newValue);
+                                },
+                                items: snapshot.data.township
+                                    .toList()
+                                    .map((TownshipModel tspModel) =>
+                                        DropdownMenuItem(
+                                            value: tspModel.id.toString(),
+                                            child:
+                                                Text(tspModel.township_name)))
+                                    .toList(),
+                              ),
+                            ));
+                          } else if (snapshot.hasError) {
+                            return Container();
+                          } else {
+                            return Container(
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                    isExpanded: true,
+                                    //value: _value,
+                                    hint: Row(
+                                      children: [
+                                        // Icon(
+                                        //   Icons.arrow_drop_down_outlined,
+                                        //   size: 35.0,
+                                        // ),
+                                        Text("市から探す"),
+                                      ],
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        //_value = value;
+                                      });
+                                    }),
+                              ),
+                            ); //buildLoadingWidget();
+                          }
+                        }),
+                  ),
+
 
                   Divider(
                     color: Colors.grey[300],
@@ -277,12 +295,6 @@ class _BottomNav4State extends State<JobWidget> {
                   ),
 
                   Container(
-                    // margin: EdgeInsets.all(8),
-                    // padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    // decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(5.0),
-                    //     color: Colors.white,
-                    //     border: Border.all(color: Colors.grey[400])),
                     child: StreamBuilder<OccupationResponse>(
                         stream: getOccBloc.subject.stream,
                         builder: (context,
@@ -322,29 +334,58 @@ class _BottomNav4State extends State<JobWidget> {
                     thickness: 1,
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                      child: ListTile(
-                        dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        leading: Text(
-                          "雇用形態",
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                        trailing: Icon(Icons.arrow_drop_down_outlined),
-                      ),
-                      color: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.grey[400], width: 1),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      onPressed: () {
-                        _checkBoxList();
-                      },
-                    ),
-                  ),
+                  Container(
+                      margin: EdgeInsets.all(8),
+                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey[400])),
+                      child: DropdownButton(
+                        isExpanded: true,
+
+                        items: [
+                          DropdownMenuItem(
+                            child: Row(
+                              children: <Widget>[
+                                Text('雇用形態から探す'),
+                              ],
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            child: Row(
+                              children: <Widget>[
+                                Checkbox(
+                                  value: this.valuefirst,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      this.valuefirst = value;
+                                    });
+                                  },
+                                ),
+                                Text('First'),
+                              ],
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            child: Row(
+                              children: <Widget>[
+                                Checkbox(
+                                  value: this.valuesecond,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      this.valuesecond = value;
+                                    });
+                                  },
+                                ),
+                                Text('Second'),
+                              ],
+                            ),
+                          )
+                        ],
+                        onChanged: (value) {},
+                        //hint: Text('Select value'),
+                      )),
                 ],
               ),
             ),
@@ -480,3 +521,27 @@ List<Widget> getTextWidgets(List<OccupationModel> occ) {
   }
   return list;
 }
+
+// class CheckBoxListTileModel {
+//   int userId;
+//   String img;
+//   String title;
+//   bool isCheck;
+
+//   CheckBoxListTileModel({this.userId, this.img, this.title, this.isCheck});
+
+//   static List<CheckBoxListTileModel> getUsers() {
+//     return <CheckBoxListTileModel>[
+//       CheckBoxListTileModel(
+//           userId: 1,
+//           //img: 'assets/images/android_img.png',
+//           title: "Android",
+//           isCheck: true),
+//       CheckBoxListTileModel(
+//           userId: 2,
+//           //img: 'assets/images/flutter.jpeg',
+//           title: "Flutter",
+//           isCheck: false),
+//     ];
+//   }
+// }

@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:io';
+// import 'dart:html';
 import 'package:dio/dio.dart';
 import 'package:tis/model/category.dart';
 import 'package:tis/model/column_respons.dart';
@@ -37,28 +38,40 @@ class NewsRepository {
   var getCityUrl = "$mainUrl/auth/getCities";
 
   Future<Categories> getHome() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getHomeUrl);
-      return Categories.fromJson(response.data);
+      if(response.statusCode==HttpStatus.ok){
+        return Categories.fromJson(response.data);
+      }else{
+        throw SocketException('No Internet');       
+      }      
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
+      throw SocketException('No Internet');
+      // throw HttpException('404');
+      // print("Exception occured: $error stackTrace: $stacktrace");
       //return NewsCategory.withError("$error");
     }
   }
 
-
   Future<NewsCategory> getNewscategorymobile(String id) async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get("$mainUrl/newscategorymobile/"+ id);
-      return NewsCategory.fromJson(response.data);
+       if(response.statusCode==HttpStatus.ok){
+          return NewsCategory.fromJson(response.data);
+        } else{
+          throw SocketException('No Internet');       
+        }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return NewsCategory.withError("$error");
+       throw SocketException('No Internet');
+      // print("Exception occured: $error stackTrace: $stacktrace");
+      // return NewsCategory.withError("$error");
     }
-  }
-  
+  } 
 
   Future<PostsResponse> getPostsNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     var params = {
       "category_id": 1,
       "search_word": "",
@@ -66,179 +79,233 @@ class NewsRepository {
 
     try {
       Response response = await _dio.post(getPostsUrl, queryParameters: params);
-      return PostsResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      
+    if(response.statusCode==HttpStatus.ok){
+        return PostsResponse.fromJson(response.data);
+      }else{
+        throw SocketException('No Internet');       
+    }  
+      
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return PostsResponse.withError("$error");
+       throw SocketException('No Internet');
+      // print("Exception occured: $error stackTrace: $stacktrace");
+      // return PostsResponse.withError("$error");
     }
   }
 
   Future<PostsResponse> getLatestPostAllCat() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getLatestPostAllCatUrl);
-      return PostsResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+         return PostsResponse.fromJson(response.data);
+      }  else{
+        throw SocketException('No Internet');       
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return PostsResponse.withError("$error");
+     throw SocketException('No Internet');
     }
   }
 
   Future<MedicalResponse> getMedicalNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return MedicalResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return MedicalResponse.withError("$error");
-    }
+      if(response.statusCode==HttpStatus.ok){
+        return MedicalResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');      
+      }
+      } catch (error, stacktrace) {
+        throw SocketException('No Internet');
+      }
   }
 
   Future<NurseResponse> getNurseNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return NurseResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+        return NurseResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');       
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return NurseResponse.withError("$error");
+        throw SocketException('No Internet');
     }
   }
 
   Future<OldPeopleResponse> getPaidOldPeopleNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return OldPeopleResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+        return OldPeopleResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return OldPeopleResponse.withError("$error");
+        throw SocketException('No Internet');
     }
   }
 
   Future<VisitNurseResponse> getVisitNurseNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return VisitNurseResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+         return VisitNurseResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return VisitNurseResponse.withError("$error");
+       throw SocketException('No Internet');
     }
   }
 
   Future<DayServiceResponse> getdayServiceNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return DayServiceResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+        return DayServiceResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return DayServiceResponse.withError("$error");
+      throw SocketException('No Internet');
     }
   }
 
-  
    Future<GroupResponse> getGroupNews() async {
+     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return GroupResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+        return GroupResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return GroupResponse.withError("$error");
+        throw SocketException('No Internet');
     }
   }
 
   Future<CoronaResponse> getCoronaNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return CoronaResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+        return CoronaResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return CoronaResponse.withError("$error");
+      throw SocketException('No Internet');
     }
   }
 
   Future<OtherResponse> getOtherNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return OtherResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+        return OtherResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return OtherResponse.withError("$error");
+      throw SocketException('No Internet');
     }
   }
 
   Future<ColumnResponse> getColumnNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      return ColumnResponse.fromJson(response.data);
-      // List<PostsResponse> responses =json.decode(response.data).map((j) => print(j));
+      if(response.statusCode==HttpStatus.ok){
+        return ColumnResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');        
+      }
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return ColumnResponse.withError("$error");
+     throw SocketException('No Internet');
     }
   }
 
   Future<RelatedNewsResponse> getRelatedNews(String id) async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getRelatedNewsUrl + "/" + id);
-      return RelatedNewsResponse.fromJson(response.data);
+      if(response.statusCode==HttpStatus.ok){
+        return RelatedNewsResponse.fromJson(response.data);
+      } else{
+        throw SocketException('No Internet');        
+      }     
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return RelatedNewsResponse.withError("$error");
+      throw SocketException('No Internet');
     }
   }
 
   Future<NewdetailsResponse> getNewsDetails(String id) async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getNewsDetailsUrl + "/" + id);
-      return NewdetailsResponse.fromJson(response.data);
+      if(response.statusCode==HttpStatus.ok){
+          return NewdetailsResponse.fromJson(response.data);
+      } else{
+          throw SocketException('No Internet');       
+      }    
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return NewdetailsResponse.withError("$error");
+          throw SocketException('No Internet');
     }
   }
 
   Future<CityResponse> getCity() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
-      Response response = await _dio.get(getCityUrl);
-      //print(response);
-      return CityResponse.fromJson(response.data);
+      Response response = await _dio.get(getCityUrl);    
+      if(response.statusCode==HttpStatus.ok){
+          return CityResponse.fromJson(response.data);
+      } else{
+          throw SocketException('No Internet');       
+      }    
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return CityResponse.withError("$error");
+          throw SocketException('No Internet');
     }
   }
 
   Future<TownshipResponse> getTsp(String test) async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       var getTspUrl = "$mainUrl/getmap?id=" +
           test +
           '&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=job&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0';
-      Response response = await _dio.get(getTspUrl);
-      return TownshipResponse.fromJson(response.data);
+      Response response = await _dio.get(getTspUrl);    
+      if(response.statusCode==HttpStatus.ok){
+          return TownshipResponse.fromJson(response.data);
+      } else{
+          throw SocketException('No Internet');    
+      }      
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return TownshipResponse.withError("$error");
+          throw SocketException('No Internet');
     }
   }
 
   Future<OccupationResponse> getOccupation(String test) async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       var getOccupationUrl = "$mainUrl/getmap?id=" +
           test +
           '&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=job&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0';
       Response response = await _dio.get(getOccupationUrl);
-      return OccupationResponse.fromJson(response.data);
+      if(response.statusCode==HttpStatus.ok){
+          return OccupationResponse.fromJson(response.data);
+      } else{
+          throw SocketException('No Internet');      
+      }    
     } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return OccupationResponse.withError("$error");
+     throw SocketException('No Internet');
     }
   }
 }

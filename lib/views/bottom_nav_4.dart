@@ -129,11 +129,27 @@ class _BottomNav4State extends State<JobWidget> {
                         stream: getCityBloc.subject.stream,
                         builder:
                             (context, AsyncSnapshot<CityResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(
+                                        height:MediaQuery.of(context).size.height/1.5,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [SizedBox(
+                                            height: 35,
+                                            width: 35,
+                                            child: CircularProgressIndicator()),
+                                          ]),
+                                    );//
+                                }
+                                else if (snapshot.hasError) {
+                                    return Container();
+                                } 
+                                else if (snapshot.hasData) {
+                                    if (snapshot.data.error != null &&
+                                        snapshot.data.error.length > 0) {
+                                      return Container();
+                                    }
+
 
                             return Container(
                                 child: DropdownButtonHideUnderline(
@@ -155,23 +171,22 @@ class _BottomNav4State extends State<JobWidget> {
                                 onChanged: (String newValue) {
                                   setState(() => _city = newValue);
 
-                                  getTspBloc..getTownship(_city);
-                                  getOccBloc..getOccupation(_city);
-                                },
-                                items: snapshot.data.city
-                                    .toList()
-                                    .map((CityModel cityModel) =>
-                                        DropdownMenuItem(
-                                            value: cityModel.id.toString(),
-                                            child: Text(cityModel.city_name)))
-                                    .toList(),
-                              ),
-                            ));
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Container(); //buildLoadingWidget();
-                          }
+
+                                            getTspBloc..getTownship(_city);
+                                            getOccBloc..getOccupation(_city);
+                                          },
+                                          items: snapshot.data.city
+                                              .toList()
+                                              .map((CityModel cityModel) =>
+                                                  DropdownMenuItem(
+                                                      value: cityModel.id.toString(),
+                                                      child: Text(cityModel.city_name)))
+                                              .toList(),
+                                        ),
+                                      ));
+                                } else {
+                                    return Container(); //buildLoadingWidget();
+                                }
                         }),
                   ),
 
@@ -187,11 +202,27 @@ class _BottomNav4State extends State<JobWidget> {
                         stream: getTspBloc.subject.stream,
                         builder: (context,
                             AsyncSnapshot<TownshipResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(
+                                        height:MediaQuery.of(context).size.height/1.5,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [SizedBox(
+                                            height: 35,
+                                            width: 35,
+                                            child: CircularProgressIndicator()),
+                                          ]),
+                                    );//
+                                 }
+                                else if (snapshot.hasError) {
+                                            return Container();
+                                } 
+                                else if (snapshot.hasData) {
+                                          if (snapshot.data.error != null &&
+                                              snapshot.data.error.length > 0) {
+                                            return Container();
+                                          }
+
 
                             return Container(
                                 child: DropdownButtonHideUnderline(
@@ -241,6 +272,7 @@ class _BottomNav4State extends State<JobWidget> {
                         }),
                   ),
 
+
                   Divider(
                     color: Colors.grey[300],
                     thickness: 1,
@@ -267,20 +299,33 @@ class _BottomNav4State extends State<JobWidget> {
                         stream: getOccBloc.subject.stream,
                         builder: (context,
                             AsyncSnapshot<OccupationResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            } else {
-                              return Column(
-                                  children:
-                                      getTextWidgets(snapshot.data.occupation));
-                            }
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Container(); //buildLoadingWidget();
-                          }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Container(
+                                          height:MediaQuery.of(context).size.height/1.5,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [SizedBox(
+                                              height: 35,
+                                              width: 35,
+                                              child: CircularProgressIndicator()),
+                                            ]),
+                                      );//
+                                 }
+                                else if (snapshot.hasError) {
+                                            return Container();
+                                } 
+                                else if (snapshot.hasData) {
+                                  if (snapshot.data.error != null &&
+                                      snapshot.data.error.length > 0) {
+                                    return Container();
+                                  } else {
+                                    return Column(
+                                        children:
+                                            getTextWidgets(snapshot.data.occupation));
+                                  }
+                                } else {
+                                  return Container(); //buildLoadingWidget();
+                                }
                         }),
                   ),
 

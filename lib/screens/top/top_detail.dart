@@ -74,17 +74,8 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                               child: StreamBuilder<NewdetailsResponse>(
                                 stream: getNewdetailsBloc.subject.stream,
                                 builder: (context, AsyncSnapshot<NewdetailsResponse> snapshot) {
-                                  if (snapshot.hasData) {
-                                    if (snapshot.data.error != null &&
-                                          snapshot.data.error.length > 0) {
-                                            return Container();
-                                    }    
-                                            return  _getNewdetailsWidget(snapshot.data);                                 
-                                  } else if (snapshot.hasError) {
-                                            return Container();
-                                  } else {                                               
-                                                                                
-                                            return Container(
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                          return Container(
                                               height:MediaQuery.of(context).size.height/1.5,
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -93,8 +84,30 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                                                   width: 35,
                                                   child: CircularProgressIndicator()),
                                                 ]),
-                                            );//return buildLoadingWidget();
-                                  }
+                                          );//
+                                    }
+                                    else if (snapshot.hasError) {
+                                          return Container();
+                                    } 
+                                    else   if (snapshot.hasData) {
+                                          if (snapshot.data.error != null &&
+                                                snapshot.data.error.length > 0) {
+                                                  return Container();
+                                          }    
+                                                  return  _getNewdetailsWidget(snapshot.data);                                 
+                                    } else {                                               
+                                                                                
+                                          return Container(
+                                              height:MediaQuery.of(context).size.height/1.5,
+                                               child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [SizedBox(
+                                                height: 35,
+                                                width: 35,
+                                                child: CircularProgressIndicator()),
+                                              ]),
+                                          );//return buildLoadingWidget();
+                                    }
                                 }                                      
                               )
                             ),   
@@ -243,54 +256,45 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                       child: StreamBuilder<RelatedNewsResponse>(
                       stream: getRelatedNewsBloc.subject.stream,
                       builder: (context, AsyncSnapshot<RelatedNewsResponse> snapshot) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data.error != null &&
-                                      snapshot.data.error.length > 0) {
-                                        return Container();
-                                }
-                                        return  _getRelatedNewsWidget(snapshot.data);                                 
-                              } else if (snapshot.hasError) {
-                                        return Container();
-                              } else {
-                                        return Container(
-                                            child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [SizedBox(
-                                                height: 35,
-                                                width: 35,
-                                                child: CircularProgressIndicator()),
-                                            ]),
-                                        );//return buildLoadingWidget();
-                              }
-                          }                                      
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Container(
+                                    height:MediaQuery.of(context).size.height/1.5,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [SizedBox(
+                                        height: 35,
+                                        width: 35,
+                                        child: CircularProgressIndicator()),
+                                      ]),
+                                );//
+                          }
+                          else if (snapshot.hasError) {
+                                return Container();
+                          } 
+                          else if (snapshot.hasData) {
+                            if (snapshot.data.error != null &&
+                                snapshot.data.error.length > 0) {
+                                return Container();
+                            }
+                                return  _getRelatedNewsWidget(snapshot.data);                                 
+                          } else {
+                                return Container(
+                                    child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [SizedBox(
+                                        height: 35,
+                                        width: 35,
+                                        child: CircularProgressIndicator()),
+                                    ]),
+                                );//return buildLoadingWidget();
+                          }
+                        }                                      
                       )
-                    ),
-                    // Container(
-                    //     margin: EdgeInsets.symmetric(vertical: 5.0),                                 
-                    //     child: StreamBuilder<NewdetailsResponse>(
-                    //     stream: getNewdetailsBloc.subject.stream,
-                    //     builder: (context, AsyncSnapshot<NewdetailsResponse> snapshot) {
-                    //             if (snapshot.hasData) {
-                    //               if (snapshot.data.error != null &&
-                    //                     snapshot.data.error.length > 0) {
-                    //                       return Container();
-                    //               }
-                    //                       return  _getNewsDetailWidget(snapshot.data);                                 
-                    //             } else if (snapshot.hasError) {
-                    //                       return Container();
-                    //             } else {
-                    //                       return Container();//buildLoadingWidget();
-                    //             }
-                    //         }     
-                    //   ),  
-                    // ),                            
+                    ),                                            
                   ],
             ); 
   }
-  // Widget _getNewsDetailWidget(NewdetailsResponse data){
-  //   List<PostsModel> allPosts = data.posts;
-  //   return detailListWidget(allPosts);
-  // }
+
   Widget _getRelatedNewsWidget(RelatedNewsResponse data){
   List<PostsModel> allPosts = data.posts;
     return detailListWidget(allPosts);

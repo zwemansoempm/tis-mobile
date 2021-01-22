@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/views/bottom_nav_1.dart';
 import 'bottom_nav_2.dart';
@@ -14,7 +18,7 @@ class TopPage extends StatefulWidget {
 class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  int _currentIndex = 0;
+  // int _currentIndex = 0;
   final List<Widget> _children = [
     HomeWidget(),
     SearchWidget(),
@@ -22,33 +26,82 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
     JobWidget(),
   ];
 
+
+  String _connectionStatus = '3';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   @override
   void initState() {
     super.initState();
+     initConnectivity();
+    _connectivitySubscription =
+    _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _tabController = TabController(vsync: this, length: 4);
   }
 
   @override
   void dispose() {
+    _connectivitySubscription.cancel();
     _tabController.dispose();
     super.dispose();
   }
 
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+  
+   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+       setState(() => _connectionStatus ='1');
+        break;
+      case ConnectivityResult.mobile:
+       setState(() => _connectionStatus ='2');
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus ='3');
+        break;
+      default:
+        setState(() => _connectionStatus ='3');
+        break;
+    }
+  }
+
   int _selectedIndex = 0;
+  Widget tabCheck; 
   @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4, // Added
-      initialIndex: 0, //Added
-      child: Scaffold(
-        // No appbar provided to the Scaffold, only a body with a
-        // CustomScrollView.
-        body: //_children[_currentIndex],
-            TabBarView(
+  Widget build(BuildContext context) { 
+
+     return DefaultTabController(
+      length: 4, 
+      initialIndex: 0, 
+      child: Scaffold(       
+      body:
+         _connectionStatus=="3"?  
+        Center(child: Text('接続ステータス：接続を取得できませんでした。')):
+        TabBarView(
           controller: _tabController,
           children: _children,
-        ),
-        bottomNavigationBar: BottomAppBar(
+        ),      
+        bottomNavigationBar:          
+        BottomAppBar( 
           child: PreferredSize(
             preferredSize: Size.fromWidth(150),
             child: Container(

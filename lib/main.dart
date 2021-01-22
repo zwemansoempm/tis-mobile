@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +8,21 @@ import 'package:flutter/material.dart';
 import 'package:tis/views/top.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'dart:ui' as ui;
+import 'package:connectivity/connectivity.dart';
+
 // import 'package:tis/views/home.dart';
 
+// Sets a platform override for desktop to avoid exceptions. See
+// https://flutter.dev/desktop#target-platform-override for more info.
+void _enablePlatformOverrideForDesktop() {
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux)) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+}
 
 void main() {
+   _enablePlatformOverrideForDesktop();
+   
   runApp(
     MyApp(),
   //   DevicePreview(     
@@ -18,11 +32,11 @@ void main() {
   );   
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget { 
   // MyApp({Key key}) : super(key: key);
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     
     return MaterialApp(
       // locale: DevicePreview.of(context).locale, // <--- /!\ Add the locale
@@ -38,8 +52,10 @@ class MyApp extends StatelessWidget {
       // HomePage(),      
     );
   }
+
 }
-class SplashPage extends StatelessWidget {
+class SplashPage extends StatelessWidget {  
+
   @override
   Widget build(BuildContext context) {
     return SplashScreen(

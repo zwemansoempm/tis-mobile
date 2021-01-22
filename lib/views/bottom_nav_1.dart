@@ -192,8 +192,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
           }else{
             columnNews = true ; 
           } 
-      }
-     
+      }     
     });
   }
 
@@ -278,17 +277,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           child: StreamBuilder<PostsResponse>(
                                             stream: getLatestPostAllCatBloc.subject.stream,
                                             builder: (context, AsyncSnapshot<PostsResponse> snapshot) {
-                                              if (snapshot.hasData) {
-                                                if (snapshot.data.error != null &&
-                                                      snapshot.data.error.length > 0) {
-                                                        return Container();
-                                                }    
-                                                        return  _getLatestPostAllCatWidget(snapshot.data);                                 
-                                              } else if (snapshot.hasError) {
-                                                        return Container();
-                                              } else {                                               
-                                                                                          
-                                                        return Container(
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
                                                           height:MediaQuery.of(context).size.height/1.5,
                                                           child: Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
@@ -297,8 +287,30 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                                               width: 35,
                                                               child: CircularProgressIndicator()),
                                                             ]),
-                                                        );//return buildLoadingWidget();
-                                              }
+                                                      );//
+                                                }
+                                                else if (snapshot.hasError) {
+                                                            return Container();
+                                                } 
+                                                else if (snapshot.hasData) {
+                                                    if (snapshot.data.error != null &&
+                                                          snapshot.data.error.length > 0) {
+                                                            return Container();
+                                                    }    
+                                                            return  _getLatestPostAllCatWidget(snapshot.data);                                 
+                                                  } 
+                                                else {                                      
+                                                          return Container(
+                                                            height:MediaQuery.of(context).size.height/1.5,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [SizedBox(
+                                                                height: 35,
+                                                                width: 35,
+                                                                child: CircularProgressIndicator()),
+                                                              ]),
+                                                          );//return buildLoadingWidget();
+                                                }
                                             }                                      
                                           )
                                       ), 
@@ -307,15 +319,28 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                             child: StreamBuilder<MedicalResponse>(
                                               stream: getMedicalBloc.subject.stream,
                                               builder: (context, AsyncSnapshot<MedicalResponse> snapshot) {
-                                                  if (snapshot.hasData) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                                  }
+                                                  else if (snapshot.hasError) {
+                                                        return Container();
+                                                  } 
+                                                 else if (snapshot.hasData) {
                                                       if (snapshot.data.error != null &&
                                                         snapshot.data.error.length > 0) {
                                                           return Container();
                                                       }    
                                                           return _getEachdata(snapshot.data,"病院・医療","0xffd1281c",1);
                                                           // return  _getMedicalWidget(snapshot.data);          
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
                                                   } else {                                                
                                                             return Container(
                                                               height: 150,
@@ -329,20 +354,33 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           child: StreamBuilder<NurseResponse>(
                                           stream: getNurseBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<NurseResponse> snapshot) {
-                                              if (snapshot.hasData) {
-                                                  if (snapshot.data.error != null &&
-                                                      snapshot.data.error.length > 0) {
-                                                      return Container();
-                                                  } 
-                                                  return _getEachdata(snapshot.data,"特養・介護 ","0xff9579ef",2);
-                                                  }else if (snapshot.hasError) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                                }
+                                                else if (snapshot.hasError) {
+                                                            return Container();
+                                                } 
+                                                else  if (snapshot.hasData) {
+                                                      if (snapshot.data.error != null &&
+                                                          snapshot.data.error.length > 0) {
                                                           return Container();
-                                                  } else {                                                
-                                                            return Container(
+                                                      } 
+                                                          return _getEachdata(snapshot.data,"特養・介護 ","0xff9579ef",2);
+                                                }else {                                                
+                                                          return Container(
                                                               height: 150,
                                                               child:buildLoadingWidget()
-                                                            ); 
-                                                  }                                         
+                                                          ); 
+                                                }                                         
                                           }
                                           ),
                                       ),                                        
@@ -350,20 +388,33 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           child: StreamBuilder<OldPeopleResponse>(
                                           stream: getOldPeopleBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<OldPeopleResponse> snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                              }
+                                              else if (snapshot.hasError) {
+                                                      return Container();
+                                              } 
+                                              else if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                       snapshot.data.error.length > 0) {
                                                       return Container();
                                                   } 
-                                                  return _getEachdata(snapshot.data,"有料老人ホーム","0xff20d1de",3);
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
-                                                  } else {                                                
-                                                            return Container(
-                                                              height: 150,
-                                                              child:buildLoadingWidget()
-                                                            ); 
-                                                  }                                         
+                                                      return _getEachdata(snapshot.data,"有料老人ホーム","0xff20d1de",3);
+                                              }else {                                                
+                                                      return Container(
+                                                        height: 150,
+                                                        child:buildLoadingWidget()
+                                                      ); 
+                                              }                                         
                                           }
                                           ),
                                       ),
@@ -371,20 +422,33 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           child: StreamBuilder<VisitNurseResponse>(
                                           stream: getVisitNurseBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<VisitNurseResponse> snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                              }
+                                              else if (snapshot.hasError) {
+                                                      return Container();
+                                              } 
+                                              else if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                       snapshot.data.error.length > 0) {
                                                       return Container();
                                                   } 
-                                                  return _getEachdata(snapshot.data,"訪問介護・看護","0xffa3774a",4);
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
-                                                  } else {                                                
-                                                            return Container(
-                                                              height: 150,
-                                                              child:buildLoadingWidget()
-                                                            ); 
-                                                  }                                         
+                                                     return _getEachdata(snapshot.data,"訪問介護・看護","0xffa3774a",4);
+                                            }else {                                                
+                                                      return Container(
+                                                        height: 150,
+                                                        child:buildLoadingWidget()
+                                                      ); 
+                                            }                                         
                                           }
                                           ),
                                       ),
@@ -392,62 +456,101 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           child: StreamBuilder<DayServiceResponse>(
                                           stream: getDayServiceeBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<DayServiceResponse> snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                              }
+                                              else if (snapshot.hasError) {
+                                                          return Container();
+                                              } 
+                                              else if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                       snapshot.data.error.length > 0) {
-                                                      return Container();
+                                                           return Container();
                                                   } 
-                                                  return _getEachdata(snapshot.data,"デイサービス","0xffFDCE00",5);
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
-                                                  } else {                                                
+                                                           return _getEachdata(snapshot.data,"デイサービス","0xffFDCE00",5);
+                                              } else {                                                
                                                             return Container(
                                                               height: 150,
                                                               child:buildLoadingWidget()
                                                             ); 
-                                                  }                                         
-                                          }
+                                              }                                         
+                                            }
                                           ),
                                       ),
                                       Container(
                                           child: StreamBuilder<GroupResponse>(
                                           stream: getGroupBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<GroupResponse> snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                              }
+                                              else if (snapshot.hasError) {
+                                                      return Container();
+                                              } 
+                                              else if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                       snapshot.data.error.length > 0) {
                                                       return Container();
                                                   } 
-                                                  return _getEachdata(snapshot.data,"グループホーム","0xff211E55",6);
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
-                                                  } else {                                                
-                                                            return Container(
-                                                              height: 150,
-                                                              child:buildLoadingWidget()
-                                                            ); 
-                                                  }                                         
+                                                      return _getEachdata(snapshot.data,"グループホーム","0xff211E55",6);
+                                              } else {                                                
+                                                      return Container(
+                                                        height: 150,
+                                                        child:buildLoadingWidget()
+                                                      ); 
+                                              }                                         
                                           }
-                                          ),
+                                        ),
                                       ), 
                                       Container(
                                           child: StreamBuilder<CoronaResponse>(
                                           stream: getCoronaBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<CoronaResponse> snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                              }
+                                              else if (snapshot.hasError) {
+                                                          return Container();
+                                              } 
+                                              else if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                       snapshot.data.error.length > 0) {
                                                       return Container();
                                                   } 
-                                                  return _getEachdata(snapshot.data,"新型コロナ","0xffA01C38",7);
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
-                                                  } else {                                                
-                                                            return Container(
-                                                              height: 150,
-                                                              child:buildLoadingWidget()
-                                                            ); 
-                                                  }                                         
+                                                      return _getEachdata(snapshot.data,"新型コロナ","0xffA01C38",7);
+                                              }else {                                                
+                                                      return Container(
+                                                        height: 150,
+                                                        child:buildLoadingWidget()
+                                                      ); 
+                                              }                                         
                                           }
                                           ),
                                       ),  
@@ -455,47 +558,70 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                                           child: StreamBuilder<OtherResponse>(
                                           stream: getOtherBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<OtherResponse> snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                              }
+                                              else if (snapshot.hasError) {
+                                                      return Container();
+                                              } 
+                                              else if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                       snapshot.data.error.length > 0) {
                                                       return Container();
                                                   } 
-                                                  return _getEachdata(snapshot.data,"その他","0xffAAAAAA",8);
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
-                                                  } else {                                                
-                                                            return Container(
-                                                              height: 150,
-                                                              child:buildLoadingWidget()
-                                                            ); 
-                                                  }                                         
+                                                      return _getEachdata(snapshot.data,"その他","0xffAAAAAA",8);
+                                              }else {                                                
+                                                      return Container(
+                                                        height: 150,
+                                                        child:buildLoadingWidget()
+                                                      ); 
+                                              }                                         
                                           }
-                                          ),
+                                        ),
                                       ),  
                                      Container(
                                           child: StreamBuilder<ColumnResponse>(
                                           stream: getColumnBloc.subject.stream,
                                           builder: (context, AsyncSnapshot<ColumnResponse> snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return Container(
+                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [SizedBox(
+                                                              height: 35,
+                                                              width: 35,
+                                                              child: CircularProgressIndicator()),
+                                                            ]),
+                                                      );//
+                                              }
+                                              else if (snapshot.hasError) {
+                                                      return Container();
+                                              } 
+                                             else if (snapshot.hasData) {
                                                   if (snapshot.data.error != null &&
                                                       snapshot.data.error.length > 0) {
                                                       return Container();
                                                   } 
-                                                  return _getEachdata(snapshot.data,"コラム","0xff29905e",9);
-                                                  }else if (snapshot.hasError) {
-                                                          return Container();
-                                                  } else {                                                
-                                                            return Container(
-                                                              height: 150,
-                                                              child:buildLoadingWidget()
-                                                            ); 
-                                                  }                                         
+                                                       return _getEachdata(snapshot.data,"コラム","0xff29905e",9);
+                                              }else {                                                
+                                                        return Container(
+                                                          height: 150,
+                                                          child:buildLoadingWidget()
+                                                        ); 
+                                              }                                         
                                           }
-                                          ),
-                                      ),  
-
-
-                                         
+                                        ),
+                                      ),                                          
                                   ],
                                 ); 
                                 // ]   
@@ -518,9 +644,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
             ),
         ); 
   }
-  // Widget _getEachNews1(MedicalResponse alldata,String textdata,String colorcode){
-  //   return _getEachdata(alldata,textdata,colorcode);        
-  // }
+
   Widget _getEachdata(med,textdata,colorcode,numb){
         bool checkShowHide;
 

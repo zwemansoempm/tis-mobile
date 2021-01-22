@@ -33,7 +33,22 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
     return StreamBuilder<NewsCategory>(
         stream: getNewsCategoryMobileBloc.subject.stream,
         builder: (context, AsyncSnapshot<NewsCategory> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                    height:MediaQuery.of(context).size.height/1.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [SizedBox(
+                        height: 35,
+                        width: 35,
+                        child: CircularProgressIndicator()),
+                      ]),
+                );//
+          }
+          else if (snapshot.hasError) {
+                return Container();
+          } 
+          else if (snapshot.hasData) {
             return CustomScrollView(
               slivers: [
                 SliverPadding(

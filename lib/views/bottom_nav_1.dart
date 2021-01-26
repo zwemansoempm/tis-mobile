@@ -7,6 +7,7 @@ import 'package:tis/bloc/get_group_news_bloc.dart';
 import 'package:tis/bloc/get_medical_bloc.dart';
 import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
+import 'package:tis/bloc/get_news_category_mobile_bloc.dart';
 import 'package:tis/bloc/get_nurse_bloc.dart';
 import 'package:tis/bloc/get_oldpeople_news_bloc.dart';
 import 'package:tis/bloc/get_other_bloc.dart';
@@ -33,9 +34,13 @@ import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
+import 'package:tis/views/top.dart';
 
 class HomeWidget extends StatefulWidget {
  final List<String> list=List.generate(20, (index) => "Textto $index");
+
+ HomeWidget({Key key}) : super(key: key);
+
   @override
   _BottomNav1State createState() => _BottomNav1State();//source
 
@@ -57,6 +62,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   bool otherNews=true;
   bool columnNews=true;
 
+  String currentTab;
 
   @override
   void initState() {    
@@ -98,26 +104,19 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
           _activeColor = _tabData[_controller.index].color;
         });
       });
-    // getSourceNewsBloc..getSourceNews("abc-news");
-    // getPostsNewsBloc..getPostsNews();
-    getLatestPostAllCatBloc..getLatestPostAllCat();
-    getMedicalBloc..getMedicalNews();
-    getNurseBloc..getNurseNews();
-    getOldPeopleBloc..getPaidOldPeopleNews();
-    getVisitNurseBloc..getVisitNurseNews();
-    getDayServiceeBloc..getdayServiceNews();
-    getGroupBloc..getGroupNews();
-    getCoronaBloc..getCoronaNews();
-    getOtherBloc..getOtherNews();
-    getColumnBloc..getColumnNews();
-    // getMedical2Bloc..getMedical2();
+
+      _getAllStream();
+  
   }
 
   @override
   void dispose() {
     _controller?.dispose();
-    // getSourceNewsBloc.drainStream();
-    // getPostsNewsBloc.drainStream();
+    _getAllDrainStream();
+    super.dispose();
+  }  
+
+  _getAllDrainStream(){
     getLatestPostAllCatBloc.drainStream();
     getMedicalBloc.drainStream();
     getNurseBloc..drainStream();
@@ -128,9 +127,24 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     getCoronaBloc..drainStream();
     getOtherBloc..drainStream();
     getColumnBloc..drainStream();
-    // getMedical2Bloc.drainStream();
-    super.dispose();
-  }  
+
+    getNewsCategoryMobileBloc..drainStream();
+  }
+
+  _getAllStream(){
+    getLatestPostAllCatBloc..getLatestPostAllCat();
+    getMedicalBloc..getMedicalNews();
+    getNurseBloc..getNurseNews();
+    getOldPeopleBloc..getPaidOldPeopleNews();
+    getVisitNurseBloc..getVisitNurseNews();
+    getDayServiceeBloc..getdayServiceNews();
+    getGroupBloc..getGroupNews();
+    getCoronaBloc..getCoronaNews();
+    getOtherBloc..getOtherNews();
+    getColumnBloc..getColumnNews();
+
+    getNewsCategoryMobileBloc..getNewsCategoryMobile(currentTab);
+  }
 
    showHideWidget(numb){
     setState(() {
@@ -196,6 +210,10 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     });
   }
 
+  Future<Null>refreshList() async{
+    await Future.delayed(Duration(seconds:5));
+  }
+
   @override
   Widget build(BuildContext context) {
                                      
@@ -214,7 +232,14 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                     leading: IconButton(      
                       padding: new EdgeInsets.all(15.0),          
                       icon:new Icon(Icons.refresh),// Image.asset("assets/images/refresh.png"),
-                      onPressed: () {  },                 
+                      onPressed: () {                       
+                        setState(() {
+                            refreshList();
+                            _getAllDrainStream();
+                            _getAllStream();     
+                        });
+                      
+                       },                 
                     ),
                     centerTitle: true,
                     title: Row(                      
@@ -237,6 +262,12 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                         ),
                       
                       bottom: TabBar(
+                         onTap: (index) {
+                             //your currently selected index
+                             setState(() {
+                               currentTab=index.toString();
+                             });
+                        },
                         isScrollable: true,
                         indicator: UnderlineTabIndicator(
                           borderSide: BorderSide(width: 5,color: _activeColor),

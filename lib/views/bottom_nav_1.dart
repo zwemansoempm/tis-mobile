@@ -62,7 +62,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   bool otherNews=true;
   bool columnNews=true;
 
-  String currentTab;
+  String currentTab="1";
 
   @override
   void initState() {    

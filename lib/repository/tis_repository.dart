@@ -57,7 +57,7 @@ class NewsRepository {
   Future<NewsCategory> getNewscategorymobile(String id) async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      Response response = await _dio.get("$mainUrl/newscategorymobile/"+ id);
+      Response response = await _dio.get("$mainUrl/newscategorymobile/"+id);
        if(response.statusCode==HttpStatus.ok){
           return NewsCategory.fromJson(response.data);
         } else{

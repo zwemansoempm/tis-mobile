@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/views/bottom_nav_1.dart';
+import 'package:tis/views/nusingSearch.dart';
 import 'bottom_nav_2.dart';
 import 'bottom_nav_3.dart';
 import 'bottom_nav_4.dart';
@@ -21,7 +22,7 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
   // int _currentIndex = 0;
   final List<Widget> _children = [
     HomeWidget(),
-    SearchWidget(),
+    NusingSearch(),
     PlaceWidget(),
     JobWidget(),
   ];

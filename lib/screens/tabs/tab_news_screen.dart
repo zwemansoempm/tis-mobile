@@ -11,7 +11,8 @@ class TabNewsScreen extends StatefulWidget {
 
   const TabNewsScreen({Key key,@required this.categoryId}) : super(key: key);
   @override
-  _TabNewsScreenState createState() => _TabNewsScreenState();
+  _TabNewsScreenState createState() => _TabNewsScreenState();  
+
 }
 
 class _TabNewsScreenState extends State<TabNewsScreen> {
@@ -19,13 +20,21 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
   @override
   void initState() {
     super.initState();
-    getNewsCategoryMobileBloc..getNewsCategoryMobile(widget.categoryId);
+    _getAllStream();
   }
 
   @override
   void dispose() {
     super.dispose();
-    getNewsCategoryMobileBloc..drainStream();
+    _getAllDrainStream();   
+  }
+
+  _getAllStream(){
+    getNewsCategoryMobileBloc..getNewsCategoryMobile(widget.categoryId);
+  }
+
+  _getAllDrainStream(){
+    getNewsCategoryMobileBloc..drainStream();  
   }
 
   @override

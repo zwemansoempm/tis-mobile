@@ -42,6 +42,16 @@ class _BottomNav4State extends State<JobWidget> {
   int value4 = 0;
   var arr = new List(4);
   bool isCheck = false;
+  var valuefirst = false;
+  var valueSecond = false;
+  bool isTspCheck = false;
+
+  Map<String, bool> jobTypeList = {
+    '正社員': false,
+    '契約社員': false,
+    '非常勤': false,
+    'その他': false,
+  };
 
   @override
   void initState() {
@@ -53,146 +63,12 @@ class _BottomNav4State extends State<JobWidget> {
   void dispose() {
     getCityBloc.drainStream();
     getTspBloc.drainStream();
-
     super.dispose();
   }
 
-  var tmpArray = [];
-  List _selectetsp = List();
-  List _selectetdJob = List();
-
-  // getCheckboxItems(){
-
-  //   values.forEach((key, value) {
-  //     if(value == true)
-  //     {
-  //       tmpArray.add(key);
-  //     }
-  // });
-
-  Future<Map<String, bool>> _checkBoxList() async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return
-                  // AlertDialog(
-                  //   //title: Text('Preferred Location'),
-                  //   actions: <Widget>[
-                  //     FlatButton(
-                  //       onPressed: () {
-                  //         Navigator.pop(context, cityList);
-                  //       },
-                  //       child: Text('Done'),
-                  //     ),
-                  //   ],
-                  //   content:
-                  Container(
-                width: double.minPositive,
-                height: 300,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: cityList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    String _key = cityList.keys.elementAt(index);
-                    return CheckboxListTile(
-                      value: cityList[_key],
-                      title: Text(_key),
-                      onChanged: (val) {
-                        setState(() {
-                          cityList[_key] = val;
-                        });
-                      },
-                    );
-                  },
-                ),
-              );
-              //);
-            },
-          );
-        });
-  }
-
-  void _onCategorySelected(selected, catId, categories, gpId) {
-    //township (not required duplicate check)
-    // if (categories == _selectetsp) {
-    //   if (selected == true) {
-    //     setState(() {
-    //       _selectetsp.add(catId);
-    //     });
-
-    //     //print("Select " + _selectetsp);
-    //   } else {
-    //     setState(() {
-    //       _selectetsp.remove(catId);
-    //     });
-    //   }
-    // }
-    //print(gpID);
-
-    if (categories == _selectetdJob) {
-      if (selected == true) {
-        setState(() {
-          if (gpId == 0) {
-            value1++;
-          }
-          if (gpId == 1) {
-            value2++;
-          }
-          if (gpId == 2) {
-            value3++;
-          }
-          if (gpId == 3) {
-            value4++;
-          }
-          _selectetdJob.add(catId);
-          isCheck = true;
-        });
-
-        //print("Select " + _selectetsp);
-      } else {
-        setState(() {
-          isCheck = false;
-          if (gpId == 0) {
-            if (value1 > 0) {
-              value1--;
-            }
-          }
-          if (gpId == 1) {
-            if (value2 > 0) {
-              value2--;
-            }
-          }
-          if (gpId == 2) {
-            if (value3 > 0) {
-              value3--;
-            }
-          }
-          if (gpId == 3) {
-            if (value4 > 0) {
-              value4--;
-            }
-          }
-          _selectetdJob.remove(catId);
-        });
-      }
-    }
-
-    arr[0] = value1;
-    arr[1] = value2;
-    arr[2] = value3;
-    arr[3] = value1;
-    for (var i = 0; i < _selectetdJob.length; i++) {
-      print(_selectetdJob[i]);
-    }
-  }
-
-  void changeText() {
-    setState(() {
-      textHolder = 'New Sample Text...';
-    });
-  }
+  bool checkboxValueCity = false;
+  List<String> allEmpType = ['正社員', '契約社員', '非常勤', 'その他'];
+  List<String> selectedEmpType = [];
 
   @override
   Widget build(BuildContext context) {
@@ -238,37 +114,38 @@ class _BottomNav4State extends State<JobWidget> {
                             }
 
                             return Container(
-                                child: DropdownButtonHideUnderline(
-                              child: new DropdownButton<String>(
-                                //isDense: true,
-                                isExpanded: true,
-                                //hint: new Text("市区町"),
-                                hint: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.arrow_drop_down_outlined,
-                                      size: 35.0,
-                                    ),
-                                    Text("市区町村"),
-                                  ],
+                              child: DropdownButtonHideUnderline(
+                                child: new DropdownButton<String>(
+                                  //isDense: true,
+                                  isExpanded: true,
+                                  //hint: new Text("市区町"),
+                                  hint: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.arrow_drop_down_outlined,
+                                        size: 35.0,
+                                      ),
+                                      Text("市区町村"),
+                                    ],
+                                  ),
+
+                                  value: _city,
+                                  onChanged: (String newValue) {
+                                    setState(() => _city = newValue);
+
+                                    getTspBloc..getTownship(_city);
+                                    getOccBloc..getOccupation(_city);
+                                  },
+                                  items: snapshot.data.city
+                                      .toList()
+                                      .map((CityModel cityModel) =>
+                                          DropdownMenuItem(
+                                              value: cityModel.id.toString(),
+                                              child: Text(cityModel.city_name)))
+                                      .toList(),
                                 ),
-
-                                value: _city,
-                                onChanged: (String newValue) {
-                                  setState(() => _city = newValue);
-
-                                  getTspBloc..getTownship(_city);
-                                  getOccBloc..getOccupation(_city);
-                                },
-                                items: snapshot.data.city
-                                    .toList()
-                                    .map((CityModel cityModel) =>
-                                        DropdownMenuItem(
-                                            value: cityModel.id.toString(),
-                                            child: Text(cityModel.city_name)))
-                                    .toList(),
                               ),
-                            ));
+                            );
                           } else if (snapshot.hasError) {
                             return Container();
                           } else {
@@ -280,7 +157,7 @@ class _BottomNav4State extends State<JobWidget> {
                   //township
                   Container(
                     margin: EdgeInsets.all(8),
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    padding: EdgeInsets.all(0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.white,
@@ -294,52 +171,46 @@ class _BottomNav4State extends State<JobWidget> {
                                 snapshot.data.error.length > 0) {
                               return Container();
                             }
-
+                            List<TownshipModel> allTsp = snapshot.data.township;
+                            List<int> selectedTsp = [];
                             return Container(
-                                child: DropdownButtonHideUnderline(
-                              child: new DropdownButton<String>(
-                                //isDense: true,
-                                isExpanded: true,
-                                //hint: Text("市から探す"),
-                                hint: Row(
-                                  children: [
-                                    // Icon(
-                                    //   Icons.arrow_drop_down_outlined,
-                                    //   size: 35.0,
-                                    // ),
-                                    Text("市から探す" + '$textHolder'),
-                                  ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(0),
+                                child: RaisedButton(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 1),
+                                  child: ListTile(
+                                    dense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: Text(
+                                      "市から探す",
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                    trailing:
+                                        Icon(Icons.arrow_drop_down_outlined),
+                                  ),
+                                  color: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.grey[400], width: 1),
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return _TspDialog(
+                                              tsp: allTsp,
+                                              selectedTsp: selectedTsp,
+                                              onSelectedTspListChanged: (tsp) {
+                                                selectedTsp = tsp;
+                                                print(selectedTsp);
+                                              });
+                                        });
+                                  },
                                 ),
-                                value: _township,
-                                onChanged: (String newValue) {
-                                  //setState(() => _township = newValue);
-                                  // _onCategorySelected(
-                                  //     _township, newValue, _selectetsp);
-                                },
-                                items: snapshot.data.township
-                                    .map<DropdownMenuItem<String>>(
-                                        (TownshipModel tspModel) =>
-                                            DropdownMenuItem(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Checkbox(
-                                                    value: _selectetsp
-                                                        .contains(tspModel.id),
-                                                    onChanged: (bool value) {
-                                                      // _onCategorySelected(
-                                                      //     value,
-                                                      //     tspModel.id,
-                                                      //     _selectetsp);
-                                                    },
-                                                  ),
-                                                  Text(tspModel.township_name
-                                                      .toString()),
-                                                ],
-                                              ),
-                                            ))
-                                    .toList(),
                               ),
-                            ));
+                            );
                           } else if (snapshot.hasError) {
                             return Container();
                           } else {
@@ -412,89 +283,39 @@ class _BottomNav4State extends State<JobWidget> {
                     thickness: 1,
                   ),
 
-                  Container(
-                      margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey[400])),
-                      child: DropdownButton(
-                        isExpanded: true,
-
-                        items: [
-                          DropdownMenuItem(
-                            child: Row(
-                              children: <Widget>[
-                                Text('雇用形態から探す'),
-                              ],
-                            ),
-                          ),
-                          DropdownMenuItem(
-                            child: Row(
-                              children: <Widget>[
-                                Checkbox(
-                                  value: true,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      //this.valuefirst = value;
-                                    });
-                                  },
-                                ),
-                                Text('正社員(正職員)'),
-                              ],
-                            ),
-                          ),
-                          DropdownMenuItem(
-                            child: Row(
-                              children: <Widget>[
-                                Checkbox(
-                                  value: true,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      //this.valuesecond = value;
-                                      //print(this.valuesecond);
-                                    });
-                                  },
-                                ),
-                                Text('契約社員(職員)'),
-                              ],
-                            ),
-                          ),
-                          DropdownMenuItem(
-                            child: Row(
-                              children: <Widget>[
-                                Checkbox(
-                                  value: true,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      //this.valuesecond = value;
-                                    });
-                                  },
-                                ),
-                                Text('非常勤/パート'),
-                              ],
-                            ),
-                          ),
-                          DropdownMenuItem(
-                            child: Row(
-                              children: <Widget>[
-                                Checkbox(
-                                  value: true,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      //this.valuesecond = value;
-                                    });
-                                  },
-                                ),
-                                Text('その他'),
-                              ],
-                            ),
-                          )
-                        ],
-                        onChanged: (value) {},
-                        //hint: Text('Select value'),
-                      )),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      child: ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: Text(
+                          "雇用形態から探す",
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                        trailing: Icon(Icons.arrow_drop_down_outlined),
+                      ),
+                      color: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.grey[400], width: 1),
+                          borderRadius: BorderRadius.circular(5.0)),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return _EmpTypeDialog(
+                                  empType: allEmpType,
+                                  selectedEmpType: selectedEmpType,
+                                  onSelectedEmpTypeListChanged: (empType) {
+                                    selectedEmpType = empType;
+                                    //print(selectedCities);
+                                  });
+                            });
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -534,48 +355,6 @@ class _BottomNav4State extends State<JobWidget> {
     );
   }
 
-  Widget _dropDownBox(String hintText) {
-    return Container(
-      //margin: EdgeInsets.only(top: 8,left: 8.0, right: 8.0),
-      margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          color: Colors.white,
-          border: Border.all(color: Colors.grey[400])),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton(
-            isExpanded: true,
-            //value: _value,
-            hint: Row(
-              children: [
-                Icon(
-                  Icons.arrow_drop_down_outlined,
-                  size: 35.0,
-                ),
-                Text(hintText),
-              ],
-            ),
-            items: [
-              DropdownMenuItem(
-                child: Text("First Item"),
-                value: 1,
-              ),
-              DropdownMenuItem(
-                child: Text("Second Item"),
-                value: 2,
-              ),
-              DropdownMenuItem(child: Text("Third Item"), value: 3),
-              DropdownMenuItem(child: Text("Fourth Item"), value: 4)
-            ],
-            onChanged: (value) {
-              setState(() {
-                //_value = value;
-              });
-            }),
-      ),
-    );
-  }
-
   Widget _header(String name) {
     return Row(
       children: [
@@ -601,50 +380,322 @@ class _BottomNav4State extends State<JobWidget> {
   }
 
   List<Widget> getTextWidgets(List<OccupationModel> occ) {
-    List<Widget> list = new List<Widget>();
-    List _selectedOcc = List();
-    bool isCheck = false;
+    List products = [];
+    List<int> selectedOcc = [];
+    var j = 0;
+
     for (var i = 0; i < occ.length; i++) {
+      j = j + 1;
+      var productMap = {
+        'item' + j.toString(): false,
+        'id': occ[i].id,
+        'name': occ[i].name
+      };
+
+      products.add(productMap);
+    }
+
+    List<Widget> list = new List<Widget>();
+
+    for (var i = 0; i < occ.length; i++) {
+      List<OccupationChildModel> allOcc = occ[i].child;
+
       list.add(new Container(
-          margin: EdgeInsets.all(8),
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-              color: Colors.white,
-              border: Border.all(color: Colors.grey[400])),
-          child: DropdownButtonHideUnderline(
-              child: new DropdownButton<String>(
-            //isDense: true,
-            isExpanded: true,
-            hint: new Text(occ[i].name + arr[i].toString()),
-            //value: _township,
-            onChanged: (String newValue) {
-              //setState(() => _township = newValue);
+        margin: EdgeInsets.all(8),
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            color: Colors.white,
+            border: Border.all(color: Colors.grey[400])),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            child: ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: Text(occ[i].name),
+              trailing: Icon(Icons.arrow_drop_down_outlined),
+            ),
+            color: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey[400], width: 1),
+                borderRadius: BorderRadius.circular(5.0)),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return _OccupationDialog(
+                        occ: allOcc,
+                        selectedOcc: selectedOcc,
+                        onSelectedOccListChanged: (occ) {
+                          selectedOcc = occ;
+                          //print(selectedCities);
+                        });
+                  });
             },
-            items: occ[i]
-                .child
-                .map<DropdownMenuItem<String>>(
-                    (OccupationChildModel occChildModel) => DropdownMenuItem(
-                          value: occChildModel.id.toString(),
-                          //child: Text(occChildModel.name),
-                          child: Row(
-                            children: <Widget>[
-                              Checkbox(
-                                //value: _selectedOcc.contains(occChildModel.id),
-                                value: isCheck,
-                                onChanged: (bool value) {
-                                  //isCheck = value;
-                                  _onCategorySelected(value, occChildModel.id,
-                                      _selectetdJob, i);
-                                },
-                              ),
-                              Text(occChildModel.name.toString()),
-                            ],
-                          ),
-                        ))
-                .toList(),
-          ))));
+          ),
+        ),
+      ));
     }
     return list;
+  }
+}
+
+class _EmpTypeDialog extends StatefulWidget {
+  _EmpTypeDialog({
+    this.empType,
+    this.selectedEmpType,
+    this.onSelectedEmpTypeListChanged,
+  });
+
+  final List<String> empType;
+  final List<String> selectedEmpType;
+  final ValueChanged<List<String>> onSelectedEmpTypeListChanged;
+
+  @override
+  _EmpTypeDialogState createState() => _EmpTypeDialogState();
+}
+
+class _EmpTypeDialogState extends State<_EmpTypeDialog> {
+  List<String> _tempSelectedEmpType = [];
+
+  @override
+  void initState() {
+    _tempSelectedEmpType = widget.selectedEmpType;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'CITIES',
+                style: TextStyle(fontSize: 18.0, color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Color(0xFFfab82b),
+                child: Text(
+                  'Done',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: widget.empType.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final empTypeObj = widget.empType[index];
+                  return Container(
+                    child: CheckboxListTile(
+                        title: Text(empTypeObj),
+                        value: _tempSelectedEmpType.contains(empTypeObj),
+                        onChanged: (bool value) {
+                          if (value) {
+                            if (!_tempSelectedEmpType.contains(empTypeObj)) {
+                              setState(() {
+                                _tempSelectedEmpType.add(empTypeObj);
+                              });
+                            }
+                          } else {
+                            if (_tempSelectedEmpType.contains(empTypeObj)) {
+                              setState(() {
+                                _tempSelectedEmpType.removeWhere(
+                                    (String city) => city == empTypeObj);
+                              });
+                            }
+                          }
+                          widget.onSelectedEmpTypeListChanged(
+                              _tempSelectedEmpType);
+                        }),
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TspDialog extends StatefulWidget {
+  _TspDialog({
+    this.tsp,
+    this.selectedTsp,
+    this.onSelectedTspListChanged,
+  });
+
+  final List<TownshipModel> tsp;
+  final List<int> selectedTsp;
+  final ValueChanged<List<int>> onSelectedTspListChanged;
+
+  @override
+  _TspDialogState createState() => _TspDialogState();
+}
+
+class _TspDialogState extends State<_TspDialog> {
+  List<int> _tempSelectedTsp = [];
+
+  @override
+  void initState() {
+    _tempSelectedTsp = widget.selectedTsp;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'CITIES',
+                style: TextStyle(fontSize: 18.0, color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Color(0xFFfab82b),
+                child: Text(
+                  'Done',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: widget.tsp.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final tspObject = widget.tsp[index];
+                  //print(cityName.township_name);
+                  //return null;
+                  return Container(
+                    child: CheckboxListTile(
+                        title: Text(tspObject.township_name),
+                        value: _tempSelectedTsp.contains(tspObject.id),
+                        onChanged: (bool value) {
+                          if (value) {
+                            if (!_tempSelectedTsp.contains(tspObject.id)) {
+                              setState(() {
+                                _tempSelectedTsp.add(tspObject.id);
+                              });
+                            }
+                          } else {
+                            if (_tempSelectedTsp.contains(tspObject.id)) {
+                              setState(() {
+                                _tempSelectedTsp.removeWhere(
+                                    (int city) => city == tspObject.id);
+                              });
+                            }
+                          }
+                          widget.onSelectedTspListChanged(_tempSelectedTsp);
+                        }),
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OccupationDialog extends StatefulWidget {
+  _OccupationDialog({
+    this.occ,
+    this.selectedOcc,
+    this.onSelectedOccListChanged,
+  });
+
+  final List<OccupationChildModel> occ;
+  final List<int> selectedOcc;
+  final ValueChanged<List<int>> onSelectedOccListChanged;
+
+  @override
+  _OccupationDialogState createState() => _OccupationDialogState();
+}
+
+class _OccupationDialogState extends State<_OccupationDialog> {
+  List<int> _tempSelectedOcc = [];
+
+  @override
+  void initState() {
+    _tempSelectedOcc = widget.selectedOcc;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'CITIES',
+                style: TextStyle(fontSize: 18.0, color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Color(0xFFfab82b),
+                child: Text(
+                  'Done',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: widget.occ.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final tspObject = widget.occ[index];
+                  //print(cityName.township_name);
+                  //return null;
+                  return Container(
+                    child: CheckboxListTile(
+                        title: Text(tspObject.name),
+                        value: _tempSelectedOcc.contains(tspObject.id),
+                        onChanged: (bool value) {
+                          if (value) {
+                            if (!_tempSelectedOcc.contains(tspObject.id)) {
+                              setState(() {
+                                _tempSelectedOcc.add(tspObject.id);
+                              });
+                            }
+                          } else {
+                            if (_tempSelectedOcc.contains(tspObject.id)) {
+                              setState(() {
+                                _tempSelectedOcc.removeWhere(
+                                    (int occId) => occId == tspObject.id);
+                              });
+                            }
+                          }
+                          widget.onSelectedOccListChanged(_tempSelectedOcc);
+                        }),
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
   }
 }

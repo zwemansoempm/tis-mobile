@@ -313,9 +313,8 @@ class NewsRepository {
   Future<NursingSearchDataResponse> getNursingSearchData(String data) async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      var getUrl = "$mainUrl/getmap?id=" +
-          data +
-          '&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=job&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0';
+      var getUrl = "$mainUrl/getmap?id=" + data
+      +"&township_id=-1&moving_in=-1&per_month=-1&local=&feature=nursing&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0";
       Response response = await _dio.get(getUrl);    
       if(response.statusCode==HttpStatus.ok){
           return NursingSearchDataResponse.fromJson(response.data);

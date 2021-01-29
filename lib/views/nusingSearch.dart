@@ -1,17 +1,11 @@
-import 'dart:convert';
-
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_nursing_search_data_bloc.dart';
-import 'package:tis/bloc/get_occupation_bloc.dart';
-import 'package:tis/bloc/get_specialFeatures_bloc.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/model/nursingSearch_response.dart';
-import 'package:tis/model/occupation.dart';
-import 'package:tis/model/occupation_response.dart';
 import 'package:tis/model/specialFeatures.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';

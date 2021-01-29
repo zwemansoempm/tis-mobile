@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_nursing_search_data_bloc.dart';
 import 'package:tis/bloc/get_occupation_bloc.dart';
-import 'package:tis/bloc/get_specialFeatures_bloc.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';

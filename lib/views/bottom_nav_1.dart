@@ -37,7 +37,6 @@ import 'package:intl/intl.dart';
 import 'package:tis/views/top.dart';
 
 class HomeWidget extends StatefulWidget {
- final List<String> list=List.generate(20, (index) => "Textto $index");
 
  HomeWidget({Key key}) : super(key: key);
 
@@ -105,8 +104,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
         });
       });
 
-      _getAllStream();
-  
+      _getAllStream();     
   }
 
   @override
@@ -114,7 +112,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     _controller?.dispose();
     _getAllDrainStream();
     super.dispose();
-  }  
+  }   
 
   _getAllDrainStream(){
     getLatestPostAllCatBloc.drainStream();
@@ -216,7 +214,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-                                     
+                             
          return Container(
                 child: CustomScrollView(    
                 // physics: NeverScrollableScrollPhysics(),  
@@ -248,18 +246,27 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                           SizedBox(
                             child: new IconButton(                  
                                   icon:new Icon(Icons.search), // Image.asset("assets/images/s1.png"),
-                                  onPressed: (){
-                                    showSearch(context: context,delegate: SearchScreen(widget.list));
+                                  onPressed: (){                             
+                                    showSearch(
+                                      context: context,
+                                      delegate: SearchScreen(),
+                                    );                                     
                                   },
                                 ),                                 
                           ), 
                           new RaisedButton(
                                   color: Colors.black.withOpacity(0.05),
-                                  onPressed: () {  showSearch(context: context,delegate: SearchScreen(widget.list)); },
+                                  onPressed: () {  
+                                    showSearch(
+                                        context: context,
+                                        delegate: SearchScreen(), 
+                                      );
+                                    },
                                   child: new Text("Search News...", style: TextStyle(color: Colors.lightBlue)),
-                          ),                               
-                              ],                        
-                        ),
+                          ),    
+                                              
+                        ],                        
+                    ),
                       
                       bottom: TabBar(
                          onTap: (index) {
@@ -281,6 +288,97 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       ),
 
                       actions: [
+                        //oshirase
+                        // SizedBox(
+                        //     width: 50,
+                        //     child: new IconButton(                  
+                        //         icon:new Icon(CustomApp.bell),
+                        //         onPressed: () {
+                        //            showDialog(
+                        //             context: context,
+                        //             builder: (context) {
+                        //             return StatefulBuilder(
+                        //               builder: (context, setState) {
+                        //                 return AlertDialog(
+                        //                   title: Text(
+                        //                     "Notification",
+                        //                   ),
+                        //                   content: SingleChildScrollView(
+                        //                     child: Container(    
+                        //                       width: MediaQuery.of(context).size.width,                                      
+                        //                       child: Column(
+                        //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //                         children: <Widget>[
+                        //                           Row(
+                        //                             mainAxisAlignment: MainAxisAlignment.start,
+                        //                             children: [
+                        //                               Container(
+                        //                                 // child: IconButton(
+                        //                                 //   icon: Icon(
+                        //                                 //     Icons.edit,
+                        //                                 //     color: Colors.blue,
+                        //                                 //     size: 50,
+                        //                                 //   ),
+                        //                                 //   onPressed: () {
+                                                          
+                        //                                 //   },
+                        //                                 // ),
+                        //                               ),
+                                                      
+                        //                               Flexible(
+                        //                                   child: TextField(
+                        //                                     textAlign: TextAlign.center,
+                        //                                     style: TextStyle(
+                        //                                       // fontSize: mobileWidth * 0.05,
+                        //                                     ),
+                        //                                     // controller: _textNameController,
+                        //                                     decoration: InputDecoration(),
+                        //                                   ),
+                        //                                 )
+                                                      
+                        //                             ],
+                        //                           ),
+                        //                           Row(
+                        //                             children: [
+                        //                               Container(
+                        //                                 // child: IconButton(
+                        //                                 //   onPressed: () {
+                                                        
+                        //                                 //   },
+                        //                                 // ),
+                        //                               ),
+                        //                               Text(
+                        //                                 '',
+                        //                               ),
+                        //                               Flexible(
+                        //                                       child: TextField(
+                        //                                         textAlign: TextAlign.center,
+                        //                                         // controller: _textContactController,
+                        //                                         decoration: InputDecoration(),
+                        //                                       ),
+                        //                               )
+                                                        
+                        //                             ],
+                        //                           ),
+                        //                         ],
+                        //                       ),
+                        //                   ),
+                        //                 ),
+                        //                   actions: [
+                        //                     FlatButton(
+                        //                       child: Text("Close"),
+                        //                       onPressed: () {
+                        //                         Navigator.of(context).pop(); // dismiss dialog
+                        //                       },
+                        //                     ),
+                        //                   ],
+                        //                 );
+                        //               },
+                        //             );
+                        //         }
+                        //     ); 
+                        //     },     )),                          
+                          // ), 
                         IconButton(
                           icon:new Icon(Icons.settings),//Image.asset("assets/images/setting.png"), 
                           onPressed: (){

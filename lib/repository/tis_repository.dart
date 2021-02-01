@@ -12,6 +12,7 @@ import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/newdetails_response.dart';
+import 'package:tis/model/nursingSearch_response.dart';
 import 'package:tis/model/old_people_response.dart';
 import 'package:tis/model/other_response.dart';
 import 'package:tis/model/posts_response.dart';
@@ -306,6 +307,22 @@ class NewsRepository {
       }    
     } catch (error, stacktrace) {
      throw SocketException('No Internet');
+    }
+  }
+
+  Future<NursingSearchDataResponse> getNursingSearchData(String data) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var getUrl = "$mainUrl/getmap?id=" + data
+      +"&township_id=-1&moving_in=-1&per_month=-1&local=&feature=nursing&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0";
+      Response response = await _dio.get(getUrl);    
+      if(response.statusCode==HttpStatus.ok){
+          return NursingSearchDataResponse.fromJson(response.data);
+      } else{
+          throw SocketException('No Internet');    
+      }      
+    } catch (error, stacktrace) {
+          throw SocketException('No Internet');
     }
   }
 }

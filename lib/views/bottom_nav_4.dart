@@ -4,12 +4,16 @@ import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
+import 'package:tis/model/job.dart';
 import 'package:tis/model/occupation_child.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/model/occupation.dart';
 import 'package:tis/model/occupation_response.dart';
 import 'package:tis/bloc/get_occupation_bloc.dart';
+import 'package:tis/bloc/get_job_bloc.dart';
+import 'package:tis/model/job_response.dart';
+import 'package:tis/views/bottom_nav_4_detail.dart';
 
 class JobWidget extends StatefulWidget {
   @override
@@ -53,6 +57,7 @@ class _BottomNav4State extends State<JobWidget> {
     'その他': false,
   };
 
+  var stream;
   @override
   void initState() {
     super.initState();
@@ -69,9 +74,12 @@ class _BottomNav4State extends State<JobWidget> {
   bool checkboxValueCity = false;
   List<String> allEmpType = ['正社員', '契約社員', '非常勤', 'その他'];
   List<String> selectedEmpType = [];
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children =
+        new List.generate(count, (int i) => new InputWidget(i));
     return Container(
       child: SingleChildScrollView(
         child: Padding(
@@ -173,6 +181,9 @@ class _BottomNav4State extends State<JobWidget> {
                             }
                             List<TownshipModel> allTsp = snapshot.data.township;
                             List<int> selectedTsp = [];
+                            // List<int> selectedTspText = [];
+                            // print(selectedTspText.length.toString());
+
                             return Container(
                               child: Padding(
                                 padding: const EdgeInsets.all(0),
@@ -183,7 +194,10 @@ class _BottomNav4State extends State<JobWidget> {
                                     dense: true,
                                     contentPadding: EdgeInsets.zero,
                                     leading: Text(
-                                      "市から探す",
+                                      "市から探す" +
+                                          "(" +
+                                          //selectedTsp.length.toString() +
+                                          ")",
                                       style: TextStyle(color: Colors.grey[600]),
                                     ),
                                     trailing:
@@ -204,7 +218,8 @@ class _BottomNav4State extends State<JobWidget> {
                                               selectedTsp: selectedTsp,
                                               onSelectedTspListChanged: (tsp) {
                                                 selectedTsp = tsp;
-                                                print(selectedTsp);
+                                                // selectedTspText = selectedTsp;
+                                                // print(selectedTspText.length);
                                               });
                                         });
                                   },
@@ -239,11 +254,6 @@ class _BottomNav4State extends State<JobWidget> {
                     color: Colors.grey[300],
                     thickness: 1,
                   ),
-
-                  // Divider(
-                  //   color: Colors.grey[300],
-                  //   thickness: 1,
-                  // ),
 
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
@@ -322,7 +332,14 @@ class _BottomNav4State extends State<JobWidget> {
             RaisedButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    count = count + 1;
+                    // stream = getJobBloc..getJob();
+                    //print(stream);
+                    getJobBloc..getJob();
+                  });
+                },
                 color: Colors.green,
                 textColor: Colors.white,
                 child: Row(
@@ -336,10 +353,280 @@ class _BottomNav4State extends State<JobWidget> {
                         )),
                   ],
                 )),
+            // Container(
+            //   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   child: Column(
+            //     children: children,
+            //   ),
+            // ),
+
+            // Container(
+            //     child: StreamBuilder<JobResponse>(
+            //         stream: getJobBloc.subject.stream,
+            //         builder: (context, AsyncSnapshot<JobResponse> snapshot) {
+            //           if (snapshot.connectionState == ConnectionState.waiting) {
+            //             return Container(
+            //               height: MediaQuery.of(context).size.height / 1.5,
+            //               child: Column(
+            //                   mainAxisAlignment: MainAxisAlignment.center,
+            //                   children: [
+            //                     SizedBox(
+            //                         height: 35,
+            //                         width: 35,
+            //                         child: CircularProgressIndicator()),
+            //                   ]),
+            //             ); //
+            //           } else if (snapshot.hasError) {
+            //             return Container();
+            //           } else if (snapshot.hasData) {
+            //             //print(snapshot.data);
+            //             if (snapshot.data.error != null &&
+            //                 snapshot.data.error.length > 0) {
+            //               return Container();
+            //             }
+            //             //return _getSearchResultWidget(snapshot.data);
+            //             return Column(
+            //                 children: _getSearchResultWidget(snapshot.data));
+            //           } else {
+            //             return Container(
+            //               child: Column(
+            //                   mainAxisAlignment: MainAxisAlignment.center,
+            //                   children: [
+            //                     SizedBox(
+            //                         height: 35,
+            //                         width: 35,
+            //                         child: CircularProgressIndicator()),
+            //                   ]),
+            //             ); //return buildLoadingWidget();
+            //           }
+            //         })),
+
+            Container(
+              child: StreamBuilder<JobResponse>(
+                  stream: getJobBloc.subject.stream,
+                  builder: (context, AsyncSnapshot<JobResponse> snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data.error != null &&
+                          snapshot.data.error.length > 0) {
+                        return Container();
+                      } else {
+                        return Column(
+                            children: _getSearchResultWidget(snapshot.data));
+                      }
+                    } else if (snapshot.hasError) {
+                      return Container();
+                    } else {
+                      return Container(); //buildLoadingWidget();
+                    }
+                  }),
+            ),
+
+            // ListView.builder(
+            //     padding: const EdgeInsets.all(0),
+            //     itemCount: children.length,
+            //     itemBuilder: (BuildContext context, int index) {
+            //       return Container(
+            //         // height: 50,
+            //         // color: Colors.amber[colorCodes[index]],
+            //         child: children[index],
+            //       );
+            //     }),
           ]),
         ),
       ),
     );
+  }
+
+  List<Widget> _getSearchResultWidget(JobResponse data) {
+    List<JobModel> jobs = data.job;
+    return searchListWidget(jobs);
+  }
+
+  List<Widget> searchListWidget(jobs) {
+    List<JobModel> jobLst = jobs;
+
+    List<Widget> list = new List<Widget>();
+    for (int i = 0; i < jobLst.length; i++) {
+      list.add(new Container(
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(5.0),
+              margin: EdgeInsets.only(bottom: 8.0),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Text("施設番号:" + jobLst[i].nearest_station.toString()),
+            ),
+            InkWell(
+              child: Text("ベストライフ三鷹",
+                  style: TextStyle(
+                      color: Colors.blue,
+                      //fontSize: 18.0,
+                      decoration: TextDecoration.underline)),
+              onTap: () {
+                //Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail()));
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 0.0),
+              child: Row(children: [
+                Text("開設年月日 :", style: TextStyle(color: Colors.green)),
+                Text("2017-04-01")
+              ]),
+            ),
+            Divider(thickness: 2),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
+              child: Row(children: [
+                Text("東京都"),
+                SizedBox(width: 4.0),
+                Icon(Icons.double_arrow),
+                SizedBox(width: 4.0),
+                Text("三鷹市")
+              ]),
+            ),
+            Card(
+              margin: EdgeInsets.all(10.0),
+              color: Colors.blue,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "64室(全室個室)",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.0),
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                      foregroundColor: Colors.black,
+                      radius: 18.0,
+                      backgroundColor: Colors.grey[200],
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.blue,
+                      )),
+                  //leading: Icon(Icons.location_on,color: Colors.blue,),
+                  title: Text("最寄駅"),
+                )),
+
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1.0),
+              ),
+              child: ListTile(
+                title: Text(
+                  jobLst[i].nearest_station.toString(),
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ),
+            Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.0),
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    foregroundColor: Colors.black,
+                    radius: 18.0,
+                    backgroundColor: Colors.grey[200],
+                    child: Text("¥",
+                        style: TextStyle(fontSize: 20, color: Colors.blue)),
+                  ),
+                  title: Text("給料"),
+                )),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1.0),
+              ),
+              child: ListTile(
+                title: Text(
+                  jobLst[i].salary.toString(),
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ),
+
+            Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.0),
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    foregroundColor: Colors.black,
+                    radius: 18.0,
+                    backgroundColor: Colors.grey[200],
+                    child: Text("時",
+                        style: TextStyle(fontSize: 20, color: Colors.blue)),
+                  ),
+                  title: Text("就業時間/休日休暇"),
+                )),
+
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1.0),
+              ),
+              child: ListTile(
+                title: Text(jobLst[i].working_hours.toString()),
+              ),
+            ),
+            Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.0),
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                      foregroundColor: Colors.black,
+                      radius: 18.0,
+                      backgroundColor: Colors.grey[200],
+                      child: Icon(
+                        Icons.shopping_bag_sharp,
+                        color: Colors.blue,
+                      )),
+                  title: Text("特別な条件"),
+                )),
+            Container(
+              margin: EdgeInsets.only(bottom: 10.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1.0),
+              ),
+              child: ListTile(
+                title: Text(jobLst[i].allowances.toString()),
+              ),
+            ),
+            SizedBox(height: 10.0),
+
+            //SizedBox(height: 10.0),
+            RaisedButton(
+              onPressed: () {
+                var route = new MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      new JobDetailWidget(value: jobLst[i]),
+                );
+                Navigator.of(context).push(route);
+              },
+              color: Colors.blue,
+              textColor: Colors.white,
+              child: Center(
+                child: Text("詳細を見る"),
+              ),
+            ),
+          ],
+        ),
+      ));
+    }
+    return list;
   }
 
   Widget _column(String name, Color bgColor, Color txtColor) {
@@ -567,7 +854,8 @@ class _TspDialogState extends State<_TspDialog> {
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  String text = "Data that we want to pass. Can be anything.";
+                  Navigator.pop(context, text);
                 },
                 color: Color(0xFFfab82b),
                 child: Text(
@@ -697,5 +985,16 @@ class _OccupationDialogState extends State<_OccupationDialog> {
         ],
       ),
     );
+  }
+}
+
+class InputWidget extends StatelessWidget {
+  final int index;
+
+  InputWidget(this.index);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Text("InputWidget: " + index.toString());
   }
 }

@@ -148,6 +148,7 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                             color: _selectedIndex == 0
                                 ? Colors.green
                                 : Colors.white,
+                            fontSize: 10.0,
                           ))),
                   Tab(
                       icon: new Icon(
@@ -160,7 +161,9 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                           style: TextStyle(
                               color: _selectedIndex == 1
                                   ? Colors.green
-                                  : Colors.white))),
+                                  : Colors.white,
+                                   fontSize: 10.0,
+                          ))),
                   Tab(
                       icon: new Icon(
                         CustomApp.briefcase_medical,
@@ -172,7 +175,9 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                           style: TextStyle(
                               color: _selectedIndex == 2
                                   ? Colors.green
-                                  : Colors.white))),
+                                  : Colors.white,
+                                   fontSize: 10.0,
+                          ))),
                   Tab(
                       icon: new Icon(
                         CustomApp.users,
@@ -184,7 +189,9 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                           style: TextStyle(
                               color: _selectedIndex == 3
                                   ? Colors.green
-                                  : Colors.white))),
+                                  : Colors.white,
+                                   fontSize: 10.0,
+                          ))),
                 ],
                 controller: _tabController,
               ),

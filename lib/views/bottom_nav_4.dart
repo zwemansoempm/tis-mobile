@@ -688,12 +688,12 @@ class _BottomNav4State extends State<JobWidget> {
       List<OccupationChildModel> allOcc = occ[i].child;
 
       list.add(new Container(
-        margin: EdgeInsets.all(8),
+        //margin: EdgeInsets.all(8),
         padding: EdgeInsets.symmetric(horizontal: 5.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            color: Colors.white,
-            border: Border.all(color: Colors.grey[400])),
+        // decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(5.0),
+        //     color: Colors.white,
+        //     border: Border.all(color: Colors.grey[400])),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: RaisedButton(
@@ -763,7 +763,7 @@ class _EmpTypeDialogState extends State<_EmpTypeDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'CITIES',
+                '雇用形態',
                 style: TextStyle(fontSize: 18.0, color: Colors.black),
                 textAlign: TextAlign.center,
               ),
@@ -848,7 +848,7 @@ class _TspDialogState extends State<_TspDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'CITIES',
+                '市',
                 style: TextStyle(fontSize: 18.0, color: Colors.black),
                 textAlign: TextAlign.center,
               ),
@@ -935,7 +935,7 @@ class _OccupationDialogState extends State<_OccupationDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'CITIES',
+                '職種',
                 style: TextStyle(fontSize: 18.0, color: Colors.black),
                 textAlign: TextAlign.center,
               ),

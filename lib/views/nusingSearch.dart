@@ -1312,7 +1312,8 @@ class _NusingSearchState extends State<NusingSearch> {
                     Container(
                       decoration: BoxDecoration(
                         color: result[index].status==3?Color(0xff52a2da):Colors.white, 
-                      ), 
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),                                      
+                      ),                     
                       // height: 20.0,
                       width: 80.0,
                       child: result[index].status==3?Text("お知らせ",textAlign: TextAlign.center,):Text(''),

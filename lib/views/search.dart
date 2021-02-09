@@ -33,7 +33,12 @@ class SearchScreen extends  SearchDelegate {
     @override
     Widget buildResults(BuildContext context) {       
           getLatestPostAllCatBloc.subject.stream;  
-          return SingleChildScrollView(
+         return Container();
+    }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+      return SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
               children: <Widget>[           
@@ -64,14 +69,16 @@ class SearchScreen extends  SearchDelegate {
                       List<dynamic> result = [];
                       for (var j = 0; j < allPosts.length; j++) {
                         result.add(allPosts[j]);
-                      }                      
-                      print(result.length);
-                      return 
+                      }      
+                      final myList=query.isEmpty?result:result.where((p) => p.mainPoint.startsWith(query)).toList();  
+                        print('sdfsfs');            
+                      print(myList.length);
+                     return                    
                       Container(
                         width:MediaQuery.of(context).size.width,
                           height: 35.0* result.length,
                           child:ListView.builder(
-                          itemCount: result.length,
+                          itemCount:myList.length,// result.length,
                           itemBuilder: (context, index) {
                             // var result = result[index];
                             // return ListTile(
@@ -83,7 +90,7 @@ class SearchScreen extends  SearchDelegate {
                                         Navigator.push<Widget>(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => TopDetailScreen(top:result[index].id.toString()),
+                                                  builder: (context) => TopDetailScreen(top:myList[index].id.toString()),
                                                 ),
                                           );
                                   },
@@ -94,18 +101,18 @@ class SearchScreen extends  SearchDelegate {
                                   child: Row(
                                         children: [
                                           Expanded(
-                                            child: (result[index].photo!=null && result[index].photo!='') ? 
+                                            child: (myList[index].photo!=null && myList[index].photo!='') ? 
                                               Padding(
                                                 padding: const EdgeInsets.all(8),
                                                 child: Stack(
                                                   children: [
                                                     Center(
                                                       child: 
-                                                      result[index].id!=410?FadeInImage(
+                                                      myList[index].id!=410?FadeInImage(
                                                         // fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
                                                         image: NetworkImage(
-                                                          "https://test.t-i-s.jp/upload/news/"+result[index].photo,
+                                                          "https://test.t-i-s.jp/upload/news/"+myList[index].photo,
                                                         ),
                                                         imageErrorBuilder: (context, error, stackTrace) { 
                                                           return Image.asset(
@@ -129,7 +136,7 @@ class SearchScreen extends  SearchDelegate {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  result[index].mainPoint.toString().length>=60?result[index].mainPoint.toString().substring(0,50)+"...":result[index].mainPoint,  
+                                                  myList[index].mainPoint.toString().length>=60?myList[index].mainPoint.toString().substring(0,50)+"...":myList[index].mainPoint,  
                                                   // medical[index].mainPoint,
                                                   maxLines: 3,
                                                   //overflow: TextOverflow.ellipsis,
@@ -138,7 +145,7 @@ class SearchScreen extends  SearchDelegate {
                                                   child: Align(
                                                   alignment: Alignment.bottomRight,
                                                   child: Text(
-                                                    result[index].createdAt,
+                                                    myList[index].createdAt,
                                                     style: TextStyle(
                                                       color: Colors.black38,
                                                       fontWeight: FontWeight.bold,
@@ -163,14 +170,6 @@ class SearchScreen extends  SearchDelegate {
               ],
          ),
           );
-    }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-      //TODO: implement buildSuggestions
-      return Column();
-    // TODO: implement buildSuggestions
-    // throw UnimplementedError();
   }
     // final List<String> listExample;
     // SearchScreen(this.listExample);

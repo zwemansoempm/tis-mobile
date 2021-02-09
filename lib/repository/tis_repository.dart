@@ -21,12 +21,12 @@ import 'package:tis/model/city_response.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/model/occupation_response.dart';
 import 'package:tis/model/visit_nurse_response.dart';
+import 'package:tis/model/job_response.dart';
 
 class NewsRepository {
   static String mainUrl = "https://test.t-i-s.jp/api";
 
   final Dio _dio = Dio();
-
 
   var getPostsUrl = "$mainUrl/posts";
   var getLatestPostAllCatUrl = "$mainUrl/get_latest_post_all_cat";
@@ -42,11 +42,11 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getHomeUrl);
-      if(response.statusCode==HttpStatus.ok){
+      if (response.statusCode == HttpStatus.ok) {
         return Categories.fromJson(response.data);
-      }else{
-        throw SocketException('No Internet');       
-      }      
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
       throw SocketException('No Internet');
       // throw HttpException('404');
@@ -58,18 +58,18 @@ class NewsRepository {
   Future<NewsCategory> getNewscategorymobile(String id) async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      Response response = await _dio.get("$mainUrl/newscategorymobile/"+id);
-       if(response.statusCode==HttpStatus.ok){
-          return NewsCategory.fromJson(response.data);
-        } else{
-          throw SocketException('No Internet');       
-        }
+      Response response = await _dio.get("$mainUrl/newscategorymobile/" + id);
+      if (response.statusCode == HttpStatus.ok) {
+        return NewsCategory.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-       throw SocketException('No Internet');
+      throw SocketException('No Internet');
       // print("Exception occured: $error stackTrace: $stacktrace");
       // return NewsCategory.withError("$error");
     }
-  } 
+  }
 
   Future<PostsResponse> getPostsNews() async {
     await Future.delayed(Duration(milliseconds: 500));
@@ -80,15 +80,14 @@ class NewsRepository {
 
     try {
       Response response = await _dio.post(getPostsUrl, queryParameters: params);
-      
-    if(response.statusCode==HttpStatus.ok){
+
+      if (response.statusCode == HttpStatus.ok) {
         return PostsResponse.fromJson(response.data);
-      }else{
-        throw SocketException('No Internet');       
-    }  
-      
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-       throw SocketException('No Internet');
+      throw SocketException('No Internet');
       // print("Exception occured: $error stackTrace: $stacktrace");
       // return PostsResponse.withError("$error");
     }
@@ -98,79 +97,9 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getLatestPostAllCatUrl);
-      if(response.statusCode==HttpStatus.ok){
-         return PostsResponse.fromJson(response.data);
-      }  else{
-        throw SocketException('No Internet');       
-      }
-    } catch (error, stacktrace) {
-     throw SocketException('No Internet');
-    }
-  }
-
-  Future<MedicalResponse> getMedicalNews() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    try {
-      Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
-        return MedicalResponse.fromJson(response.data);
-      } else{
-        throw SocketException('No Internet');      
-      }
-      } catch (error, stacktrace) {
-        throw SocketException('No Internet');
-      }
-  }
-
-  Future<NurseResponse> getNurseNews() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    try {
-      Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
-        return NurseResponse.fromJson(response.data);
-      } else{
-        throw SocketException('No Internet');       
-      }
-    } catch (error, stacktrace) {
-        throw SocketException('No Internet');
-    }
-  }
-
-  Future<OldPeopleResponse> getPaidOldPeopleNews() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    try {
-      Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
-        return OldPeopleResponse.fromJson(response.data);
-      } else{
-        throw SocketException('No Internet');
-      }
-    } catch (error, stacktrace) {
-        throw SocketException('No Internet');
-    }
-  }
-
-  Future<VisitNurseResponse> getVisitNurseNews() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    try {
-      Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
-         return VisitNurseResponse.fromJson(response.data);
-      } else{
-        throw SocketException('No Internet');
-      }
-    } catch (error, stacktrace) {
-       throw SocketException('No Internet');
-    }
-  }
-
-  Future<DayServiceResponse> getdayServiceNews() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    try {
-      Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
-        return DayServiceResponse.fromJson(response.data);
-      } else{
+      if (response.statusCode == HttpStatus.ok) {
+        return PostsResponse.fromJson(response.data);
+      } else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
@@ -178,17 +107,87 @@ class NewsRepository {
     }
   }
 
-   Future<GroupResponse> getGroupNews() async {
-     await Future.delayed(Duration(milliseconds: 500));
+  Future<MedicalResponse> getMedicalNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
-        return GroupResponse.fromJson(response.data);
-      } else{
+      if (response.statusCode == HttpStatus.ok) {
+        return MedicalResponse.fromJson(response.data);
+      } else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
+      throw SocketException('No Internet');
+    }
+  }
+
+  Future<NurseResponse> getNurseNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return NurseResponse.fromJson(response.data);
+      } else {
         throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      throw SocketException('No Internet');
+    }
+  }
+
+  Future<OldPeopleResponse> getPaidOldPeopleNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return OldPeopleResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      throw SocketException('No Internet');
+    }
+  }
+
+  Future<VisitNurseResponse> getVisitNurseNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return VisitNurseResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      throw SocketException('No Internet');
+    }
+  }
+
+  Future<DayServiceResponse> getdayServiceNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return DayServiceResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      throw SocketException('No Internet');
+    }
+  }
+
+  Future<GroupResponse> getGroupNews() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response = await _dio.get(getAllNewsSearchUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return GroupResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      throw SocketException('No Internet');
     }
   }
 
@@ -196,9 +195,9 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
+      if (response.statusCode == HttpStatus.ok) {
         return CoronaResponse.fromJson(response.data);
-      } else{
+      } else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
@@ -210,9 +209,9 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
+      if (response.statusCode == HttpStatus.ok) {
         return OtherResponse.fromJson(response.data);
-      } else{
+      } else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
@@ -224,13 +223,13 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getAllNewsSearchUrl);
-      if(response.statusCode==HttpStatus.ok){
+      if (response.statusCode == HttpStatus.ok) {
         return ColumnResponse.fromJson(response.data);
-      } else{
-        throw SocketException('No Internet');        
+      } else {
+        throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-     throw SocketException('No Internet');
+      throw SocketException('No Internet');
     }
   }
 
@@ -238,11 +237,11 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getRelatedNewsUrl + "/" + id);
-      if(response.statusCode==HttpStatus.ok){
+      if (response.statusCode == HttpStatus.ok) {
         return RelatedNewsResponse.fromJson(response.data);
-      } else{
-        throw SocketException('No Internet');        
-      }     
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
       throw SocketException('No Internet');
     }
@@ -252,27 +251,27 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getNewsDetailsUrl + "/" + id);
-      if(response.statusCode==HttpStatus.ok){
-          return NewdetailsResponse.fromJson(response.data);
-      } else{
-          throw SocketException('No Internet');       
-      }    
+      if (response.statusCode == HttpStatus.ok) {
+        return NewdetailsResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-          throw SocketException('No Internet');
+      throw SocketException('No Internet');
     }
   }
 
   Future<CityResponse> getCity() async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      Response response = await _dio.get(getCityUrl);    
-      if(response.statusCode==HttpStatus.ok){
-          return CityResponse.fromJson(response.data);
-      } else{
-          throw SocketException('No Internet');       
-      }    
+      Response response = await _dio.get(getCityUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return CityResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-          throw SocketException('No Internet');
+      throw SocketException('No Internet');
     }
   }
 
@@ -282,14 +281,14 @@ class NewsRepository {
       var getTspUrl = "$mainUrl/getmap?id=" +
           test +
           '&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=job&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0';
-      Response response = await _dio.get(getTspUrl);    
-      if(response.statusCode==HttpStatus.ok){
-          return TownshipResponse.fromJson(response.data);
-      } else{
-          throw SocketException('No Internet');    
-      }      
+      Response response = await _dio.get(getTspUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return TownshipResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-          throw SocketException('No Internet');
+      throw SocketException('No Internet');
     }
   }
 
@@ -300,29 +299,49 @@ class NewsRepository {
           test +
           '&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=job&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0';
       Response response = await _dio.get(getOccupationUrl);
-      if(response.statusCode==HttpStatus.ok){
-          return OccupationResponse.fromJson(response.data);
-      } else{
-          throw SocketException('No Internet');      
-      }    
+      if (response.statusCode == HttpStatus.ok) {
+        return OccupationResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-     throw SocketException('No Internet');
+      throw SocketException('No Internet');
     }
   }
 
   Future<NursingSearchDataResponse> getNursingSearchData(String data) async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      var getUrl = "$mainUrl/getmap?id=" + data
-      +"&township_id=-1&moving_in=-1&per_month=-1&local=&feature=nursing&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0";
-      Response response = await _dio.get(getUrl);    
-      if(response.statusCode==HttpStatus.ok){
-          return NursingSearchDataResponse.fromJson(response.data);
-      } else{
-          throw SocketException('No Internet');    
-      }      
+      var getUrl = "$mainUrl/getmap?id=" +
+          data +
+          "&township_id=-1&moving_in=-1&per_month=-1&local=&feature=nursing&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0";
+      Response response = await _dio.get(getUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return NursingSearchDataResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
     } catch (error, stacktrace) {
-          throw SocketException('No Internet');
+      throw SocketException('No Internet');
+    }
+  }
+
+  Future<JobResponse> getJob() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var getJobUrl =
+          "$mainUrl/getjobsearch/null?id=-1&townshipID[]=0&occupationID[]=0&empstatus[]=0";
+
+      Response response = await _dio.get(getJobUrl);
+
+      if (response.statusCode == HttpStatus.ok) {
+        print(response.statusCode);
+        return JobResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      throw SocketException('No Internet');
     }
   }
 }

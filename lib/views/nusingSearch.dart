@@ -1,14 +1,19 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
+import 'package:tis/bloc/get_link_bloc.dart';
 import 'package:tis/bloc/get_nursing_search_data_bloc.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
+import 'package:tis/model/link.dart';
+import 'package:tis/model/link_response.dart';
 import 'package:tis/model/nursingSearch_response.dart';
 import 'package:tis/model/specialFeatures.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
+import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/views/nusing_detail.dart';
 
 class NusingSearch extends StatefulWidget {
@@ -47,6 +52,7 @@ class _NusingSearchState extends State<NusingSearch> {
     super.initState();
     getCityBloc..getCity();
     getNursingSearchDataBloc..getNursingSearchData("1");
+    getLinkNewsBloc..getLinkedNews("1");
   }
 
   @override
@@ -54,6 +60,7 @@ class _NusingSearchState extends State<NusingSearch> {
     super.dispose();
     getCityBloc.drainStream();
     getNursingSearchDataBloc.drainStream();
+    getLinkNewsBloc.drainStream();
   }
 
   @override
@@ -79,31 +86,221 @@ class _NusingSearchState extends State<NusingSearch> {
               DottedLine(dashColor: Colors.blue,),
 
               SizedBox(height: 20.0),
-
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue
-                    ), 
-                    height: 36.0,
-                    width: 10.0,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 30.0,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100]
-                    ),
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("現在の検索条件" ,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+              Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  // SizedBox(height: 20.0),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue
+                        ), 
+                        height: 36.0,
+                        width: 10.0,
                       ),
-                    ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 30.0,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100]
+                        ),
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("現在の検索条件" ,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  Container(
+                    child: Align(
+                          alignment: Alignment.bottomRight,
+                          child:RawMaterialButton(
+                            onPressed: () {
+                               return  showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                          return StatefulBuilder(
+                                            builder: (context, setState) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  "Notifications",
+                                                ),
+                                                content: SingleChildScrollView(
+                                                  child: 
+                                                    Container(
+                                                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                                        child: StreamBuilder<LinkResponse>(
+                                                          stream: getLinkNewsBloc.subject.stream,
+                                                          builder: (context, AsyncSnapshot<LinkResponse> snapshot) {
+                                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                                    return Container(
+                                                                        height:MediaQuery.of(context).size.height/1.5,
+                                                                        child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                          children: [SizedBox(
+                                                                            height: 35,
+                                                                            width: 35,
+                                                                            child: CircularProgressIndicator()),
+                                                                          ]),
+                                                                    );//
+                                                              }
+                                                              else if (snapshot.hasError) {
+                                                                          return Container();
+                                                              } 
+                                                              else if (snapshot.hasData) {
+                                                                  if (snapshot.data.error != null &&
+                                                                        snapshot.data.error.length > 0) {
+                                                                          return Container();
+                                                                  }    
+                                                                          return  _getLinkNews(snapshot.data);                                 
+                                                                } 
+                                                              else {                                      
+                                                                        return Container(
+                                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                                          child: Column(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children: [SizedBox(
+                                                                              height: 35,
+                                                                              width: 35,
+                                                                              child: CircularProgressIndicator()),
+                                                                            ]),
+                                                                        );//return buildLoadingWidget();
+                                                              }
+                                                          }                                      
+                                                        )
+                                                    ), 
+
+                                                //   Container(    
+                                                //     width: MediaQuery.of(context).size.width,                                      
+                                                //     child: Column(
+                                                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                //       children: <Widget>[
+                                                //         Row(
+                                                //           mainAxisAlignment: MainAxisAlignment.start,
+                                                //           children: [
+                                                //             Container(
+                                                //               // child: IconButton(
+                                                //               //   icon: Icon(
+                                                //               //     Icons.edit,
+                                                //               //     color: Colors.blue,
+                                                //               //     size: 50,
+                                                //               //   ),
+                                                //               //   onPressed: () {
+                                                                
+                                                //               //   },
+                                                //               // ),
+                                                //             ),
+                                                            
+                                                //             Flexible(
+                                                //                 child: TextField(
+                                                //                   textAlign: TextAlign.center,
+                                                //                   style: TextStyle(
+                                                //                     // fontSize: mobileWidth * 0.05,
+                                                //                   ),
+                                                //                   // controller: _textNameController,
+                                                //                   decoration: InputDecoration(),
+                                                //                 ),
+                                                //               )
+                                                            
+                                                //           ],
+                                                //         ),
+                                                //         Row(
+                                                //           children: [
+                                                //             Container(
+                                                //               // child: IconButton(
+                                                //               //   onPressed: () {
+                                                              
+                                                //               //   },
+                                                //               // ),
+                                                //             ),
+                                                //             Text(
+                                                //               '',
+                                                //             ),
+                                                //             Flexible(
+                                                //                     child: TextField(
+                                                //                       textAlign: TextAlign.center,
+                                                //                       // controller: _textContactController,
+                                                //                       decoration: InputDecoration(),
+                                                //                     ),
+                                                //             )
+                                                              
+                                                //           ],
+                                                //         ),
+                                                //       ],
+                                                //     ),
+                                                // ),
+
+                                              ),
+                                                actions: [
+                                                  FlatButton(
+                                                    child: Text("Close"),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop(); // dismiss dialog
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      );   
+                                          //  StreamBuilder<LinkResponse>(
+                                          //   stream: getLinkNewsBloc.subject.stream,
+                                          //   builder: (context, AsyncSnapshot<LinkResponse> snapshot) {
+                                          //       if (snapshot.connectionState == ConnectionState.waiting) {
+                                          //             return Container(
+                                          //                 height:MediaQuery.of(context).size.height/1.5,
+                                          //                 child: Column(
+                                          //                   mainAxisAlignment: MainAxisAlignment.center,
+                                          //                   children: [SizedBox(
+                                          //                     height: 35,
+                                          //                     width: 35,
+                                          //                     child: CircularProgressIndicator()),
+                                          //                   ]),
+                                          //             );//
+                                          //       }
+                                          //       else if (snapshot.hasError) {
+                                          //                   return Container();
+                                          //       } 
+                                          //       else if (snapshot.hasData) {
+                                          //           if (snapshot.data.error != null &&
+                                          //                 snapshot.data.error.length > 0) {
+                                          //                   return Container();
+                                          //           }    
+                                                                      
+                                          //         } 
+                                          //       else {                                      
+                                          //                 return Container(
+                                          //                   height:MediaQuery.of(context).size.height/1.5,
+                                          //                   child: Column(
+                                          //                     mainAxisAlignment: MainAxisAlignment.center,
+                                          //                     children: [SizedBox(
+                                          //                       height: 35,
+                                          //                       width: 35,
+                                          //                       child: CircularProgressIndicator()),
+                                          //                     ]),
+                                          //                 );//return buildLoadingWidget();
+                                          //       }
+                                          //   }                                      
+                                          // );
+                                                                      
+                            },
+                            elevation: 1.0,
+                            fillColor: Colors.blue,
+                            child: Icon(
+                              CustomApp.bell,
+                              size: 30.0,
+                            ),
+                            padding: EdgeInsets.all(15.0),
+                            shape: CircleBorder(),
+                        )                       
+                    ),
+                  ),                
                 ],
-              ),
+              ),              
               SizedBox(height: 10.0),
 
               Text("地域で絞り込む"),
@@ -1083,6 +1280,70 @@ class _NusingSearchState extends State<NusingSearch> {
        ),
     );
   }
+
+  Widget _getLinkNews(LinkResponse data){
+    List<LinkModel> allPosts = data.link;
+    List<dynamic> result = [];
+    for (var j = 0; j < allPosts.length; j++) {
+      result.add(allPosts[j]);
+    }
+
+    return  Container(
+          height: 350.0, // Change as per your requirement
+          width: 300.0, 
+          child: ListView.builder(
+          // physics: NeverScrollableScrollPhysics(),
+          itemCount:allPosts.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                index==0?DottedLine(dashColor: Colors.blue,): Container(),
+                SizedBox(height: 20,),
+                Row(
+                  children: [
+                    Text(
+                      result[index].postDate,
+                     style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0
+                    )),
+                    SizedBox(width: 20,),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: result[index].status==3?Color(0xff52a2da):Colors.white, 
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),                                      
+                      ),                     
+                      // height: 20.0,
+                      width: 80.0,
+                      child: result[index].status==3?Text("お知らせ",textAlign: TextAlign.center,):Text(''),
+                    ),
+                    // RaisedButton(                      
+                    //   onPressed: () => {},
+                    //   color:result[index].status==3?Color(0xff52a2da):Colors.white,                   
+                    //   child: result[index].status==3?Text("お知らせ"):Text(''),
+                    // )
+                  ],
+                ),              
+                Html(
+                    data: result[index].description,
+                ),                
+                // SizedBox(height: 20,),
+                Container(
+                            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),      
+                                child: Divider(
+                                  height:10,
+                                  color:Color(0xffaaaaaa),//Color(0xffaaa),
+                                  thickness: 1.5,
+                                ),
+                )
+              ],
+            );
+          }
+        )
+    ); 
+
+  }  
 
   Widget _news(){
     return Column(

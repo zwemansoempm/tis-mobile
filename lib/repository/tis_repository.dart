@@ -384,8 +384,8 @@ class NewsRepository {
      throw SocketException('No Internet');
     }
   }
-
-  Future<LinkResponse> getLinkedNews(String id) async {
+ 
+  Future<LinkResponse> getLinkedNews(String id) async {  
     await Future.delayed(Duration(milliseconds: 500));
     try {
 

@@ -62,7 +62,7 @@ class _NusingSearchState extends State<NusingSearch> {
     return Container(
        child: SingleChildScrollView(
                 child: Padding(
-           padding: const EdgeInsets.all(10.0),
+           padding: const EdgeInsets.only(top:40.0),//const EdgeInsets.all(10.0),
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
@@ -1165,7 +1165,7 @@ class _MyDialog extends StatefulWidget {
     this.onSelectedCitiesListChanged,
   });
 
-  final List<SpecialFeatureModel> cities;
+  final List<SpecialFeaturesModel> cities;
   final List<String> selectedCities;
   final ValueChanged<List<String>> onSelectedCitiesListChanged;
 

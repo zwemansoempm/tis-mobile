@@ -251,7 +251,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                             ],
                           ),
                     ):Container(),
-                      Container(    
+                    (allPosts[0].relatedNews!=null) ?  Container(    
                       margin: EdgeInsets.symmetric(vertical: 5.0),                                 
                       child: StreamBuilder<RelatedNewsResponse>(
                       stream: getRelatedNewsBloc.subject.stream,
@@ -290,7 +290,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                           }
                         }                                      
                       )
-                    ),                                            
+                    ):Container(),                                            
                   ],
             ); 
   }

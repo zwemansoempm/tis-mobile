@@ -119,7 +119,7 @@ class _NusingSearchState extends State<NusingSearch> {
                           alignment: Alignment.bottomRight,
                           child:RawMaterialButton(
                             onPressed: () {
-                               return  showDialog(
+                               return  showDialog(                                 
                                           context: context,
                                           builder: (context) {
                                           return StatefulBuilder(
@@ -131,7 +131,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                                 content: SingleChildScrollView(
                                                   child: 
                                                     Container(
-                                                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                                     height:350,
+                                                     width:300,
+                                                        // margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
                                                         child: StreamBuilder<LinkResponse>(
                                                           stream: getLinkNewsBloc.subject.stream,
                                                           builder: (context, AsyncSnapshot<LinkResponse> snapshot) {

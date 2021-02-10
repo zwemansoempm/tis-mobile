@@ -46,13 +46,13 @@ class _NusingSearchState extends State<NusingSearch> {
   List<String> moveList = [
     '自立', '要支援' , '要介護',
   ];
-
+  var stream; 
   @override
   void initState() {
     super.initState();
     getCityBloc..getCity();
     getNursingSearchDataBloc..getNursingSearchData("1");
-    getLinkNewsBloc..getLinkedNews("1");
+    stream;//getLinkNewsBloc..getLinkedNews("1");
   }
 
   @override
@@ -119,7 +119,10 @@ class _NusingSearchState extends State<NusingSearch> {
                           alignment: Alignment.bottomRight,
                           child:RawMaterialButton(
                             onPressed: () {
-                               return  showDialog(
+                                setState(() {
+                                stream =getLinkNewsBloc..getLinkedNews('1');                               
+                              });
+                               return  showDialog(                                 
                                           context: context,
                                           builder: (context) {
                                           return StatefulBuilder(
@@ -131,7 +134,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                                 content: SingleChildScrollView(
                                                   child: 
                                                     Container(
-                                                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                                     height:350,
+                                                     width:300,
+                                                        // margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
                                                         child: StreamBuilder<LinkResponse>(
                                                           stream: getLinkNewsBloc.subject.stream,
                                                           builder: (context, AsyncSnapshot<LinkResponse> snapshot) {
@@ -171,68 +176,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                               }
                                                           }                                      
                                                         )
-                                                    ), 
-
-                                                //   Container(    
-                                                //     width: MediaQuery.of(context).size.width,                                      
-                                                //     child: Column(
-                                                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                //       children: <Widget>[
-                                                //         Row(
-                                                //           mainAxisAlignment: MainAxisAlignment.start,
-                                                //           children: [
-                                                //             Container(
-                                                //               // child: IconButton(
-                                                //               //   icon: Icon(
-                                                //               //     Icons.edit,
-                                                //               //     color: Colors.blue,
-                                                //               //     size: 50,
-                                                //               //   ),
-                                                //               //   onPressed: () {
-                                                                
-                                                //               //   },
-                                                //               // ),
-                                                //             ),
-                                                            
-                                                //             Flexible(
-                                                //                 child: TextField(
-                                                //                   textAlign: TextAlign.center,
-                                                //                   style: TextStyle(
-                                                //                     // fontSize: mobileWidth * 0.05,
-                                                //                   ),
-                                                //                   // controller: _textNameController,
-                                                //                   decoration: InputDecoration(),
-                                                //                 ),
-                                                //               )
-                                                            
-                                                //           ],
-                                                //         ),
-                                                //         Row(
-                                                //           children: [
-                                                //             Container(
-                                                //               // child: IconButton(
-                                                //               //   onPressed: () {
-                                                              
-                                                //               //   },
-                                                //               // ),
-                                                //             ),
-                                                //             Text(
-                                                //               '',
-                                                //             ),
-                                                //             Flexible(
-                                                //                     child: TextField(
-                                                //                       textAlign: TextAlign.center,
-                                                //                       // controller: _textContactController,
-                                                //                       decoration: InputDecoration(),
-                                                //                     ),
-                                                //             )
-                                                              
-                                                //           ],
-                                                //         ),
-                                                //       ],
-                                                //     ),
-                                                // ),
-
+                                                    ),
                                               ),
                                                 actions: [
                                                   FlatButton(
@@ -246,47 +190,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             },
                                           );
                                         }
-                                      );   
-                                          //  StreamBuilder<LinkResponse>(
-                                          //   stream: getLinkNewsBloc.subject.stream,
-                                          //   builder: (context, AsyncSnapshot<LinkResponse> snapshot) {
-                                          //       if (snapshot.connectionState == ConnectionState.waiting) {
-                                          //             return Container(
-                                          //                 height:MediaQuery.of(context).size.height/1.5,
-                                          //                 child: Column(
-                                          //                   mainAxisAlignment: MainAxisAlignment.center,
-                                          //                   children: [SizedBox(
-                                          //                     height: 35,
-                                          //                     width: 35,
-                                          //                     child: CircularProgressIndicator()),
-                                          //                   ]),
-                                          //             );//
-                                          //       }
-                                          //       else if (snapshot.hasError) {
-                                          //                   return Container();
-                                          //       } 
-                                          //       else if (snapshot.hasData) {
-                                          //           if (snapshot.data.error != null &&
-                                          //                 snapshot.data.error.length > 0) {
-                                          //                   return Container();
-                                          //           }    
-                                                                      
-                                          //         } 
-                                          //       else {                                      
-                                          //                 return Container(
-                                          //                   height:MediaQuery.of(context).size.height/1.5,
-                                          //                   child: Column(
-                                          //                     mainAxisAlignment: MainAxisAlignment.center,
-                                          //                     children: [SizedBox(
-                                          //                       height: 35,
-                                          //                       width: 35,
-                                          //                       child: CircularProgressIndicator()),
-                                          //                     ]),
-                                          //                 );//return buildLoadingWidget();
-                                          //       }
-                                          //   }                                      
-                                          // );
-                                                                      
+                                      );                             
                             },
                             elevation: 1.0,
                             fillColor: Colors.blue,

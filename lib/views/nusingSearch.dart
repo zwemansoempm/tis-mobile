@@ -1215,12 +1215,12 @@ class _NusingSearchState extends State<NusingSearch> {
                     SizedBox(width: 20,),
                     Container(
                       decoration: BoxDecoration(
-                        color: result[index].status==3?Color(0xff52a2da):Colors.white, 
+                        color: result[index].status==3?Color(0xff52a2da):(result[index].status==2?Color(0xffdcb01c):(result[index].status==1?Color(0xffd7787d):Colors.white)),
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),                                      
                       ),                     
                       // height: 20.0,
                       width: 80.0,
-                      child: result[index].status==3?Text("お知らせ",textAlign: TextAlign.center,):Text(''),
+                      child: result[index].status==3?Text("お知らせ",textAlign: TextAlign.center,):(result[index].status==2?Text("メディア掲載",textAlign: TextAlign.center,):(result[index].status==1?Text("ニュースリリース",textAlign: TextAlign.center,):Text(''))),
                     ),
                     // RaisedButton(                      
                     //   onPressed: () => {},

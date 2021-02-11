@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tis/model/day_service_response.dart';
-import 'package:tis/model/visit_nurse_response.dart';
 import 'package:tis/repository/tis_repository.dart';
 
 class GetDayServiceeBloc {

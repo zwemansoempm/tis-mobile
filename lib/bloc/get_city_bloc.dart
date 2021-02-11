@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tis/model/city_response.dart';
@@ -10,8 +9,7 @@ class GetCityBloc {
       BehaviorSubject<CityResponse>();
 
   getCity() async {
-    CityResponse response = await _repository.getCity();
-    //print(response.city);
+    CityResponse response = await _repository.getCity();  
     _subject.sink.add(response);
   }
 

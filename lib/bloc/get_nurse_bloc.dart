@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-// import 'package:tis/model/medical_response2.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/repository/tis_repository.dart';
 

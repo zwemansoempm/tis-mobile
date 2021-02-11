@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tis/model/newsCategory.dart';

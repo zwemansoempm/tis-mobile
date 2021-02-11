@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tis/model/speialfeatures_response.dart';
@@ -10,8 +9,7 @@ class GetFeaturesBloc {
       BehaviorSubject<SpecialFeaturesResponse>();
 
   getFeatures() async {
-    SpecialFeaturesResponse response = await _repository.getFeatures();
-    //print(response.city);
+    SpecialFeaturesResponse response = await _repository.getFeatures();  
     _subject.sink.add(response);
   }
 

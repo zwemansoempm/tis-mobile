@@ -1,20 +1,11 @@
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:tis/bloc/get_newdetails_bloc.dart';
 import 'package:tis/bloc/get_related_news_bloc.dart';
-import 'package:tis/elements/loader.dart';
-import 'package:tis/model/medical.dart';
 import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/posts.dart';
 import 'package:tis/model/related_news_response.dart';
-import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/html_parser.dart';
-import 'package:flutter_html/style.dart';
-
 
 class TopDetailScreen extends StatefulWidget {
 

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_link_bloc.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/model/job.dart';
-import 'package:tis/model/link.dart';
-import 'package:tis/model/link_response.dart';
 import 'package:tis/model/occupation_child.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
@@ -19,7 +16,6 @@ import 'package:tis/bloc/get_job_bloc.dart';
 import 'package:tis/model/job_response.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/views/bottom_nav_4_detail.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:tis/views/shownoti.dart';
 
 class JobWidget extends StatefulWidget {

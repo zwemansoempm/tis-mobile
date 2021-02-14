@@ -289,95 +289,95 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
 
                       actions: [
                         //oshirase
-                        // SizedBox(
-                        //     width: 50,
-                        //     child: new IconButton(                  
-                        //         icon:new Icon(CustomApp.bell),
-                        //         onPressed: () {
-                        //            showDialog(
-                        //             context: context,
-                        //             builder: (context) {
-                        //             return StatefulBuilder(
-                        //               builder: (context, setState) {
-                        //                 return AlertDialog(
-                        //                   title: Text(
-                        //                     "Notification",
-                        //                   ),
-                        //                   content: SingleChildScrollView(
-                        //                     child: Container(    
-                        //                       width: MediaQuery.of(context).size.width,                                      
-                        //                       child: Column(
-                        //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //                         children: <Widget>[
-                        //                           Row(
-                        //                             mainAxisAlignment: MainAxisAlignment.start,
-                        //                             children: [
-                        //                               Container(
-                        //                                 // child: IconButton(
-                        //                                 //   icon: Icon(
-                        //                                 //     Icons.edit,
-                        //                                 //     color: Colors.blue,
-                        //                                 //     size: 50,
-                        //                                 //   ),
-                        //                                 //   onPressed: () {
+                        SizedBox(
+                            width: 50,
+                            child: new IconButton(                  
+                                icon:new Icon(CustomApp.bell),
+                                onPressed: () {
+                          //          showDialog(
+                          //           context: context,
+                          //           builder: (context) {
+                          //           return StatefulBuilder(
+                          //             builder: (context, setState) {
+                          //               return AlertDialog(
+                          //                 title: Text(
+                          //                   "Notification",
+                          //                 ),
+                          //                 content: SingleChildScrollView(
+                          //                   child: Container(    
+                          //                     width: MediaQuery.of(context).size.width,                                      
+                          //                     child: Column(
+                          //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //                       children: <Widget>[
+                          //                         Row(
+                          //                           mainAxisAlignment: MainAxisAlignment.start,
+                          //                           children: [
+                          //                             Container(
+                          //                               // child: IconButton(
+                          //                               //   icon: Icon(
+                          //                               //     Icons.edit,
+                          //                               //     color: Colors.blue,
+                          //                               //     size: 50,
+                          //                               //   ),
+                          //                               //   onPressed: () {
                                                           
-                        //                                 //   },
-                        //                                 // ),
-                        //                               ),
+                          //                               //   },
+                          //                               // ),
+                          //                             ),
                                                       
-                        //                               Flexible(
-                        //                                   child: TextField(
-                        //                                     textAlign: TextAlign.center,
-                        //                                     style: TextStyle(
-                        //                                       // fontSize: mobileWidth * 0.05,
-                        //                                     ),
-                        //                                     // controller: _textNameController,
-                        //                                     decoration: InputDecoration(),
-                        //                                   ),
-                        //                                 )
+                          //                             Flexible(
+                          //                                 child: TextField(
+                          //                                   textAlign: TextAlign.center,
+                          //                                   style: TextStyle(
+                          //                                     // fontSize: mobileWidth * 0.05,
+                          //                                   ),
+                          //                                   // controller: _textNameController,
+                          //                                   decoration: InputDecoration(),
+                          //                                 ),
+                          //                               )
                                                       
-                        //                             ],
-                        //                           ),
-                        //                           Row(
-                        //                             children: [
-                        //                               Container(
-                        //                                 // child: IconButton(
-                        //                                 //   onPressed: () {
+                          //                           ],
+                          //                         ),
+                          //                         Row(
+                          //                           children: [
+                          //                             Container(
+                          //                               // child: IconButton(
+                          //                               //   onPressed: () {
                                                         
-                        //                                 //   },
-                        //                                 // ),
-                        //                               ),
-                        //                               Text(
-                        //                                 '',
-                        //                               ),
-                        //                               Flexible(
-                        //                                       child: TextField(
-                        //                                         textAlign: TextAlign.center,
-                        //                                         // controller: _textContactController,
-                        //                                         decoration: InputDecoration(),
-                        //                                       ),
-                        //                               )
+                          //                               //   },
+                          //                               // ),
+                          //                             ),
+                          //                             Text(
+                          //                               '',
+                          //                             ),
+                          //                             Flexible(
+                          //                                     child: TextField(
+                          //                                       textAlign: TextAlign.center,
+                          //                                       // controller: _textContactController,
+                          //                                       decoration: InputDecoration(),
+                          //                                     ),
+                          //                             )
                                                         
-                        //                             ],
-                        //                           ),
-                        //                         ],
-                        //                       ),
-                        //                   ),
-                        //                 ),
-                        //                   actions: [
-                        //                     FlatButton(
-                        //                       child: Text("Close"),
-                        //                       onPressed: () {
-                        //                         Navigator.of(context).pop(); // dismiss dialog
-                        //                       },
-                        //                     ),
-                        //                   ],
-                        //                 );
-                        //               },
-                        //             );
-                        //         }
-                        //     ); 
-                        //     },     )),                          
+                          //                           ],
+                          //                         ),
+                          //                       ],
+                          //                     ),
+                          //                 ),
+                          //               ),
+                          //                 actions: [
+                          //                   FlatButton(
+                          //                     child: Text("Close"),
+                          //                     onPressed: () {
+                          //                       Navigator.of(context).pop(); // dismiss dialog
+                          //                     },
+                          //                   ),
+                          //                 ],
+                          //               );
+                          //             },
+                          //           );
+                          //       }
+                          //   ); 
+                            },     )),                          
                           // ), 
                         IconButton(
                           icon:new Icon(Icons.settings),//Image.asset("assets/images/setting.png"), 
@@ -1069,8 +1069,8 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
               child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       // padding:EdgeInsets.only(top: 0),
-                      itemCount: 1,
-                      itemBuilder: (context, index) {
+                        itemCount: 1,
+                        itemBuilder: (context, index) {
                       return GestureDetector(
                         child: 
                         Column(

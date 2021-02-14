@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
+import 'package:tis/screens/hospital/search_hospital.dart';
 import 'package:tis/views/bottom_nav_1.dart';
 import 'package:tis/views/nusingSearch.dart';
 import 'bottom_nav_2.dart';
@@ -23,7 +24,7 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
   final List<Widget> _children = [
     HomeWidget(),
     NusingSearch(),
-    PlaceWidget(),
+    SearchHospital(),
     JobWidget(),
   ];
 

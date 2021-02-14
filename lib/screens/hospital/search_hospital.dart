@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
+import 'package:tis/bloc/get_link_bloc.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/model/department_child.dart';
+import 'package:tis/model/link.dart';
+import 'package:tis/model/link_response.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/bloc/get_features_bloc.dart';
@@ -13,6 +17,7 @@ import 'package:tis/model/speialfeatures_response.dart';
 import 'package:tis/model/department.dart';
 import 'package:tis/model/department_response.dart';
 import 'package:tis/bloc/get_department_bloc.dart';
+import 'package:tis/presentation/custom_app_icons.dart';
 
 class SearchHospital extends StatefulWidget {
   @override
@@ -20,6 +25,7 @@ class SearchHospital extends StatefulWidget {
 }
 
 class _SearchHospitalState extends State<SearchHospital> {
+  var stream; 
   Map<String, bool> cityList = {
     'item1': false,
     'item2': false,
@@ -45,13 +51,16 @@ class _SearchHospitalState extends State<SearchHospital> {
     super.initState();
     getCityBloc..getCity();
     getFeaturesBloc..getFeatures();
+    stream;//=getLinkNewsBloc..getLinkedNews('2');
   }
 
   @override
   void dispose() {
+    super.dispose();
     getCityBloc.drainStream();
     getFeaturesBloc..drainStream();
-    super.dispose();
+    getLinkNewsBloc.drainStream();
+    
   }
 
   Future<Map<String, bool>> _checkBoxList() async {
@@ -100,7 +109,7 @@ class _SearchHospitalState extends State<SearchHospital> {
     return Container(
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(top:40.0),//const EdgeInsets.all(10.0),//  padding: EdgeInsets.all(10.0),
           child: Column(
             children: [
               Row(
@@ -115,7 +124,127 @@ class _SearchHospitalState extends State<SearchHospital> {
                 dashColor: Colors.blue,
               ),
               SizedBox(height: 20),
-              _header("現在の検索条件"),
+               Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  // SizedBox(height: 20.0),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue
+                        ), 
+                        height: 36.0,
+                        width: 10.0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 30.0,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100]
+                        ),
+                        padding: EdgeInsets.all(8.0),
+                        
+                       child: Text("現在の検索条件" ,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        ),// _header("現在の検索条件"),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    child: Align(
+                          alignment: Alignment.bottomRight,
+                          child:RawMaterialButton(
+                            onPressed: () {
+                                setState(() {
+                                stream =getLinkNewsBloc..getLinkedNews('2');                               
+                              });
+                               return  showDialog(                                 
+                                          context: context,
+                                          builder: (context) {
+                                          return StatefulBuilder(
+                                            builder: (context, setState) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  "Notifications",
+                                                ),
+                                                content: SingleChildScrollView(
+                                                  child: 
+                                                    Container(
+                                                     height:350,
+                                                     width:300,
+                                                        // margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
+                                                        child: StreamBuilder<LinkResponse>(
+                                                          stream: getLinkNewsBloc.subject.stream,
+                                                          builder: (context, AsyncSnapshot<LinkResponse> snapshot) {
+                                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                                    return Container(
+                                                                        height:MediaQuery.of(context).size.height/1.5,
+                                                                        child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                          children: [SizedBox(
+                                                                            height: 35,
+                                                                            width: 35,
+                                                                            child: CircularProgressIndicator()),
+                                                                          ]),
+                                                                    );//
+                                                              }
+                                                              else if (snapshot.hasError) {
+                                                                          return Container();
+                                                              } 
+                                                              else if (snapshot.hasData) {
+                                                                  if (snapshot.data.error != null &&
+                                                                        snapshot.data.error.length > 0) {
+                                                                          return Container();
+                                                                  }    
+                                                                          return  _getLinkNews(snapshot.data);                                 
+                                                                } 
+                                                              else {                                      
+                                                                        return Container(
+                                                                          height:MediaQuery.of(context).size.height/1.5,
+                                                                          child: Column(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children: [SizedBox(
+                                                                              height: 35,
+                                                                              width: 35,
+                                                                              child: CircularProgressIndicator()),
+                                                                            ]),
+                                                                        );//return buildLoadingWidget();
+                                                              }
+                                                          }                                      
+                                                        )
+                                                    ), 
+                                              ),
+                                                actions: [
+                                                  FlatButton(
+                                                    child: Text("Close"),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop(); // dismiss dialog
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      );                              
+                            },
+                            elevation: 1.0,
+                            fillColor: Colors.blue,
+                            child: Icon(
+                              CustomApp.bell,
+                              size: 30.0,
+                            ),
+                            padding: EdgeInsets.all(15.0),
+                            shape: CircleBorder(),
+                        )                       
+                    ),
+                  ),                
+                ],
+              ),  
+              // _header("現在の検索条件"),
               SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
@@ -343,39 +472,39 @@ class _SearchHospitalState extends State<SearchHospital> {
 
                     //Department
 
-                    Container(
-                      child: StreamBuilder<DepartmentResponse>(
-                          stream: getDepBloc.subject.stream,
-                          builder: (context,
-                              AsyncSnapshot<DepartmentResponse> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 1.5,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Center(
-                                          child: CircularProgressIndicator()),
-                                    ]),
-                              ); //
-                            } else if (snapshot.hasError) {
-                              return Container();
-                            } else if (snapshot.hasData) {
-                              if (snapshot.data.error != null &&
-                                  snapshot.data.error.length > 0) {
-                                return Container();
-                              } else {
-                                return Column(
-                                    children: getTextWidgets(
-                                        snapshot.data.department));
-                              }
-                            } else {
-                              return Container(); //buildLoadingWidget();
-                            }
-                          }),
-                    ),
+                    // Container(
+                    //   child: StreamBuilder<DepartmentResponse>(
+                    //       stream: getDepBloc.subject.stream,
+                    //       builder: (context,
+                    //           AsyncSnapshot<DepartmentResponse> snapshot) {
+                    //         if (snapshot.connectionState ==
+                    //             ConnectionState.waiting) {
+                    //           return Container(
+                    //             height:
+                    //                 MediaQuery.of(context).size.height / 1.5,
+                    //             child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 children: [
+                    //                   Center(
+                    //                       child: CircularProgressIndicator()),
+                    //                 ]),
+                    //           ); //
+                    //         } else if (snapshot.hasError) {
+                    //           return Container();
+                    //         } else if (snapshot.hasData) {
+                    //           if (snapshot.data.error != null &&
+                    //               snapshot.data.error.length > 0) {
+                    //             return Container();
+                    //           } else {
+                    //             return Column(
+                    //                 children: getTextWidgets(
+                    //                     snapshot.data.department));
+                    //           }
+                    //         } else {
+                    //           return Container(); //buildLoadingWidget();
+                    //         }
+                    //       }),
+                    // ),
                   ],
                 ),
               ),
@@ -409,6 +538,71 @@ class _SearchHospitalState extends State<SearchHospital> {
       ),
     );
   }
+
+   Widget _getLinkNews(LinkResponse data){
+    List<LinkModel> allPosts = data.link;
+    List<dynamic> result = [];
+    for (var j = 0; j < allPosts.length; j++) {
+      result.add(allPosts[j]);
+    }
+
+    return  Container(
+          height: 350.0, // Change as per your requirement
+          width: 300.0, 
+          child: ListView.builder(
+          // physics: NeverScrollableScrollPhysics(),
+          itemCount:allPosts.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                index==0?DottedLine(dashColor: Colors.blue,): Container(),
+                SizedBox(height: 20,),
+                Row(
+                  children: [
+                    Text(
+                      result[index].postDate,
+                     style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0
+                    )),
+                    SizedBox(width: 20,),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: result[index].status==3?Color(0xff52a2da):(result[index].status==2?Color(0xffdcb01c):(result[index].status==1?Color(0xffd7787d):Colors.white)), 
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),                                      
+                      ),                     
+                      // height: 20.0,
+                      width: 130.0,
+                      child: result[index].status==3?Text("お知らせ",textAlign: TextAlign.center,):(result[index].status==2?Text("メディア掲載",textAlign: TextAlign.center,):(result[index].status==1?Text("ニュースリリース",textAlign: TextAlign.center,):Text(''))),
+                    ),
+                    // RaisedButton(                      
+                    //   onPressed: () => {},
+                    //   color:result[index].status==3?Color(0xff52a2da):Colors.white,                   
+                    //   child: result[index].status==3?Text("お知らせ"):Text(''),
+                    // )
+                  ],
+                ),              
+                Html(
+                    data: result[index].description,
+                ),                
+                // SizedBox(height: 20,),
+                Container(
+                            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),      
+                                child: Divider(
+                                  height:10,
+                                  color:Color(0xffaaaaaa),//Color(0xffaaa),
+                                  thickness: 1.5,
+                                ),
+                )
+              ],
+            );
+          }
+        )
+    ); 
+
+  }  
+
 
   Widget _header(String name) {
     return Row(

@@ -17,7 +17,7 @@ class JobModel {
   final String insurance;
   final String working_hours;
   final String holidays;
-  final String job_number;
+  final String jobnum;
   final int user_id;
   final int recordstatus;
   final String city_name;
@@ -41,7 +41,7 @@ class JobModel {
       this.insurance,
       this.working_hours,
       this.holidays,
-      this.job_number,
+      this.jobnum,
       this.user_id,
       this.recordstatus,
       this.city_name);
@@ -65,7 +65,7 @@ class JobModel {
         insurance = json['insurance'],
         working_hours = json['working_hours'],
         holidays = json['holidays'],
-        job_number = json['job_number'],
+        jobnum = json['jobnum'],
         user_id = json['user_id'],
         recordstatus = json['recordstatus'],
         city_name = json['city_name'];

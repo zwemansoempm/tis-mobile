@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
+import 'package:tis/bloc/get_link_bloc.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/model/job.dart';
+import 'package:tis/model/link.dart';
+import 'package:tis/model/link_response.dart';
 import 'package:tis/model/occupation_child.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
@@ -13,7 +17,10 @@ import 'package:tis/model/occupation_response.dart';
 import 'package:tis/bloc/get_occupation_bloc.dart';
 import 'package:tis/bloc/get_job_bloc.dart';
 import 'package:tis/model/job_response.dart';
+import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/views/bottom_nav_4_detail.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:tis/views/shownoti.dart';
 
 class JobWidget extends StatefulWidget {
   @override
@@ -21,6 +28,7 @@ class JobWidget extends StatefulWidget {
 }
 
 class _BottomNav4State extends State<JobWidget> {
+  var stream; 
   Map<String, bool> cityList = {
     'item1': false,
     'item2': false,
@@ -57,11 +65,12 @@ class _BottomNav4State extends State<JobWidget> {
     'その他': false,
   };
 
-  var stream;
+  
   @override
   void initState() {
     super.initState();
     getCityBloc..getCity();
+    stream;
   }
 
   @override
@@ -88,7 +97,7 @@ class _BottomNav4State extends State<JobWidget> {
         // decoration:
         //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(top:40.0),// padding: const EdgeInsets.all(10.0),
           child: Column(children: [
             Row(children: [
               SizedBox(width: 5.0),
@@ -98,9 +107,87 @@ class _BottomNav4State extends State<JobWidget> {
             ]),
             DottedLine(
               dashColor: Colors.blue,
-            ),
-            SizedBox(height: 20),
-            _header("現在の検索条件"),
+            ),        
+              SizedBox(height: 20),
+               Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  // SizedBox(height: 20.0),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue
+                        ), 
+                        height: 36.0,
+                        width: 10.0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 30.0,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100]
+                        ),
+                        padding: EdgeInsets.all(8.0),
+                        
+                       child: Text("現在の検索条件" ,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        ),// _header("現在の検索条件"),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    child: Align(
+                          alignment: Alignment.bottomRight,
+                          child:RawMaterialButton(
+                            onPressed: () {
+                                setState(() {
+                                stream =getLinkNewsBloc..getLinkedNews('3');                               
+                              });
+                               return  
+                               showDialog(                                 
+                                          context: context,
+                                          builder: (context) {
+                                          return 
+                                          StatefulBuilder(
+                                            builder: (context, setState) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  "Notifications",
+                                                ),
+                                                content: SingleChildScrollView(
+                                                  child: ShowNoti().showNotification(),                                            
+                                              ),
+                                                actions: [
+                                                  FlatButton(
+                                                    child: Text("Close"),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop(); // dismiss dialog
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      );                              
+                            },
+                            elevation: 1.0,
+                            fillColor: Colors.blue,
+                            child: Icon(
+                              CustomApp.bell,
+                              size: 30.0,
+                            ),
+                            padding: EdgeInsets.all(15.0),
+                            shape: CircleBorder(),
+                        )                       
+                    ),
+                  ),                
+                ],
+              ),  
+            // _header("現在の検索条件"),
             SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(

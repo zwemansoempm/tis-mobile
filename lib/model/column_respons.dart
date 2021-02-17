@@ -6,7 +6,7 @@ class ColumnResponse{
 
   ColumnResponse(this.medical,this.error);
   ColumnResponse.fromJson(Map<String, dynamic> json)// Map<String, dynamic>  List<dynamic> 
-  : medical=(json["40,コラム,#29905e"]as List).map((i) => new MedicalModel.fromJson(i)).toList(), 
+  : medical=(json["40,コラム,#0000ff"]as List).map((i) => new MedicalModel.fromJson(i)).toList(), 
   error="";
 
    ColumnResponse.withError(String errorValue)

@@ -963,7 +963,7 @@ class _NusingSearchState extends State<NusingSearch> {
                       ),
                     ),
                     Center(
-                      child: Image.asset("assets/logos/bbc-news.png", width: 200, height: 150,),
+                      // child: Image.asset("assets/logos/bbc-news.png", width: 200, height: 150,),
                     ),
                     
                     Container(

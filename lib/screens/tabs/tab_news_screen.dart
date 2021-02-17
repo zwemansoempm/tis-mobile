@@ -2,35 +2,33 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_news_category_mobile_bloc.dart';
+import 'package:tis/model/category.dart';
 import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/posts.dart';
+import 'package:tis/screens/tabs/top_news_screen.dart';
 import 'package:tis/screens/top/top_detail.dart';
 
 class TabNewsScreen extends StatefulWidget {
   final String categoryId;
+  final Categories snapdata;
 
-  const TabNewsScreen({Key key,@required this.categoryId}) : super(key: key);
+  const TabNewsScreen({Key key,@required this.categoryId, this.snapdata}) : super(key: key);
   @override
   _TabNewsScreenState createState() => _TabNewsScreenState();  
 
 }
 
-class _TabNewsScreenState extends State<TabNewsScreen> {
+class _TabNewsScreenState extends State<TabNewsScreen> {  
 
   @override
-  void initState() {
-    super.initState();
-    _getAllStream();
+  void initState() {     
+    super.initState();  
   }
 
   @override
   void dispose() {
     super.dispose();
-    _getAllDrainStream();   
-  }
-
-  _getAllStream(){
-    getNewsCategoryMobileBloc..getNewsCategoryMobile(widget.categoryId);
+    _getAllDrainStream();
   }
 
   _getAllDrainStream(){
@@ -39,7 +37,11 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<NewsCategory>(
+   
+    if(widget.categoryId=='35'){      
+          return  TopNewsScreen(categoryId:'35',snapdata:widget.snapdata);
+    }else{
+          return StreamBuilder<NewsCategory>(
         stream: getNewsCategoryMobileBloc.subject.stream,
         builder: (context, AsyncSnapshot<NewsCategory> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -230,12 +232,14 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                   height: 35,
                   width: 35,
                   child: CircularProgressIndicator()),
-                ]),
+              ]),
             );
           }
         } 
       ,
     );
+    }     
+    
     
   }
 

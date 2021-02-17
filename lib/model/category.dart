@@ -1,19 +1,17 @@
-import 'dart:convert';
-
 class Categories {
-  List<CategoryModel> categories;
+  final List<CategoryModel> categories;
+  final String error;
 
-  Categories({this.categories});
+  Categories(this.categories, this.error);
 
-  factory Categories.fromJson(List<dynamic> categories){
-    final tempData = categories.map((e) => CategoryModel.fromJson(e)).toList();
-    return Categories( categories: tempData);
-  }
+  Categories.fromJson(List<dynamic> json)
+  : categories=(json as List).map((i) => new CategoryModel.fromJson(i)).toList(),
+  error="";
+
+  Categories.withError(String errorValue)
+    : categories = List(),
+      error = errorValue;  
 }
-
-List<CategoryModel> categoriesFromJson(String str) => List<CategoryModel>.from(json.decode(str).map((x) => CategoryModel.fromJson(x)));
-
-//String photosToJson(List<CategoryModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class CategoryModel {
   int id;
@@ -26,12 +24,9 @@ class CategoryModel {
     this.colorCode,
   });
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json){
-    return CategoryModel(
-      id : json['id'],
-      name : json['name'],
-      colorCode: json['color_code'],
-    );
+  CategoryModel.fromJson(Map<String, dynamic> json)
+      :id = json['id'],
+      name = json['name'],
+      colorCode= json['color_code'];
   }
 
-}

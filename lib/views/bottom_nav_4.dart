@@ -87,6 +87,11 @@ class _BottomNav4State extends State<JobWidget> {
         new List.generate(count, (int i) => new InputWidget(i));
     return Container(
       child: SingleChildScrollView(
+        //child: Container(
+        // padding: EdgeInsets.all(10.0),
+        // margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        // decoration:
+        //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
         child: Padding(
           padding: const EdgeInsets.only(top:40.0),// padding: const EdgeInsets.all(10.0),
           child: Column(children: [

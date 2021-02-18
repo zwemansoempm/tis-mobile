@@ -62,11 +62,21 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
     getCoronaBloc..drainStream();
     getOtherBloc..drainStream();
     getColumnBloc..drainStream();
-    getHomeBloc..drainStream();
+    // getHomeBloc..drainStream();
     getNewsCategoryMobileBloc..drainStream();
   }
 
   _getAllStream(){   
+    getLatestPostAllCatBloc..getLatestPostAllCat();
+    getMedicalBloc..getMedicalNews();
+    getNurseBloc..getNurseNews();
+    getOldPeopleBloc..getPaidOldPeopleNews();
+    getVisitNurseBloc..getVisitNurseNews();
+    getDayServiceeBloc..getdayServiceNews();
+    getGroupBloc..getGroupNews();
+    getCoronaBloc..getCoronaNews();
+    getOtherBloc..getOtherNews();
+    getColumnBloc..getColumnNews(); 
     getHomeBloc..getHomeData(); 
   }
 
@@ -94,6 +104,7 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
         if(check==false){       
             _activeColor = _tabData.first.color;
         }
+          _tabs=[];
            _tabData.forEach((data) {          
               final tab = Tab(
                 child: PreferredSize(

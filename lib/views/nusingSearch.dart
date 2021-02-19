@@ -7,6 +7,7 @@ import 'package:tis/bloc/get_link_bloc.dart';
 import 'package:tis/bloc/get_nursing_result_bloc.dart';
 import 'package:tis/bloc/get_nursing_search_data_bloc.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
+import 'package:tis/elements/loader.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/model/link.dart';
@@ -51,14 +52,15 @@ class _NusingSearchState extends State<NusingSearch> {
   List<String> moveList = [
     '自立', '要支援' , '要介護',
   ];
-  var stream;
+  var stream;var stream1;var stream2;int checkstream=0;
 
   @override
   void initState() {
     super.initState();
-    getCityBloc..getCity();
-    getNursingSearchDataBloc..getNursingSearchData("-1");
+    getCityBloc..getCity();  
     stream;//getLinkNewsBloc..getLinkedNews("1");
+    stream1;
+    stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
   }
 
   @override
@@ -192,10 +194,26 @@ class _NusingSearchState extends State<NusingSearch> {
                         stream: getCityBloc.subject.stream,
                         builder:
                             (context, AsyncSnapshot<CityResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("市区町村"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                            }
+                            else if (snapshot.hasError) {
+                                  return Container();
+                            } 
+                            else if (snapshot.hasData) {
+                              if (snapshot.data.error != null &&
+                                  snapshot.data.error.length > 0) {
+                                return Container();
                             }
                             List<CityModel> cityList = List();
                             cityList.add(new CityModel(-1,""));
@@ -218,7 +236,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                   onChanged: (String newValue) {
                                     setState(() {
                                       _township = null;
-                                      getTspBloc..getTownship(newValue);
+                                        getTspBloc.drainStream();
+                                        stream1=getTspBloc..getTownship(newValue);
+                                        checkstream=1;
                                       _city = newValue;
                                     });
                                   },
@@ -238,10 +258,19 @@ class _NusingSearchState extends State<NusingSearch> {
                                     .toList(),
                                 ),
                               ));
-                          } else if (snapshot.hasError) {
-                            return Container();
                           } else {
-                            return _dropDown("市区町村"); //buildLoadingWidget();
+                            return Stack(
+                              children: <Widget>[
+                                _dropDown("市区町村"),                            
+                                Center(
+                                  child: Opacity(
+                                    opacity:1.0, 
+                                    child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            );
+                            // );//_dropDown("市区町村"); //buildLoadingWidget();
                           }
                         }),
               
@@ -260,13 +289,29 @@ class _NusingSearchState extends State<NusingSearch> {
                         border: Border.all(color: Colors.grey[400])),
                       child: StreamBuilder<TownshipResponse>(
                         stream: getTspBloc.subject.stream,
-                        builder: (context,
-                            AsyncSnapshot<TownshipResponse> snapshot) {
-                          if (snapshot.hasData) {
+                        builder: (context,AsyncSnapshot<TownshipResponse> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting && checkstream==1) {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("市区町村"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                          }
+                          else if (snapshot.hasError) {
+                                  return Container();
+                          } 
+                          else if (snapshot.hasData) {
                             if (snapshot.data.error != null &&
                                 snapshot.data.error.length > 0) {
                               return Container();
                             }
+                            checkstream=0;
                             List<TownshipModel> townships = List();
                             townships.add(new TownshipModel(-1,"",""));
                             snapshot.data.township.forEach((e) {
@@ -304,10 +349,18 @@ class _NusingSearchState extends State<NusingSearch> {
                                   
                                 ),
                             ));
-                          } else if (snapshot.hasError) {
-                            return Container();
                           } else {
-                            return _dropDown("市区町村");
+                            return Stack(
+                              children: <Widget>[
+                                _dropDown("市区町村"),                            
+                                 Center(
+                                  child: Opacity(
+                                    opacity:1.0, 
+                                    child:checkstream==1?buildLoadingWidget():Container(),//CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            );
                           }
                         }),
                   ),
@@ -618,12 +671,44 @@ class _NusingSearchState extends State<NusingSearch> {
               ),
               
               StreamBuilder<NursingSearchDataResponse>(
-                stream: getNursingSearchDataBloc.subject.stream,
+                stream:getNursingSearchDataBloc.subject.stream,
                 builder: (context,
                     AsyncSnapshot<NursingSearchDataResponse> snapshot) {
-                    if (snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Stack(
+                            children: <Widget>[
+                              // _dropDown("市区町村"),     
+                               Opacity(
+                                  opacity:0.3, 
+                                  child: Column(
+                                  children: [
+                                    _checkBoxLoadBuildWidget(specFeatureText),
+                                    _checkBoxLoadBuildWidget(medAcceptanceText),
+                                    _checkBoxLoadBuildWidget(facTypeText),
+                                  ],
+                                 ),
+                               ), //buil                       
+                                Positioned(
+                                    top:75,
+                                    left:  MediaQuery.of(context).size.width/2.2,   
+                                    child: Center(                                
+                                    child: Opacity(
+                                      opacity:1.0, 
+                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ),                             
+                            ],
+                          );
+                      }
+                      else if (snapshot.hasError) {
+                         stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
+                         return Container();
+                      } 
+                     else if (snapshot.hasData) {
                       if (snapshot.data.error != null &&
                           snapshot.data.error.length > 0) {
+                         stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
                         return Container();
                       }else {
                         return Container(
@@ -893,18 +978,41 @@ class _NusingSearchState extends State<NusingSearch> {
                           ),
                         );
                       }
-                    } else if (snapshot.hasError) {
-                      return Container();
-                    } else {
-                      return Column(
-                        children: [
-                           _checkBoxLoadBuildWidget(specFeatureText),
-                           _checkBoxLoadBuildWidget(medAcceptanceText),
-                           _checkBoxLoadBuildWidget(facTypeText),
-                        ],
-                      ); //buildLoadingWidget();
+                    }else {
+
+                      return Stack(
+                              children: <Widget>[
+                              Opacity(
+                                  opacity:0.3, 
+                                  child: Column(
+                                  children: [
+                                    _checkBoxLoadBuildWidget(specFeatureText),
+                                    _checkBoxLoadBuildWidget(medAcceptanceText),
+                                    _checkBoxLoadBuildWidget(facTypeText),
+                                  ],
+                                 ),
+                               ), //buil                       
+                                Positioned(
+                                    top:75,
+                                    left:  MediaQuery.of(context).size.width/2.2,   
+                                    child: Center(                                
+                                    child: Opacity(
+                                      opacity:1.0, 
+                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ), 
+                              ],
+                      );
+                      // return Column(
+                      //   children: [
+                      //      _checkBoxLoadBuildWidget(specFeatureText),
+                      //      _checkBoxLoadBuildWidget(medAcceptanceText),
+                      //      _checkBoxLoadBuildWidget(facTypeText),
+                      //   ],
+                      // ); //buildLoadingWidget();
                     }
-                  }),
+              }),
 
               //search button
               Container(
@@ -935,7 +1043,23 @@ class _NusingSearchState extends State<NusingSearch> {
                 child: StreamBuilder<NursingResponse>(
                   stream: getNursingResultBloc.subject.stream,
                   builder: (context, AsyncSnapshot<NursingResponse> snapshot) {
-                    if (snapshot.hasData) {
+                    // if (snapshot.connectionState == ConnectionState.waiting) {
+                    //             return Stack(
+                    //               children: <Widget>[                                                            
+                    //                 Center(
+                    //                   child: Opacity(
+                    //                     opacity:1.0, 
+                    //                     child:buildLoadingWidget(),//CircularProgressIndicator(),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             );
+                    // }
+                    // else 
+                    if (snapshot.hasError) {
+                          return Container();
+                    } 
+                    else if (snapshot.hasData) {
                       if (snapshot.data.error != null &&
                           snapshot.data.error.length > 0) {
                         return Container();
@@ -943,10 +1067,8 @@ class _NusingSearchState extends State<NusingSearch> {
                         return Column(
                             children: _getSearchResultWidget(snapshot.data));
                       }
-                    } else if (snapshot.hasError) {
-                      return Container();
-                    } else {
-                      return Container(); //buildLoadingWidget();
+                    }else {
+                      return Container();             
                     }
                   }
                 ),

@@ -36,8 +36,7 @@ class NewsRepository {
   var getRelatedNewsUrl = "$mainUrl/relatednews";
   var getNewsDetailsUrl = "$mainUrl/newdetails";
   var getHomeUrl = "$mainUrl/home";
-  var getAllNewsSearchUrl =
-      "$mainUrl/get_latest_posts_by_catId_mobile/all_news_search";
+  var getAllNewsSearchUrl ="$mainUrl/get_latest_posts_by_catId_mobile/all_news_search";
   var getCityUrl = "$mainUrl/auth/getCities";
   var getFeatureUrl = "$mainUrl/getmap?id=-1&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=hospital&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0";
   var getLinkedNewsUrl ="$mainUrl/getLinkedNews/";
@@ -103,13 +102,14 @@ class NewsRepository {
       Response response = await _dio.get(getLatestPostAllCatUrl);
       if (response.statusCode == HttpStatus.ok) {
         return PostsResponse.fromJson(response.data);
-      } else {
+      } 
+      else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      // throw SocketException('No Internet');
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return PostsResponse.withError("$error");
+      throw SocketException('No Internet');
+      // print("Exception occured: $error stackTrace: $stacktrace");
+      // return PostsResponse.withError("$error");
     }
   }
 

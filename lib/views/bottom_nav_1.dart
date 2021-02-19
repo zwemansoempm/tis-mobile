@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_column_bloc.dart';
 import 'package:tis/bloc/get_corona_bloc.dart';
 import 'package:tis/bloc/get_dayservice_bloc.dart';
 import 'package:tis/bloc/get_group_news_bloc.dart';
 import 'package:tis/bloc/get_medical_bloc.dart';
-import 'package:tis/bloc/get_hotnews_bloc.dart';
 import 'package:tis/bloc/get_latest_post_all_cat_bloc.dart';
-import 'package:tis/bloc/get_news_category_mobile_bloc.dart';
 import 'package:tis/bloc/get_nurse_bloc.dart';
 import 'package:tis/bloc/get_oldpeople_news_bloc.dart';
 import 'package:tis/bloc/get_other_bloc.dart';
-import 'package:tis/bloc/get_postsnews_bloc.dart';
 import 'package:tis/bloc/get_visit_nurse_bloc.dart';
 import 'package:tis/elements/loader.dart';
 import 'package:tis/model/column_respons.dart';
 import 'package:tis/model/corona_response.dart';
 import 'package:tis/model/day_service_response.dart';
 import 'package:tis/model/group_response.dart';
-import 'package:tis/model/medical.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/old_people_response.dart';
@@ -34,7 +29,6 @@ import 'package:tis/views/settingScreen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
-import 'package:tis/views/top.dart';
 
 class HomeWidget extends StatefulWidget {
 
@@ -61,7 +55,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
   bool otherNews=true;
   bool columnNews=true;
 
-  String currentTab="1";
+  //String currentTab="1";
 
   @override
   void initState() {    
@@ -126,7 +120,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     getOtherBloc..drainStream();
     getColumnBloc..drainStream();
 
-    getNewsCategoryMobileBloc..drainStream();
+    // getNewsCategoryMobileBloc..drainStream();
   }
 
   _getAllStream(){
@@ -141,7 +135,7 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
     getOtherBloc..getOtherNews();
     getColumnBloc..getColumnNews();
 
-    getNewsCategoryMobileBloc..getNewsCategoryMobile(currentTab);
+    // getNewsCategoryMobileBloc..getNewsCategoryMobile(currentTab);
   }
 
    showHideWidget(numb){
@@ -271,9 +265,9 @@ class _BottomNav1State  extends State<HomeWidget> with SingleTickerProviderState
                       bottom: TabBar(
                          onTap: (index) {
                              //your currently selected index
-                             setState(() {
-                               currentTab=index.toString();
-                             });
+                            //  setState(() {
+                            //    currentTab=index.toString();
+                            //  });
                         },
                         isScrollable: true,
                         indicator: UnderlineTabIndicator(

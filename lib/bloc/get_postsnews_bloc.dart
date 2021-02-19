@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tis/model/article_response.dart';
 import 'package:tis/model/posts_response.dart';
 import 'package:tis/repository/tis_repository.dart';
 

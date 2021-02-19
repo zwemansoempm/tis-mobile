@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tis/model/link_response.dart';
-import 'package:tis/model/newsCategory.dart';
 import 'package:tis/repository/tis_repository.dart';
 
 class GetLinkNewsBloc {

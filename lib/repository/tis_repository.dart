@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-// import 'dart:html';
 import 'package:dio/dio.dart';
 import 'package:tis/model/category.dart';
 import 'package:tis/model/column_respons.dart';
@@ -9,7 +7,6 @@ import 'package:tis/model/day_service_response.dart';
 import 'package:tis/model/department_response.dart';
 import 'package:tis/model/group_response.dart';
 import 'package:tis/model/link_response.dart';
-// import 'package:tis/model/category.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/newsCategory.dart';

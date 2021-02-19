@@ -7,8 +7,6 @@ import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/screens/hospital/search_hospital.dart';
 import 'package:tis/views/bottom_nav_1.dart';
 import 'package:tis/views/nusingSearch.dart';
-import 'bottom_nav_2.dart';
-import 'bottom_nav_3.dart';
 import 'bottom_nav_4.dart';
 
 class TopPage extends StatefulWidget {

@@ -44,16 +44,16 @@ class NewsRepository {
     await Future.delayed(Duration(milliseconds: 500));
     try {
       Response response = await _dio.get(getHomeUrl);
-      if (response.statusCode == HttpStatus.ok) {
+      if (response.statusCode == HttpStatus.ok) {     
         return Categories.fromJson(response.data);
       } else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
-      // throw HttpException('404');
-      // print("Exception occured: $error stackTrace: $stacktrace");
-      //return NewsCategory.withError("$error");
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return Categories.withError("$error");
+      // throw HttpException('404');    
     }
   }
 
@@ -67,9 +67,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
-      // print("Exception occured: $error stackTrace: $stacktrace");
-      // return NewsCategory.withError("$error");
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return NewsCategory.withError("$error");      
     }
   }
 
@@ -89,9 +89,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
-      // print("Exception occured: $error stackTrace: $stacktrace");
-      // return PostsResponse.withError("$error");
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return PostsResponse.withError("$error");     
     }
   }
 
@@ -105,7 +105,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return PostsResponse.withError("$error");
     }
   }
 
@@ -119,7 +121,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return MedicalResponse.withError("$error");
     }
   }
 
@@ -133,7 +137,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return NurseResponse.withError("$error");
     }
   }
 
@@ -147,7 +153,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return OldPeopleResponse.withError("$error");
     }
   }
 
@@ -162,7 +170,7 @@ class NewsRepository {
       }
     } catch (error, stacktrace) {
       // throw SocketException('No Internet');
-        print("Exception occured: $error stackTrace: $stacktrace");
+      print("Exception occured: $error stackTrace: $stacktrace");
       return VisitNurseResponse.withError("$error");
     }
   }
@@ -177,7 +185,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return DayServiceResponse.withError("$error");
     }
   }
 
@@ -191,7 +201,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return GroupResponse.withError("$error");
     }
   }
 
@@ -205,7 +217,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CoronaResponse.withError("$error");
     }
   }
 
@@ -219,7 +233,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return OtherResponse.withError("$error");
     }
   }
 
@@ -234,7 +250,7 @@ class NewsRepository {
       }
     } catch (error, stacktrace) {
       // throw SocketException('No Internet');
-        print("Exception occured: $error stackTrace: $stacktrace");
+      print("Exception occured: $error stackTrace: $stacktrace");
       return ColumnResponse.withError("$error");
     }
   }
@@ -249,7 +265,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return RelatedNewsResponse.withError("$error");
     }
   }
 
@@ -263,7 +281,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return NewdetailsResponse.withError("$error");
     }
   }
 
@@ -277,7 +297,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return CityResponse.withError("$error");
     }
   }
 
@@ -294,7 +316,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return TownshipResponse.withError("$error");
     }
   }
 
@@ -311,7 +335,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return OccupationResponse.withError("$error");
     }
   }
 
@@ -328,7 +354,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return NursingSearchDataResponse.withError("$error");
     }
   }
 
@@ -347,7 +375,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return JobResponse.withError("$error");
     }
   }
 
@@ -361,7 +391,9 @@ class NewsRepository {
           throw SocketException('No Internet');       
       }    
     } catch (error, stacktrace) {
-          throw SocketException('No Internet');
+          // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return SpecialFeaturesResponse.withError("$error");
     }
   }
 
@@ -378,7 +410,9 @@ class NewsRepository {
           throw SocketException('No Internet');      
       }    
     } catch (error, stacktrace) {
-     throw SocketException('No Internet');
+    //  throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return DepartmentResponse.withError("$error");
     }
   }
  
@@ -395,7 +429,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return LinkResponse.withError("$error");
     }
   }  
 

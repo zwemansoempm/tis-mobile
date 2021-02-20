@@ -52,7 +52,7 @@ class _NusingDetailState extends State<NusingDetail> {
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset("assets/logos/bbc-news.png"),
+                // child: Image.asset("assets/logos/bbc-news.png"),
               ),
               SizedBox(height: 10.0),
               Container(

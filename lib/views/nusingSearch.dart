@@ -1,6 +1,5 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_link_bloc.dart';
@@ -10,8 +9,6 @@ import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/elements/loader.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
-import 'package:tis/model/link.dart';
-import 'package:tis/model/link_response.dart';
 import 'package:tis/model/nursing.dart';
 import 'package:tis/model/nursingSearch_response.dart';
 import 'package:tis/model/specialFeatures.dart';
@@ -78,7 +75,7 @@ class _NusingSearchState extends State<NusingSearch> {
     
     return SafeArea(
        child: SingleChildScrollView(
-                child: Padding(
+          child: Padding(
            padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,

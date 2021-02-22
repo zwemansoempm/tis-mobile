@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_link_bloc.dart';
+import 'package:tis/elements/loader.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
@@ -22,7 +23,7 @@ class SearchHospital extends StatefulWidget {
 }
 
 class _SearchHospitalState extends State<SearchHospital> {
-  var stream; 
+  var stream;var stream1;var stream2;int checkstream=0;
   Map<String, bool> cityList = {
     'item1': false,
     'item2': false,
@@ -34,11 +35,11 @@ class _SearchHospitalState extends State<SearchHospital> {
 
   SpecialFeaturesResponse sdata;
 
-  static String _township;
+  String _township;
 
-  static String _city;
+  String _city;
 
-  static String _feature;
+  String _feature;
 
   List _selectetsp = List();
   List _selectedfea = List();
@@ -49,12 +50,16 @@ class _SearchHospitalState extends State<SearchHospital> {
     getCityBloc..getCity();
     getFeaturesBloc..getFeatures();
     stream;//=getLinkNewsBloc..getLinkedNews('2');
+    stream1;
+    stream2;
   }
 
   @override
   void dispose() {
     super.dispose();
-    getCityBloc.drainStream();
+    getTspBloc..drainStream();
+    getDepBloc..drainStream();
+    getCityBloc..drainStream();
     getFeaturesBloc..drainStream();
     getLinkNewsBloc.drainStream();
     
@@ -103,10 +108,10 @@ class _SearchHospitalState extends State<SearchHospital> {
   }
 
   Widget build(BuildContext context) {
-    return Container(
+    return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top:40.0),//const EdgeInsets.all(10.0),//  padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
           child: Column(
             children: [
               Row(
@@ -218,41 +223,93 @@ class _SearchHospitalState extends State<SearchHospital> {
                       child: StreamBuilder<CityResponse>(
                           stream: getCityBloc.subject.stream,
                           builder:
-                              (context, AsyncSnapshot<CityResponse> snapshot) {
-                            if (snapshot.hasData) {
+                            (context, AsyncSnapshot<CityResponse> snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("市区町村"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                            }
+                            else if (snapshot.hasError) {
+                                  return Container();
+                            } 
+                            else if (snapshot.hasData) {
                               if (snapshot.data.error != null &&
                                   snapshot.data.error.length > 0) {
                                 return Container();
                               }
-
+                              List<CityModel> cityList = List();
+                                cityList.add(new CityModel(-1,""));
+                                snapshot.data.city.forEach((e) {
+                                  cityList.add(e);
+                              });
                               return Container(
                                   child: DropdownButtonHideUnderline(
                                 child: new DropdownButton<String>(
                                   //isDense: true,
                                   isExpanded: true,
-                                  hint: new Text("市区町村"),
+                                  hint: Row(
+                                    children: [
+                                      Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                      Text("市区町村"),
+                                    ],
+                                  ),
                                   value: _city,
                                   onChanged: (String newValue) {
                                     setState(() {
+                                      checkstream=1;
+                                      getTspBloc.drainStream();
+                                      getDepBloc.drainStream();
                                       _township = null;
                                       _city = newValue;
-                                      getTspBloc..getTownship(_city);
-                                      getDepBloc..getDepartment(_city);
+                                      stream1=getTspBloc..getTownship(_city);
+                                      stream2=getDepBloc..getDepartment(_city);
+                                   
+                                   
                                     });
                                   },
-                                  items: snapshot.data.city
-                                      .toList()
-                                      .map((CityModel cityModel) =>
-                                          DropdownMenuItem(
-                                              value: cityModel.id.toString(),
-                                              child: Text(cityModel.city_name)))
-                                      .toList(),
+                                  items: 
+                                   cityList.map((CityModel cityModel) =>
+                                      DropdownMenuItem(
+                                        value: cityModel.id.toString(),
+                                        child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
+                                          : Row(
+                                            children: [
+                                              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                              Text("市区町村"),
+                                            ],
+                                          ),
+                                      )
+                                      )
+                                    .toList(),
+                                  // snapshot.data.city
+                                  //     .toList()
+                                  //     .map((CityModel cityModel) =>
+                                  //         DropdownMenuItem(
+                                  //             value: cityModel.id.toString(),
+                                  //             child: Text(cityModel.city_name)))
+                                  //     .toList(),
                                 ),
                               ));
-                            } else if (snapshot.hasError) {
-                              return Container();
                             } else {
-                              return Container(); //buildLoadingWidget();
+                              return Stack(
+                              children: <Widget>[
+                                _dropDown("市区町村"),                            
+                                Center(
+                                  child: Opacity(
+                                    opacity:1.0, 
+                                    child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            );
                             }
                           }),
                     ),
@@ -270,12 +327,33 @@ class _SearchHospitalState extends State<SearchHospital> {
                           stream: getTspBloc.subject.stream,
                           builder: (context,
                               AsyncSnapshot<TownshipResponse> snapshot) {
-                            if (snapshot.hasData) {
+                            if (snapshot.connectionState == ConnectionState.waiting && checkstream==1) {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("  市から探す"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                            }
+                            else if (snapshot.hasError) {
+                                  return Container();
+                            }     
+                            else if (snapshot.hasData) {
                               if (snapshot.data.error != null &&
                                   snapshot.data.error.length > 0) {
                                 return Container();
                               }
-
+                              checkstream=0;
+                              List<TownshipModel> townships = List();
+                              townships.add(new TownshipModel(-1,"",""));
+                              snapshot.data.township.forEach((e) {
+                                townships.add(e);
+                              });
                               return Container(
                                   child: DropdownButtonHideUnderline(
                                 child: new DropdownButton<String>(
@@ -288,20 +366,22 @@ class _SearchHospitalState extends State<SearchHospital> {
                                       //   Icons.arrow_drop_down_outlined,
                                       //   size: 35.0,
                                       // ),
-                                      Text("市から探す"),
+                                      Text("  市から探す"),
                                     ],
                                   ),
                                   value: _township,
                                   onChanged: (String newValue) {
-                                    //setState(() => _township = newValue);
+                                    setState(() => _township = newValue);
                                     // _onCategorySelected(
                                     //     _township, newValue, _selectetsp);
                                   },
-                                  items: snapshot.data.township
-                                      .map<DropdownMenuItem<String>>(
-                                          (TownshipModel tspModel) =>
-                                              DropdownMenuItem(
-                                                child: Row(
+                                  items: 
+                                  townships.map((TownshipModel tspModel) =>
+                                      DropdownMenuItem(
+                                        value: tspModel.id.toString(),
+                                        //child: Text(tspModel.township_name)
+                                        child: tspModel.id != -1 ?
+                                            Row(
                                                   children: <Widget>[
                                                     Checkbox(
                                                       value: _selectetsp
@@ -312,35 +392,95 @@ class _SearchHospitalState extends State<SearchHospital> {
                                                         //     tspModel.id,
                                                         //     _selectetsp);
                                                       },
-                                                    ),
+                                                    ),                                                 
                                                     Text(tspModel.township_name
                                                         .toString()),
                                                   ],
-                                                ),
-                                              ))
-                                      .toList(),
+                                                )
+                                          : Row(
+                                            children: [
+                                              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                              Text("  市から探す"),
+                                            ],
+                                          ),
+                                      )
+                                    )
+                                    .toList(),
+                                  // snapshot.data.township
+                                  //     .map<DropdownMenuItem<String>>(
+                                  //         (TownshipModel tspModel) =>
+                                  //             DropdownMenuItem(
+                                  //                value: tspModel.id.toString(),
+                                  //               child: tspModel.id != -1 ?Row(
+                                  //                 children: <Widget>[
+                                  //                   Checkbox(
+                                  //                     value: _selectetsp
+                                  //                         .contains(tspModel.id),
+                                  //                     onChanged: (bool value) {
+                                  //                       // _onCategorySelected(
+                                  //                       //     value,
+                                  //                       //     tspModel.id,
+                                  //                       //     _selectetsp);
+                                  //                     },
+                                  //                   ),                                                 
+                                  //                   Text(tspModel.township_name
+                                  //                       .toString()),
+                                  //                 ],
+                                  //               ):Row(
+                                  //                 children: [
+                                  //                   Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                  //                   Text("  市から探す"),
+                                  //                 ],
+                                  //               ),
+                                  //             ))
+                                  //     .toList(),
                                 ),
                               ));
-                            } else if (snapshot.hasError) {
-                              return Container();
                             } else {
-                              return Container(
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton(
-                                      isExpanded: true,
-                                      //value: _value,
-                                      hint: Row(
-                                        children: [
-                                          Text("市から探す"),
-                                        ],
-                                      ),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          //_value = value;
-                                        });
-                                      }),
-                                ),
-                              ); //buildLoadingWidget();
+                              return Stack(
+                                children: <Widget>[
+                                    Container(
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                          isExpanded: true,
+                                          //value: _value,
+                                          hint: Row(
+                                            children: [
+                                              Text("  市から探す"),
+                                            ],
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              //_value = value;
+                                            });
+                                          }),
+                                    ),
+                                  ),                   
+                                  Center(
+                                    child: Opacity(
+                                      opacity:1.0, 
+                                      child:checkstream==1?buildLoadingWidget():Container(),
+                                    ),
+                                  ),
+                                ],
+                               );
+                              // return Container(
+                              //   child: DropdownButtonHideUnderline(
+                              //     child: DropdownButton(
+                              //         isExpanded: true,
+                              //         //value: _value,
+                              //         hint: Row(
+                              //           children: [
+                              //             Text("市から探す"),
+                              //           ],
+                              //         ),
+                              //         onChanged: (value) {
+                              //           setState(() {
+                              //             //_value = value;
+                              //           });
+                              //         }),
+                              //   ),
+                              // ); //buildLoadingWidget();
                             }
                           }),
                     ),
@@ -492,6 +632,23 @@ class _SearchHospitalState extends State<SearchHospital> {
     );
   }
     
+  Widget _dropDown(String hintText){
+    return  DropdownButtonHideUnderline(
+      child: new DropdownButton<String>(
+        //isDense: true,
+        isExpanded: true,
+        hint:  Row(
+          children: [
+            Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+            Text(hintText),
+          ],
+        ),
+        onChanged: (String newValue) {},
+        items: [],
+      ),
+    );
+  }
+
   Widget _header(String name) {
     return Row(
       children: [

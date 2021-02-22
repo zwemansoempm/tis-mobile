@@ -3,20 +3,20 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_link_bloc.dart';
 import 'package:tis/model/city.dart';
-import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/model/job.dart';
 import 'package:tis/model/occupation_child.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/model/occupation.dart';
-import 'package:tis/model/occupation_response.dart';
-import 'package:tis/bloc/get_occupation_bloc.dart';
 import 'package:tis/bloc/get_job_bloc.dart';
 import 'package:tis/model/job_response.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/views/bottom_nav_4_detail.dart';
 import 'package:tis/views/shownoti.dart';
+import 'package:tis/model/city_occ_response.dart';
+import 'package:tis/bloc/get_city_occ_bloc.dart';
+import 'package:tis/elements/loader.dart';
 
 class JobWidget extends StatefulWidget {
   @override
@@ -24,36 +24,11 @@ class JobWidget extends StatefulWidget {
 }
 
 class _BottomNav4State extends State<JobWidget> {
-  var stream; 
-  Map<String, bool> cityList = {
-    'item1': false,
-    'item2': false,
-    'item3': false,
-    'item4': false,
-  };
-  CityResponse data;
-
-  List<dynamic> result = [];
-
-  //String _mySelection;
-
+  var stream;
+  var stream1;
   static String _city;
   static String _township;
-  String seiShaIn = "正社員";
-  String conIn = "契約社員";
-  String apartIn = "非常勤";
-  String other = "その他";
-  String textHolder = 'Old Sample Text...!!!';
-  int value1 = 0;
-  int value2 = 0;
-  int value3 = 0;
-  int value4 = 0;
-  var arr = new List(4);
-  bool isCheck = false;
-  var valuefirst = false;
-  var valueSecond = false;
-  bool isTspCheck = false;
-
+  var checkstream;
   Map<String, bool> jobTypeList = {
     '正社員': false,
     '契約社員': false,
@@ -61,18 +36,16 @@ class _BottomNav4State extends State<JobWidget> {
     'その他': false,
   };
 
-  
   @override
   void initState() {
     super.initState();
-    getCityBloc..getCity();
-    stream;
+    getCityOccBloc..getCityOccList();
   }
 
   @override
   void dispose() {
-    getCityBloc.drainStream();
-    getTspBloc.drainStream();
+    // getCityBloc.drainStream();
+    // getTspBloc.drainStream();
     super.dispose();
   }
 
@@ -87,13 +60,9 @@ class _BottomNav4State extends State<JobWidget> {
         new List.generate(count, (int i) => new InputWidget(i));
     return Container(
       child: SingleChildScrollView(
-        //child: Container(
-        // padding: EdgeInsets.all(10.0),
-        // margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-        // decoration:
-        //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
         child: Padding(
-          padding: const EdgeInsets.only(top:40.0),// padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(
+              top: 40.0), // padding: const EdgeInsets.all(10.0),
           child: Column(children: [
             Row(children: [
               SizedBox(width: 5.0),
@@ -103,86 +72,80 @@ class _BottomNav4State extends State<JobWidget> {
             ]),
             DottedLine(
               dashColor: Colors.blue,
-            ),        
-              SizedBox(height: 20),
-               Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  // SizedBox(height: 20.0),
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue
-                        ), 
-                        height: 36.0,
-                        width: 10.0,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 30.0,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100]
-                        ),
-                        padding: EdgeInsets.all(8.0),
-                        
-                       child: Text("現在の検索条件" ,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                          ),
-                        ),// _header("現在の検索条件"),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    child: Align(
-                          alignment: Alignment.bottomRight,
-                          child:RawMaterialButton(
-                            onPressed: () {
-                                setState(() {
-                                stream =getLinkNewsBloc..getLinkedNews('3');                               
-                              });
-                               return  
-                               showDialog(                                 
-                                          context: context,
-                                          builder: (context) {
-                                          return 
-                                          StatefulBuilder(
-                                            builder: (context, setState) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  "Notifications",
-                                                ),
-                                                content: SingleChildScrollView(
-                                                  child: ShowNoti().showNotification(),                                            
-                                              ),
-                                                actions: [
-                                                  FlatButton(
-                                                    child: Text("Close"),
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop(); // dismiss dialog
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        }
-                                      );                              
-                            },
-                            elevation: 1.0,
-                            fillColor: Colors.blue,
-                            child: Icon(
-                              CustomApp.bell,
-                              size: 30.0,
-                            ),
-                            padding: EdgeInsets.all(15.0),
-                            shape: CircleBorder(),
-                        )                       
+            ),
+            SizedBox(height: 20),
+            Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                // SizedBox(height: 20.0),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(color: Colors.blue),
+                      height: 36.0,
+                      width: 10.0,
                     ),
-                  ),                
-                ],
-              ),  
+                    Container(
+                      width: MediaQuery.of(context).size.width - 30.0,
+                      decoration: BoxDecoration(color: Colors.grey[100]),
+                      padding: EdgeInsets.all(8.0),
+
+                      child: Text(
+                        "現在の検索条件",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ), // _header("現在の検索条件"),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            stream = getLinkNewsBloc..getLinkedNews('3');
+                          });
+                          return showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Notifications",
+                                      ),
+                                      content: SingleChildScrollView(
+                                        child: ShowNoti().showNotification(),
+                                      ),
+                                      actions: [
+                                        FlatButton(
+                                          child: Text("Close"),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // dismiss dialog
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              });
+                        },
+                        elevation: 1.0,
+                        fillColor: Colors.blue,
+                        child: Icon(
+                          CustomApp.bell,
+                          size: 30.0,
+                        ),
+                        padding: EdgeInsets.all(15.0),
+                        shape: CircleBorder(),
+                      )),
+                ),
+              ],
+            ),
             // _header("現在の検索条件"),
             SizedBox(height: 10),
             Container(
@@ -192,100 +155,147 @@ class _BottomNav4State extends State<JobWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey[400])),
-                    child: StreamBuilder<CityResponse>(
-                        stream: getCityBloc.subject.stream,
-                        builder:
-                            (context, AsyncSnapshot<CityResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            }
-
-                            return Container(
-                              child: DropdownButtonHideUnderline(
-                                child: new DropdownButton<String>(
-                                  //isDense: true,
-                                  isExpanded: true,
-                                  //hint: new Text("市区町"),
-                                  hint: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_drop_down_outlined,
-                                        size: 35.0,
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10.0, left: 20.0, right: 20.0),
+                      child: Container(
+                        //padding: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey[400])),
+                        child: StreamBuilder<CityOccListResponse>(
+                            stream: getCityOccBloc.subject.stream,
+                            builder: (context,
+                                AsyncSnapshot<CityOccListResponse> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("市区町村"),
+                                    Center(
+                                      child: Opacity(
+                                        opacity: 1.0,
+                                        child:
+                                            buildLoadingWidget(), //CircularProgressIndicator(),
                                       ),
-                                      Text("市区町村"),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
+                                );
+                              } else if (snapshot.hasError) {
+                                return Container();
+                              } else if (snapshot.hasData) {
+                                if (snapshot.data.error != null &&
+                                    snapshot.data.error.length > 0) {
+                                  return Container();
+                                }
+                                List<CityModel> cityList = List();
+                                cityList.add(new CityModel(-1, ""));
+                                snapshot.data.cityList.forEach((e) {
+                                  cityList.add(e);
+                                });
+                                return Container(
+                                    //width: 320.0,
+                                    child: DropdownButtonHideUnderline(
+                                  child: new DropdownButton<String>(
+                                    //isDense: true,
+                                    isExpanded: true,
+                                    hint: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_drop_down_outlined,
+                                          size: 35.0,
+                                        ),
+                                        Text("市区町村"),
+                                      ],
+                                    ),
+                                    value: _city,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        _township = null;
+                                        getTspBloc.drainStream();
+                                        stream1 = getTspBloc
+                                          ..getTownship(newValue);
+                                        checkstream = 1;
+                                        _city = newValue;
+                                      });
+                                    },
 
-                                  value: _city,
-                                  onChanged: (String newValue) {
-                                    setState(() => _city = newValue);
-
-                                    getTspBloc..getTownship(_city);
-                                    getOccBloc..getOccupation(_city);
-                                  },
-                                  items: snapshot.data.city
-                                      .toList()
-                                      .map((CityModel cityModel) =>
-                                          DropdownMenuItem(
+                                    items: cityList
+                                        .map((CityModel cityModel) =>
+                                            DropdownMenuItem(
                                               value: cityModel.id.toString(),
-                                              child: Text(cityModel.city_name)))
-                                      .toList(),
-                                ),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Container(); //buildLoadingWidget();
-                          }
-                        }),
-                  ),
+                                              child: cityModel.id != -1
+                                                  ? Text(cityModel.city_name)
+                                                  : Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_drop_down_outlined,
+                                                          size: 35.0,
+                                                        ),
+                                                        Text("市区町村"),
+                                                      ],
+                                                    ),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ));
+                              } else {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("市区町村"),
+                                    Center(
+                                      child: Opacity(
+                                        opacity: 1.0,
+                                        child:
+                                            buildLoadingWidget(), //CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                                // );//_dropDown("市区町村"); //buildLoadingWidget();
+                              }
+                            }),
+                      )),
 
                   //township
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    padding: EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey[400])),
-                    child: StreamBuilder<TownshipResponse>(
-                        stream: getTspBloc.subject.stream,
-                        builder: (context,
-                            AsyncSnapshot<TownshipResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
-                            }
-                            List<TownshipModel> allTsp = snapshot.data.township;
-                            List<int> selectedTsp = [];
-                            // List<int> selectedTspText = [];
-                            // print(selectedTspText.length.toString());
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10.0, left: 20.0, right: 20.0),
+                    child: Container(
+                      //padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.only(left: 5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey[400])),
+                      child: StreamBuilder<TownshipResponse>(
+                          stream: getTspBloc.subject.stream,
+                          builder: (context,
+                              AsyncSnapshot<TownshipResponse> snapshot) {
+                            if (snapshot.hasData) {
+                              if (snapshot.data.error != null &&
+                                  snapshot.data.error.length > 0) {
+                                return Container();
+                              }
+                              List<TownshipModel> allTsp =
+                                  snapshot.data.township;
+                              List<int> selectedTsp = [];
 
-                            return Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(0),
+                              return Container(
+                                //padding: EdgeInsets.all(5.0),
+                                //padding: EdgeInsets.only(left: 0),
+
                                 child: RaisedButton(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 1),
+                                  padding: const EdgeInsets.only(
+                                      top: 10.0, right: 20.0),
                                   child: ListTile(
                                     dense: true,
-                                    contentPadding: EdgeInsets.zero,
+                                    contentPadding: EdgeInsets.only(left: 10.0),
                                     leading: Text(
-                                      "市から探す" +
-                                          "(" +
-                                          //selectedTsp.length.toString() +
-                                          ")",
+                                      "市から探す",
                                       style: TextStyle(color: Colors.grey[600]),
                                     ),
                                     trailing:
@@ -312,30 +322,31 @@ class _BottomNav4State extends State<JobWidget> {
                                         });
                                   },
                                 ),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Container(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                    isExpanded: true,
-                                    //value: _value,
-                                    hint: Row(
-                                      children: [
-                                        Text("市から探す"),
-                                      ],
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        //_value = value;
-                                      });
-                                    }),
-                              ),
-                            ); //buildLoadingWidget();
-                          }
-                        }),
+                                //),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Container();
+                            } else {
+                              return Container(
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                      isExpanded: true,
+                                      //value: _value,
+                                      hint: Row(
+                                        children: [
+                                          Text("市から探す"),
+                                        ],
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          //_value = value;
+                                        });
+                                      }),
+                                ),
+                              ); //buildLoadingWidget();
+                            }
+                          }),
+                    ),
                   ),
 
                   Divider(
@@ -355,10 +366,10 @@ class _BottomNav4State extends State<JobWidget> {
                   ),
 
                   Container(
-                    child: StreamBuilder<OccupationResponse>(
-                        stream: getOccBloc.subject.stream,
+                    child: StreamBuilder<CityOccListResponse>(
+                        stream: getCityOccBloc.subject.stream,
                         builder: (context,
-                            AsyncSnapshot<OccupationResponse> snapshot) {
+                            AsyncSnapshot<CityOccListResponse> snapshot) {
                           if (snapshot.hasData) {
                             if (snapshot.data.error != null &&
                                 snapshot.data.error.length > 0) {
@@ -366,12 +377,12 @@ class _BottomNav4State extends State<JobWidget> {
                             } else {
                               return Column(
                                   children:
-                                      getTextWidgets(snapshot.data.occupation));
+                                      getTextWidgets(snapshot.data.occList));
                             }
                           } else if (snapshot.hasError) {
                             return Container();
                           } else {
-                            return Container(); //buildLoadingWidget();
+                            return Column(); //buildLoadingWidget();
                           }
                         }),
                   ),
@@ -422,9 +433,9 @@ class _BottomNav4State extends State<JobWidget> {
                     borderRadius: BorderRadius.circular(5)),
                 onPressed: () {
                   setState(() {
-                    count = count + 1;
-                    // stream = getJobBloc..getJob();
-                    //print(stream);
+                    // count = count + 1;
+                    // // stream = getJobBloc..getJob();
+                    // //print(stream);
                     getJobBloc..getJob();
                   });
                 },
@@ -441,84 +452,34 @@ class _BottomNav4State extends State<JobWidget> {
                         )),
                   ],
                 )),
-            // Container(
-            //   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   child: Column(
-            //     children: children,
-            //   ),
-            // ),
-
-            // Container(
-            //     child: StreamBuilder<JobResponse>(
-            //         stream: getJobBloc.subject.stream,
-            //         builder: (context, AsyncSnapshot<JobResponse> snapshot) {
-            //           if (snapshot.connectionState == ConnectionState.waiting) {
-            //             return Container(
-            //               height: MediaQuery.of(context).size.height / 1.5,
-            //               child: Column(
-            //                   mainAxisAlignment: MainAxisAlignment.center,
-            //                   children: [
-            //                     SizedBox(
-            //                         height: 35,
-            //                         width: 35,
-            //                         child: CircularProgressIndicator()),
-            //                   ]),
-            //             ); //
-            //           } else if (snapshot.hasError) {
-            //             return Container();
-            //           } else if (snapshot.hasData) {
-            //             //print(snapshot.data);
-            //             if (snapshot.data.error != null &&
-            //                 snapshot.data.error.length > 0) {
-            //               return Container();
-            //             }
-            //             //return _getSearchResultWidget(snapshot.data);
-            //             return Column(
-            //                 children: _getSearchResultWidget(snapshot.data));
-            //           } else {
-            //             return Container(
-            //               child: Column(
-            //                   mainAxisAlignment: MainAxisAlignment.center,
-            //                   children: [
-            //                     SizedBox(
-            //                         height: 35,
-            //                         width: 35,
-            //                         child: CircularProgressIndicator()),
-            //                   ]),
-            //             ); //return buildLoadingWidget();
-            //           }
-            //         })),
 
             Container(
-              child: StreamBuilder<JobResponse>(
-                  stream: getJobBloc.subject.stream,
-                  builder: (context, AsyncSnapshot<JobResponse> snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data.error != null &&
-                          snapshot.data.error.length > 0) {
+                child: StreamBuilder<JobResponse>(
+                    stream: getJobBloc.subject.stream,
+                    builder: (context, AsyncSnapshot<JobResponse> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          height: MediaQuery.of(context).size.height / 1.5,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
+                        ); //
+                      } else if (snapshot.hasError) {
                         return Container();
-                      } else {
+                      } else if (snapshot.hasData) {
+                        //print(snapshot.data);
+                        if (snapshot.data.error != null &&
+                            snapshot.data.error.length > 0) {
+                          return Container();
+                        }
+                        //return _getSearchResultWidget(snapshot.data);
                         return Column(
                             children: _getSearchResultWidget(snapshot.data));
+                      } else {
+                        return Container(
+                            child: Column()); //return buildLoadingWidget();
                       }
-                    } else if (snapshot.hasError) {
-                      return Container();
-                    } else {
-                      return Container(); //buildLoadingWidget();
-                    }
-                  }),
-            ),
-
-            // ListView.builder(
-            //     padding: const EdgeInsets.all(0),
-            //     itemCount: children.length,
-            //     itemBuilder: (BuildContext context, int index) {
-            //       return Container(
-            //         // height: 50,
-            //         // color: Colors.amber[colorCodes[index]],
-            //         child: children[index],
-            //       );
-            //     }),
+                    })),
           ]),
         ),
       ),
@@ -715,6 +676,26 @@ class _BottomNav4State extends State<JobWidget> {
       ));
     }
     return list;
+  }
+
+  Widget _dropDown(String hintText) {
+    return DropdownButtonHideUnderline(
+      child: new DropdownButton<String>(
+        //isDense: true,
+        isExpanded: true,
+        hint: Row(
+          children: [
+            Icon(
+              Icons.arrow_drop_down_outlined,
+              size: 35.0,
+            ),
+            Text(hintText),
+          ],
+        ),
+        onChanged: (String newValue) {},
+        items: [],
+      ),
+    );
   }
 
   Widget _column(String name, Color bgColor, Color txtColor) {

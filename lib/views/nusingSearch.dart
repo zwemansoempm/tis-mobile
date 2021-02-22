@@ -77,8 +77,8 @@ class _NusingSearchState extends State<NusingSearch> {
 
     return SafeArea(
        child: SingleChildScrollView(
-                child: Padding(
-           padding: const EdgeInsets.only(left: 10,right: 10),//const EdgeInsets.all(10.0),
+          child: Padding(
+          padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [

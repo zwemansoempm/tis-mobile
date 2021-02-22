@@ -30,8 +30,8 @@ class _NusingSearchState extends State<NusingSearch> {
 
   String _city;
   String _township;
-  String _moving_in;
-  String _per_month;
+  String _movingIn;
+  String _perMonth;
   int countMove = 0;
   int countFeature = 0;
   int countAcceptance = 0;
@@ -49,7 +49,8 @@ class _NusingSearchState extends State<NusingSearch> {
   List<String> moveList = [
     '自立', '要支援' , '要介護',
   ];
-  var stream;var stream1;var stream2;int checkstream=0;
+  var stream;var stream1;var stream2;var resultStream; int checkstream=0;
+  bool _load = false;
 
   @override
   void initState() {
@@ -58,6 +59,7 @@ class _NusingSearchState extends State<NusingSearch> {
     stream;//getLinkNewsBloc..getLinkedNews("1");
     stream1;
     stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
+    resultStream;
   }
 
   @override
@@ -72,23 +74,23 @@ class _NusingSearchState extends State<NusingSearch> {
 
   @override
   Widget build(BuildContext context) {
-    
+
     return SafeArea(
        child: SingleChildScrollView(
           child: Padding(
-           padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
 
-              Row(
-                children: [
-                  SizedBox(width: 5.0),
-                  Icon(Icons.map,color: Colors.blue),
-                  SizedBox(width: 5.0),
-                  Text("地図検索"),
-                  //Text("「全国の介護施設 6件」"),
-                ]
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text("介護施設検索",
+                    style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),)),
               ),
               DottedLine(dashColor: Colors.blue,),
 
@@ -391,9 +393,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                   Text("入居一時金"),
                                 ],
                               ),
-                              value: _moving_in,
+                              value: _movingIn,
                               onChanged: (String newValue) {
-                                setState(() => _moving_in = newValue);
+                                setState(() => _movingIn = newValue);
                               },
                               items: [
                                 DropdownMenuItem(
@@ -487,9 +489,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                   Text("月額利用料"),
                                 ],
                               ),
-                              value: _per_month,
+                              value: _perMonth,
                               onChanged: (String newValue) {
-                                setState(() => _per_month = newValue);
+                                setState(() => _perMonth = newValue);
                               },
                               items: [
                                 DropdownMenuItem(
@@ -594,7 +596,7 @@ class _NusingSearchState extends State<NusingSearch> {
                           child: ListTile(
                             dense: true,
                             contentPadding: EdgeInsets.zero,
-                            leading: Text(moveText, style: TextStyle(color: Colors.grey[600]),),
+                            leading: Text(moveText),
                             trailing: Icon(Icons.arrow_drop_down_outlined),
                           ),
                           color: Colors.white,
@@ -727,7 +729,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             child: ListTile(
                                               dense: true,
                                               contentPadding: EdgeInsets.zero,
-                                              leading: Text(specFeatureText, style: TextStyle(color: Colors.grey[600]),),
+                                              leading: Text(specFeatureText),
                                               trailing: Icon(Icons.arrow_drop_down_outlined),
                                             ),
                                             color: Colors.white,
@@ -813,7 +815,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             child: ListTile(
                                               dense: true,
                                               contentPadding: EdgeInsets.zero,
-                                              leading: Text(medAcceptanceText, style: TextStyle(color: Colors.grey[600]),),
+                                              leading: Text(medAcceptanceText),
                                               trailing: Icon(Icons.arrow_drop_down_outlined),
                                             ),
                                             color: Colors.white,
@@ -899,7 +901,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             child: ListTile(
                                               dense: true,
                                               contentPadding: EdgeInsets.zero,
-                                              leading: Text(facTypeText, style: TextStyle(color: Colors.grey[600]),),
+                                              leading: Text(facTypeText),
                                               trailing: Icon(Icons.arrow_drop_down_outlined),
                                             ),
                                             color: Colors.white,
@@ -1021,7 +1023,11 @@ class _NusingSearchState extends State<NusingSearch> {
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   onPressed: () {
-                    getNursingResultBloc..getNursingResult(_city,_township,_moving_in,_per_month,selectedMoveId,selectedSpeFeature,selectedMedAcceptance,selectedFacType);
+                    getNursingResultBloc.drainStream();
+                    resultStream = getNursingResultBloc..getNursingResult(_city,_township,_movingIn,_perMonth,selectedMoveId,selectedSpeFeature,selectedMedAcceptance,selectedFacType);
+                    setState((){
+                      _load=true;
+                    });
                   },
                   color: Colors.green,
                   textColor: Colors.white,
@@ -1036,45 +1042,71 @@ class _NusingSearchState extends State<NusingSearch> {
               ),
 
               //ResultData
-              Container(
+              _load ? Container(
                 child: StreamBuilder<NursingResponse>(
                   stream: getNursingResultBloc.subject.stream,
                   builder: (context, AsyncSnapshot<NursingResponse> snapshot) {
-                    // if (snapshot.connectionState == ConnectionState.waiting) {
-                    //             return Stack(
-                    //               children: <Widget>[                                                            
-                    //                 Center(
-                    //                   child: Opacity(
-                    //                     opacity:1.0, 
-                    //                     child:buildLoadingWidget(),//CircularProgressIndicator(),
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             );
-                    // }
-                    // else 
                     if (snapshot.hasError) {
-                          return Container();
+                      return Container(child: Text("error"));
                     } 
                     else if (snapshot.hasData) {
                       if (snapshot.data.error != null &&
                           snapshot.data.error.length > 0) {
-                        return Container();
+                        return Container(child: Text(snapshot.data.error));
+                      } else  if (snapshot.data.nursingList.isEmpty){
+                        return Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  color: Colors.grey[300],
+                                  child:Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(Icons.search_off_sharp, color: Colors.grey[600]),
+                                  ), 
+                                ),
+                                Text("お探しの条件に合う施設は見つかりませんでした。",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xff2980b9),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                  ),
+                                ),
+                                Text("条件の変更を行い再度ご検索いだだくと見つかる可能性がございます。",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                  ),
+                                ),
+                              ]
+                            ),
+                          )
+                        );
                       } else {
                         return Column(
                             children: _getSearchResultWidget(snapshot.data));
                       }
                     }else {
-                      return Container();             
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: buildLoadingWidget(),
+                      );   
                     }
                   }
                 ),
-              ),
+              ): Container(),
              ],
-            ),
+            )
          ),
        ),
     );
+  
   }
 
   List<Widget> _getSearchResultWidget(NursingResponse data) {

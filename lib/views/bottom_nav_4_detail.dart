@@ -189,7 +189,7 @@ class _BottomNav4DetailState extends State<JobDetailWidget> {
                   children: [
                     Container(
                         width: MediaQuery.of(context).size.width / 2,
-                        child: Column(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -205,30 +205,30 @@ class _BottomNav4DetailState extends State<JobDetailWidget> {
                               ),
                             ),
                             //employment_status
-                            Expanded(
-                                child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[],
-                                  ),
-                                ],
-                              ),
-                            ))
+                            // Expanded(
+                            //     child: Align(
+                            //   alignment: Alignment.bottomLeft,
+                            //   child: Row(
+                            //     mainAxisAlignment:
+                            //         MainAxisAlignment.spaceBetween,
+                            //     children: <Widget>[
+                            //       Row(
+                            //         children: <Widget>[],
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ))
                           ],
                         )),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        // child: Image.asset(
-                        //   "assets/logos/bbc-news.png",
-                        //   fit: BoxFit.fitHeight,
-                        // ),
-                      ),
-                    ),
+                    // Expanded(
+                    //   child: Align(
+                    //     alignment: Alignment.topRight,
+                    //     // child: Image.asset(
+                    //     //   "assets/logos/bbc-news.png",
+                    //     //   fit: BoxFit.fitHeight,
+                    //     // ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

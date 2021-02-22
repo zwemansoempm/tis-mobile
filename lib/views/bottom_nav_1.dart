@@ -36,6 +36,7 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
   Color _activeColor; 
   int checknum=0;  
   bool check=false;
+  var stream0;
 
   @override
   void initState() {
@@ -62,12 +63,22 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
     getCoronaBloc..drainStream();
     getOtherBloc..drainStream();
     getColumnBloc..drainStream();
-    getHomeBloc..drainStream();
+    // getHomeBloc..drainStream();
     getNewsCategoryMobileBloc..drainStream();
   }
 
   _getAllStream(){   
-    getHomeBloc..getHomeData(); 
+    getLatestPostAllCatBloc..getLatestPostAllCat();
+    getMedicalBloc..getMedicalNews();
+    getNurseBloc..getNurseNews();
+    getOldPeopleBloc..getPaidOldPeopleNews();
+    getVisitNurseBloc..getVisitNurseNews();
+    getDayServiceeBloc..getdayServiceNews();
+    getGroupBloc..getGroupNews();
+    getCoronaBloc..getCoronaNews();
+    getOtherBloc..getOtherNews();
+    getColumnBloc..getColumnNews(); 
+    stream0=getHomeBloc..getHomeData(); 
   }
 
   Future<Null>refreshList() async{
@@ -79,10 +90,27 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
    return  StreamBuilder<Categories>(
       stream:getHomeBloc.subject.stream,
       builder: (BuildContext context, snapshot) {
-        if (snapshot.hasData) { 
+         if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Stack(
+                                  children: <Widget>[                                                      
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+          }
+          else if (snapshot.hasError) {
+                stream0=getHomeBloc..getHomeData(); 
+                return Container();
+          } 
+          else if (snapshot.hasData) { 
 
             if (snapshot.data.error != null &&
                 snapshot.data.error.length > 0) {
+                stream0=getHomeBloc..getHomeData(); 
                 return Container();
            }  
 
@@ -94,6 +122,7 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
         if(check==false){       
             _activeColor = _tabData.first.color;
         }
+          _tabs=[];
            _tabData.forEach((data) {          
               final tab = Tab(
                 child: PreferredSize(
@@ -247,8 +276,7 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
             ),
         ); 
         
-        }
-        if (snapshot.hasError) print(snapshot.error.toString());    
+        }     
         return Container(
           height: 150,
           child:buildLoadingWidget()

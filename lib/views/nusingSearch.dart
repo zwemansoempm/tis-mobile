@@ -1,16 +1,21 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:tis/app-format.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_link_bloc.dart';
+import 'package:tis/bloc/get_nursing_result_bloc.dart';
 import 'package:tis/bloc/get_nursing_search_data_bloc.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
+import 'package:tis/elements/loader.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/model/link.dart';
 import 'package:tis/model/link_response.dart';
+import 'package:tis/model/nursing.dart';
 import 'package:tis/model/nursingSearch_response.dart';
 import 'package:tis/model/specialFeatures.dart';
+import 'package:tis/model/specialfeature.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
@@ -34,10 +39,10 @@ class _NusingSearchState extends State<NusingSearch> {
   int countFeature = 0;
   int countAcceptance = 0;
   int countFacType = 0;
-  List<String> selectedMoveId = [];
-  List<int> selectedSpeFeature = [];
-  List<int> selectedMedAcceptance = [];
-  List<int> selectedFacType = [];
+  var selectedMoveId =[];
+  var selectedSpeFeature = [];
+  var selectedMedAcceptance = [];
+  var selectedFacType = [];
 
   String moveText = "入居時の条件から探す";
   String specFeatureText = "特長から探す";
@@ -47,13 +52,15 @@ class _NusingSearchState extends State<NusingSearch> {
   List<String> moveList = [
     '自立', '要支援' , '要介護',
   ];
-  var stream; 
+  var stream;var stream1;var stream2;int checkstream=0;
+
   @override
   void initState() {
     super.initState();
-    getCityBloc..getCity();
-    getNursingSearchDataBloc..getNursingSearchData("1");
+    getCityBloc..getCity();  
     stream;//getLinkNewsBloc..getLinkedNews("1");
+    stream1;
+    stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
   }
 
   @override
@@ -61,16 +68,18 @@ class _NusingSearchState extends State<NusingSearch> {
     super.dispose();
     getCityBloc.drainStream();
     getNursingSearchDataBloc.drainStream();
+    getTspBloc.drainStream();
     getLinkNewsBloc.drainStream();
+    getNursingResultBloc.drainStream();
   }
 
   @override
   Widget build(BuildContext context) {
     
-    return Container(
+    return SafeArea(
        child: SingleChildScrollView(
                 child: Padding(
-           padding: const EdgeInsets.only(top:40.0),//const EdgeInsets.all(10.0),
+           padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
@@ -81,7 +90,7 @@ class _NusingSearchState extends State<NusingSearch> {
                   Icon(Icons.map,color: Colors.blue),
                   SizedBox(width: 5.0),
                   Text("地図検索"),
-                  Text("「全国の介護施設 6件」"),
+                  //Text("「全国の介護施設 6件」"),
                 ]
               ),
               DottedLine(dashColor: Colors.blue,),
@@ -164,7 +173,7 @@ class _NusingSearchState extends State<NusingSearch> {
               ),              
               SizedBox(height: 10.0),
 
-              Text("地域で絞り込む"),
+              Text("地域"),
               
               Card(
                 color: Colors.grey[300],
@@ -173,7 +182,7 @@ class _NusingSearchState extends State<NusingSearch> {
                   children:[
                     //city
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0 , left : 10.0 , right: 10.0),
+                      padding: const EdgeInsets.only(top: 10.0 , left : 20.0 , right: 20.0),
                       child: Container(
                         //padding: EdgeInsets.all(5.0),
                         padding: EdgeInsets.only(left: 5),
@@ -185,12 +194,34 @@ class _NusingSearchState extends State<NusingSearch> {
                         stream: getCityBloc.subject.stream,
                         builder:
                             (context, AsyncSnapshot<CityResponse> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.error != null &&
-                                snapshot.data.error.length > 0) {
-                              return Container();
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("市区町村"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
                             }
+                            else if (snapshot.hasError) {
+                                  return Container();
+                            } 
+                            else if (snapshot.hasData) {
+                              if (snapshot.data.error != null &&
+                                  snapshot.data.error.length > 0) {
+                                return Container();
+                            }
+                            List<CityModel> cityList = List();
+                            cityList.add(new CityModel(-1,""));
+                            snapshot.data.city.forEach((e) {
+                              cityList.add(e);
+                            });
                             return Container(
+                              //width: 320.0,
                               child: DropdownButtonHideUnderline(
                                 child: new DropdownButton<String>(
                                   //isDense: true,
@@ -205,22 +236,41 @@ class _NusingSearchState extends State<NusingSearch> {
                                   onChanged: (String newValue) {
                                     setState(() {
                                       _township = null;
+                                        getTspBloc.drainStream();
+                                        stream1=getTspBloc..getTownship(newValue);
+                                        checkstream=1;
                                       _city = newValue;
-                                      getTspBloc..getTownship(_city);
                                     });
                                   },
-                                  items: snapshot.data.city.toList()
-                                    .map((CityModel cityModel) =>
+                                  
+                                  items: cityList.map((CityModel cityModel) =>
                                       DropdownMenuItem(
                                         value: cityModel.id.toString(),
-                                         child: Text(cityModel.city_name)))
+                                        child: cityModel.id != -1 ? Text(cityModel.city_name) 
+                                          : Row(
+                                            children: [
+                                              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                              Text("市区町村"),
+                                            ],
+                                          ),
+                                      )
+                                      )
                                     .toList(),
                                 ),
                               ));
-                          } else if (snapshot.hasError) {
-                            return Container();
                           } else {
-                            return _dropDown("市区町村"); //buildLoadingWidget();
+                            return Stack(
+                              children: <Widget>[
+                                _dropDown("市区町村"),                            
+                                Center(
+                                  child: Opacity(
+                                    opacity:1.0, 
+                                    child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            );
+                            // );//_dropDown("市区町村"); //buildLoadingWidget();
                           }
                         }),
               
@@ -229,7 +279,7 @@ class _NusingSearchState extends State<NusingSearch> {
                     
                     //Township
                     Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(left: 20,right: 20,bottom: 10,top: 10),
                       //township
                       child: Container(
                       padding: EdgeInsets.only(left: 5),
@@ -239,13 +289,34 @@ class _NusingSearchState extends State<NusingSearch> {
                         border: Border.all(color: Colors.grey[400])),
                       child: StreamBuilder<TownshipResponse>(
                         stream: getTspBloc.subject.stream,
-                        builder: (context,
-                            AsyncSnapshot<TownshipResponse> snapshot) {
-                          if (snapshot.hasData) {
+                        builder: (context,AsyncSnapshot<TownshipResponse> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting && checkstream==1) {
+                                return Stack(
+                                  children: <Widget>[
+                                    _dropDown("市区町村"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                          }
+                          else if (snapshot.hasError) {
+                                  return Container();
+                          } 
+                          else if (snapshot.hasData) {
                             if (snapshot.data.error != null &&
                                 snapshot.data.error.length > 0) {
                               return Container();
                             }
+                            checkstream=0;
+                            List<TownshipModel> townships = List();
+                            townships.add(new TownshipModel(-1,"",""));
+                            snapshot.data.township.forEach((e) {
+                              townships.add(e);
+                            });
                             return Container(
                               child: DropdownButtonHideUnderline(
                                 child: new DropdownButton<String>(
@@ -261,19 +332,35 @@ class _NusingSearchState extends State<NusingSearch> {
                                   onChanged: (String newValue) {
                                     setState(() => _township = newValue);
                                   },
-                                  items: snapshot.data.township
-                                    .toList()
-                                    .map((TownshipModel tspModel) =>
+                                  items: townships.map((TownshipModel tspModel) =>
                                       DropdownMenuItem(
                                         value: tspModel.id.toString(),
-                                        child: Text(tspModel.township_name)))
+                                        //child: Text(tspModel.township_name)
+                                        child: tspModel.id != -1 ? Text(tspModel.township_name) 
+                                          : Row(
+                                            children: [
+                                              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                              Text("市区町村"),
+                                            ],
+                                          ),
+                                      )
+                                    )
                                     .toList(),
+                                  
                                 ),
                             ));
-                          } else if (snapshot.hasError) {
-                            return Container();
                           } else {
-                            return _dropDown("市区町村");
+                            return Stack(
+                              children: <Widget>[
+                                _dropDown("市区町村"),                            
+                                 Center(
+                                  child: Opacity(
+                                    opacity:1.0, 
+                                    child:checkstream==1?buildLoadingWidget():Container(),//CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            );
                           }
                         }),
                   ),
@@ -283,14 +370,14 @@ class _NusingSearchState extends State<NusingSearch> {
               ),
               
               SizedBox(height: 10.0),
-              Text("料金で絞り込む"),
+              Text("料金"),
               Card(
                 color: Colors.grey[300],
                 child: Column(
                   children:[
                     //moving_in
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0 , left : 10.0 , right: 10.0),
+                      padding: const EdgeInsets.only(top: 10.0 , left : 20.0 , right: 20.0),
                       child: Container(
                         padding: EdgeInsets.only(left: 5),
                         decoration: BoxDecoration(
@@ -386,8 +473,7 @@ class _NusingSearchState extends State<NusingSearch> {
 
                     //per_month
                     Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      //child: _dropDownBox("月額利用料")
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Container(
                         padding: EdgeInsets.only(left: 5),
                         decoration: BoxDecoration(
@@ -492,16 +578,9 @@ class _NusingSearchState extends State<NusingSearch> {
                 )
               ),
               
-              SizedBox(height: 20.0),
-              Text("もっと探す条件"),
-              Row(children: [ 
-                SizedBox(
-                  height: 20.0,
-                  width: 40.0,
-                  child: Divider(color: Colors.blue[400],thickness: 3.0,)
-                ),]
-              ),
- 
+              SizedBox(height: 10.0),
+              Text("その他"),
+              SizedBox(height: 2.0),
               //MoveId
               Container(
                 decoration: BoxDecoration(
@@ -512,7 +591,7 @@ class _NusingSearchState extends State<NusingSearch> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        countMove != 0 ?Text("[${countMove.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
+                        (countMove != null && countMove != 0) ?Text("[${countMove.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
                         RaisedButton(
                           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                           child: ListTile(
@@ -528,8 +607,8 @@ class _NusingSearchState extends State<NusingSearch> {
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                           onPressed: () async {
-                            // _checkBoxList();
                             int result = await showDialog(
+                              barrierDismissible: false,
                               context: context,
                               builder: (BuildContext context) {
                                 return StatefulBuilder(
@@ -566,7 +645,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                   if (selectedMoveId.contains(_move)) {
                                                     setState(() {
                                                       selectedMoveId.removeWhere(
-                                                          (String s) => s == _move);
+                                                          (s) => s == _move);
                                                     });
                                                   }
                                                 }
@@ -580,7 +659,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                 );
                               });
                               setState(() {
-                                countMove = result;
+                                if(result != null){
+                                  countMove = result;
+                                }
                               });
                           },
                         ),
@@ -590,12 +671,44 @@ class _NusingSearchState extends State<NusingSearch> {
               ),
               
               StreamBuilder<NursingSearchDataResponse>(
-                stream: getNursingSearchDataBloc.subject.stream,
+                stream:getNursingSearchDataBloc.subject.stream,
                 builder: (context,
                     AsyncSnapshot<NursingSearchDataResponse> snapshot) {
-                    if (snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Stack(
+                            children: <Widget>[
+                              // _dropDown("市区町村"),     
+                               Opacity(
+                                  opacity:0.3, 
+                                  child: Column(
+                                  children: [
+                                    _checkBoxLoadBuildWidget(specFeatureText),
+                                    _checkBoxLoadBuildWidget(medAcceptanceText),
+                                    _checkBoxLoadBuildWidget(facTypeText),
+                                  ],
+                                 ),
+                               ), //buil                       
+                                Positioned(
+                                    top:75,
+                                    left:  MediaQuery.of(context).size.width/2.2,   
+                                    child: Center(                                
+                                    child: Opacity(
+                                      opacity:1.0, 
+                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ),                             
+                            ],
+                          );
+                      }
+                      else if (snapshot.hasError) {
+                         stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
+                         return Container();
+                      } 
+                     else if (snapshot.hasData) {
                       if (snapshot.data.error != null &&
                           snapshot.data.error.length > 0) {
+                         stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
                         return Container();
                       }else {
                         return Container(
@@ -628,6 +741,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             ),
                                             onPressed: () async  {
                                               var result = await showDialog(
+                                                barrierDismissible: false,
                                                 context: context,
                                                 builder: (BuildContext context) {
                                                   return StatefulBuilder(
@@ -664,7 +778,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                                     if (selectedSpeFeature.contains(special.id)) {
                                                                       setState(() {
                                                                         selectedSpeFeature.removeWhere(
-                                                                            (int s) => s == special.id);
+                                                                            (s) => s == special.id);
                                                                       });
                                                                     }
                                                                   }
@@ -714,6 +828,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             onPressed: () async {
                                               var result = await showDialog(
                                                 context: context,
+                                                barrierDismissible: false,
                                                 builder: (BuildContext context) {
                                                   return StatefulBuilder(
                                                     builder: (context, setState) {
@@ -749,7 +864,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                                     if (selectedMedAcceptance.contains(medAcceptance.id)) {
                                                                       setState(() {
                                                                         selectedMedAcceptance.removeWhere(
-                                                                            (int m) => m == medAcceptance.id);
+                                                                            (m) => m == medAcceptance.id);
                                                                       });
                                                                     }
                                                                   }
@@ -799,6 +914,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             onPressed: () async {
                                               var result = await showDialog(
                                                 context: context,
+                                                barrierDismissible: false,
                                                 builder: (BuildContext context) {
                                                   return StatefulBuilder(
                                                     builder: (context, setState) {
@@ -834,7 +950,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                                     if (selectedFacType.contains(facType.id)) {
                                                                       setState(() {
                                                                         selectedFacType.removeWhere(
-                                                                            (int m) => m == facType.id);
+                                                                            (m) => m == facType.id);
                                                                       });
                                                                     }
                                                                   }
@@ -862,21 +978,45 @@ class _NusingSearchState extends State<NusingSearch> {
                           ),
                         );
                       }
-                    } else if (snapshot.hasError) {
-                      return Container();
-                    } else {
-                      return Column(
-                        children: [
-                           _checkBoxLoadBuildWidget(specFeatureText),
-                           _checkBoxLoadBuildWidget(medAcceptanceText),
-                           _checkBoxLoadBuildWidget(facTypeText),
-                        ],
-                      ); //buildLoadingWidget();
+                    }else {
+
+                      return Stack(
+                              children: <Widget>[
+                              Opacity(
+                                  opacity:0.3, 
+                                  child: Column(
+                                  children: [
+                                    _checkBoxLoadBuildWidget(specFeatureText),
+                                    _checkBoxLoadBuildWidget(medAcceptanceText),
+                                    _checkBoxLoadBuildWidget(facTypeText),
+                                  ],
+                                 ),
+                               ), //buil                       
+                                Positioned(
+                                    top:75,
+                                    left:  MediaQuery.of(context).size.width/2.2,   
+                                    child: Center(                                
+                                    child: Opacity(
+                                      opacity:1.0, 
+                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ), 
+                              ],
+                      );
+                      // return Column(
+                      //   children: [
+                      //      _checkBoxLoadBuildWidget(specFeatureText),
+                      //      _checkBoxLoadBuildWidget(medAcceptanceText),
+                      //      _checkBoxLoadBuildWidget(facTypeText),
+                      //   ],
+                      // ); //buildLoadingWidget();
                     }
-                  }),
+              }),
 
-
+              //search button
               Container(
+                margin: EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey, width: 1.0),
                 ), 
@@ -884,9 +1024,7 @@ class _NusingSearchState extends State<NusingSearch> {
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   onPressed: () {
-                    print(selectedMoveId);
-                    print(selectedMedAcceptance);
-                    print(selectedFacType);
+                    getNursingResultBloc..getNursingResult(_city,_township,_moving_in,_per_month,selectedMoveId,selectedSpeFeature,selectedMedAcceptance,selectedFacType);
                   },
                   color: Colors.green,
                   textColor: Colors.white,
@@ -900,9 +1038,61 @@ class _NusingSearchState extends State<NusingSearch> {
                 ),
               ),
 
+              //ResultData
               Container(
+                child: StreamBuilder<NursingResponse>(
+                  stream: getNursingResultBloc.subject.stream,
+                  builder: (context, AsyncSnapshot<NursingResponse> snapshot) {
+                    // if (snapshot.connectionState == ConnectionState.waiting) {
+                    //             return Stack(
+                    //               children: <Widget>[                                                            
+                    //                 Center(
+                    //                   child: Opacity(
+                    //                     opacity:1.0, 
+                    //                     child:buildLoadingWidget(),//CircularProgressIndicator(),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             );
+                    // }
+                    // else 
+                    if (snapshot.hasError) {
+                          return Container();
+                    } 
+                    else if (snapshot.hasData) {
+                      if (snapshot.data.error != null &&
+                          snapshot.data.error.length > 0) {
+                        return Container();
+                      } else {
+                        return Column(
+                            children: _getSearchResultWidget(snapshot.data));
+                      }
+                    }else {
+                      return Container();             
+                    }
+                  }
+                ),
+              ),
+             ],
+            ),
+         ),
+       ),
+    );
+  }
+
+  List<Widget> _getSearchResultWidget(NursingResponse data) {
+    List<NursingModel> nursingList = data.nursingList;
+    List<SpecialFeature> featureList = data.specialFeatureList;
+    return searchListWidget(nursingList, featureList);
+  }
+
+  List<Widget> searchListWidget(nursingList, featureList) {
+
+    List<Widget> list = new List<Widget>();
+    for (int i = 0; i < nursingList.length; i++) {
+      list.add(new Container(
                 padding: EdgeInsets.all(10.0),
-                margin: EdgeInsets.only(top: 20.0 , bottom: 20.0),
+                margin: EdgeInsets.only(top: 10.0 , bottom: 10.0),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blueAccent)
                 ),
@@ -918,11 +1108,11 @@ class _NusingSearchState extends State<NusingSearch> {
                         ),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: Text("施設番号:500009-0001"),
+                      child: Text("施設番号:${nursingList[i].profilenumber}"),
                     ),
                     InkWell(
                       child: Text(
-                        "ベストライフ三鷹",
+                        nursingList[i].name,
                         style: TextStyle(
                           color: Colors.blue,
                           //fontSize: 18.0,
@@ -932,38 +1122,35 @@ class _NusingSearchState extends State<NusingSearch> {
                         Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail()));
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0 , bottom: 0.0),
-                      child: Row(
-                        children: [
-                          Text("開設年月日 :",style: TextStyle(color: Colors.green)),
-                          Text("2017-04-01")
-                        ]
-                      ),
-                    ),
                     Divider( thickness: 2),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0 , bottom: 8.0, left: 8.0),
                       child: Row(
                         children: [
-                          Text("東京都"),
+                          Text(nursingList[i].city_name),
                           SizedBox(width: 4.0),
                           Icon(Icons.double_arrow ),
                           SizedBox(width: 4.0),
-                          Text("三鷹市")
+                          Text(nursingList[i].township_name)
                         ]
                       ),
                     ),
-                    Card(
-                      margin: EdgeInsets.all(10.0),
-                      color: Colors.blue,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text("64室(全室個室)", style: TextStyle(color: Colors.white),),
-                      ),
-                    ),
+                   
                     Center(
                       // child: Image.asset("assets/logos/bbc-news.png", width: 200, height: 150,),
+                      child: (nursingList[i].logo != null && nursingList[i].logo !='') ?
+                        FadeInImage(
+                          placeholder: AssetImage('assets/img/placeholder.jpg'),
+                          image: NetworkImage(
+                            "https://test.t-i-s.jp/upload/nursing_profile/${nursingList[i].logo}",
+                          ),
+                          imageErrorBuilder: (context, error, stackTrace) { 
+                            return Image.asset(
+                              "assets/img/placeholder.jpg",
+                            );
+                          },                                                                           
+                        )
+                        : Image.asset("assets/img/placeholder.jpg"),
                     ),
                     
                     Container(
@@ -986,7 +1173,7 @@ class _NusingSearchState extends State<NusingSearch> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
                       ), 
-                      child: ListTile(title: Text("0円 ~ 380万円", style: TextStyle(color: Colors.red),),),
+                      child: ListTile(title: Text(moneyChangeFormat(nursingList[i].moving_in_from)+"円 ~ "+moneyChangeFormat(nursingList[i].moving_in_to) +"円", style: TextStyle(color: Colors.red),),),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -1006,7 +1193,7 @@ class _NusingSearchState extends State<NusingSearch> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
                       ), 
-                      child: ListTile(title: Text("0円 ~ 380万円", style: TextStyle(color: Colors.red),),),
+                      child: ListTile(title: Text(moneyChangeFormat(nursingList[i].per_month_from)+"円 ~ "+moneyChangeFormat(nursingList[i].per_month_to) +"円", style: TextStyle(color: Colors.red),),),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -1019,7 +1206,6 @@ class _NusingSearchState extends State<NusingSearch> {
                           backgroundColor: Colors.grey[200],
                           child: Icon(Icons.location_on,color: Colors.blue,)
                         ),
-                        //leading: Icon(Icons.location_on,color: Colors.blue,),
                         title: Text("住所"),
                       )
                     ),
@@ -1027,7 +1213,7 @@ class _NusingSearchState extends State<NusingSearch> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
                       ), 
-                      child: ListTile(title: Text("東京都三鷹市中原3-4-7"),),
+                      child: ListTile(title: Text("${nursingList[i].city_name}${nursingList[i].township_name}${nursingList[i].address ==null ? '' : nursingList[i].address}"),),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -1040,7 +1226,6 @@ class _NusingSearchState extends State<NusingSearch> {
                           backgroundColor: Colors.grey[200],
                           child: Icon(Icons.location_on,color: Colors.blue,)
                         ),
-                        //leading: Icon(Icons.location_on,color: Colors.blue,),
                         title: Text("アクセス"),
                       )
                     ),
@@ -1048,7 +1233,7 @@ class _NusingSearchState extends State<NusingSearch> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
                       ), 
-                      child: ListTile(title: Text("京王線「仙川」駅から徒歩3分「仙川」バス停より小田急バス乗車「中原小学校」バス停下車徒歩約4分京王線「つつじヶ丘」駅よりみたかシティバス 「杏林大学病院」行「中原高架下児童公園」バス停から徒歩2分"),),
+                      child: ListTile(title: Text("${nursingList[i].access == null ? '' : parseHtmlString(nursingList[i].access)}"),),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -1069,11 +1254,14 @@ class _NusingSearchState extends State<NusingSearch> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
                       ), 
-                      child: ListTile(title: Text("株式会社アスモ介護サービス"),),
+                      child: ListTile(title: Text("${nursingList[i].cus_name == null ? '' : nursingList[i].cus_name}"),),
                     ),
                     SizedBox(height: 10.0),
-                    Text("こだわりの特長"),
+                    Text("こだわりの特長",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                     DottedLine(dashColor: Colors.blue,),
+                    SizedBox(height: 10.0),
+
+                    getTextWidgets(featureList, nursingList[i].id),
                     
                     SizedBox(height: 10.0),
                     RaisedButton(
@@ -1086,86 +1274,24 @@ class _NusingSearchState extends State<NusingSearch> {
                     ),
                    ],
                  ),
-                 
-              ),
+              ));
+    }
+    return list;
+  }
 
-              //News
-              // Row(
-              //   children: [
-              //     Container(
-              //       decoration: BoxDecoration(
-              //         color: Colors.blue
-              //       ), 
-              //       height: 36.0,
-              //       width: 10.0,
-              //     ),
-              //     Container(
-              //       width: MediaQuery.of(context).size.width - 30.0,
-              //       decoration: BoxDecoration(
-              //         color: Colors.blue[100]
-              //       ),
-              //       padding: EdgeInsets.all(8.0),
-              //       child: Text("News" ,
-              //         style: TextStyle(
-              //           color: Colors.blue,
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: 18.0,
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // SizedBox(
-              //   height: 10.0
-              // ),
-
-              // Row(
-              //   children: [
-              //     RaisedButton(
-              //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-              //       onPressed: () {},
-              //       color: Colors.grey,
-              //       child: Center(child: Text("2020年"),),
-              //     ),
-              //   ],
-              // ),
-              // SizedBox(
-              //   height: 10.0
-              // ),
-              
-              // _news()
-
-             ],
-      ),
-         ),
-       ),
-    );
-  }  
-
-  Widget _news(){
-    return Column(
-      children: [
-        Row(
-              children: [
-                Text("2020-11-06"),
-                SizedBox(width: 20.0),
-                Card(
-                  color: Colors.blue,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                    child: Text("お知らせ" , style: TextStyle(color: Colors.white),)
-                  ),
-                ),
-              ]
-            ),
-            SizedBox(
-              height: 5.0
-            ),
-            Text("介護施設検索サービスを開設しました。登録・サイト利用等サービスをご利用出来ますので、皆様奮ってご利用下さい。"),
-            Divider(thickness: 2,),
-      ]
-        
-    );
+  Widget getTextWidgets(List<SpecialFeature> features,int nursingId)
+  {
+    return new Wrap(children: features.map((item) => item.profile_id == nursingId ?
+      Container(
+        margin: EdgeInsets.symmetric(vertical: 4,horizontal: 4),
+        padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue, width: 1.0),
+          borderRadius: BorderRadius.circular(20)
+        ), 
+        child: Text(item.name,style: TextStyle(color: Colors.blue),),
+      )
+      :  Container()).toList());
   }
 
   Widget _checkBoxLoadBuildWidget(String name){
@@ -1197,21 +1323,19 @@ class _NusingSearchState extends State<NusingSearch> {
 
   Widget _dropDown(String hintText){
     return  DropdownButtonHideUnderline(
-                  child: new DropdownButton<String>(
-                    //isDense: true,
-                    isExpanded: true,
-                    hint:  Row(
-                      children: [
-                        Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                        Text(hintText),
-                      ],
-                    ),
-                    
-                    onChanged: (String newValue) {},
-                    items: [],
-                  ),
-                );
-
+      child: new DropdownButton<String>(
+        //isDense: true,
+        isExpanded: true,
+        hint:  Row(
+          children: [
+            Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+            Text(hintText),
+          ],
+        ),
+        onChanged: (String newValue) {},
+        items: [],
+      ),
+    );
   }
 }
 

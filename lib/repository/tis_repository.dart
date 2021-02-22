@@ -11,6 +11,7 @@ import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
 import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/newdetails_response.dart';
+import 'package:tis/model/nursing.dart';
 import 'package:tis/model/nursingSearch_response.dart';
 import 'package:tis/model/old_people_response.dart';
 import 'package:tis/model/other_response.dart';
@@ -24,6 +25,7 @@ import 'package:tis/model/visit_nurse_response.dart';
 import 'package:tis/model/job_response.dart';
 
 class NewsRepository {
+  static String url = "test.t-i-s.jp";
   static String mainUrl = "https://test.t-i-s.jp/api";
 
   final Dio _dio = Dio();
@@ -34,8 +36,7 @@ class NewsRepository {
   var getRelatedNewsUrl = "$mainUrl/relatednews";
   var getNewsDetailsUrl = "$mainUrl/newdetails";
   var getHomeUrl = "$mainUrl/home";
-  var getAllNewsSearchUrl =
-      "$mainUrl/get_latest_posts_by_catId_mobile/all_news_search";
+  var getAllNewsSearchUrl ="$mainUrl/get_latest_posts_by_catId_mobile/all_news_search";
   var getCityUrl = "$mainUrl/auth/getCities";
   var getFeatureUrl = "$mainUrl/getmap?id=-1&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=hospital&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0";
   var getLinkedNewsUrl ="$mainUrl/getLinkedNews/";
@@ -101,13 +102,14 @@ class NewsRepository {
       Response response = await _dio.get(getLatestPostAllCatUrl);
       if (response.statusCode == HttpStatus.ok) {
         return PostsResponse.fromJson(response.data);
-      } else {
+      } 
+      else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      // throw SocketException('No Internet');
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return PostsResponse.withError("$error");
+      throw SocketException('No Internet');
+      // print("Exception occured: $error stackTrace: $stacktrace");
+      // return PostsResponse.withError("$error");
     }
   }
 
@@ -357,6 +359,39 @@ class NewsRepository {
       // throw SocketException('No Internet');
       print("Exception occured: $error stackTrace: $stacktrace");
       return NursingSearchDataResponse.withError("$error");
+    }
+  }
+
+  Future<NursingResponse> getNursingResult(String city, String township,String movingIn,String perMonth,var moveID,var specialFeatureID,var medicalAcceptanceID,var facTypeID) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var uri = Uri(
+        scheme: 'https',
+        host: url,
+        path: '/api/getnursingsearch/null',
+        queryParameters: {
+          'id': city, 
+          'townshipID': township,
+          'SpecialFeatureID[]':specialFeatureID.toString(),
+          'MedicalAcceptanceID[]': medicalAcceptanceID.toString(),
+          'FacTypeID[]': facTypeID.toString(),
+          'MoveID[]': moveID,
+          'Moving_in': movingIn,
+          'Per_month': perMonth,
+          'local':'0',
+        },
+      );
+      //print(uri);
+      Response response = await _dio.get(uri.toString());
+      if (response.statusCode == HttpStatus.ok) {
+        return NursingResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      //throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return NursingResponse.withError("$error");
     }
   }
 

@@ -13,6 +13,7 @@ import 'package:tis/model/newsCategory.dart';
 import 'package:tis/model/newdetails_response.dart';
 import 'package:tis/model/nursing.dart';
 import 'package:tis/model/nursingSearch_response.dart';
+import 'package:tis/model/nursing_detail_response.dart';
 import 'package:tis/model/old_people_response.dart';
 import 'package:tis/model/other_response.dart';
 import 'package:tis/model/posts_response.dart';
@@ -375,6 +376,18 @@ class NewsRepository {
       var specialFeatureID,
       var medicalAcceptanceID,
       var facTypeID) async {
+    if(city == null || city.isEmpty){
+      city = "-1";
+    }
+    if(township == null || township.isEmpty){
+      township = "-1";
+    }
+    if(movingIn == null || movingIn.isEmpty){
+      movingIn = "-1";
+    }
+    if(perMonth == null || perMonth.isEmpty){
+      perMonth = "-1";
+    }
     await Future.delayed(Duration(milliseconds: 500));
     try {
       var uri = Uri(
@@ -382,18 +395,17 @@ class NewsRepository {
         host: url,
         path: '/api/getnursingsearch/null',
         queryParameters: {
-          'id': city,
+          'id': city, 
           'townshipID': township,
-          'SpecialFeatureID[]': specialFeatureID.toString(),
-          'MedicalAcceptanceID[]': medicalAcceptanceID.toString(),
-          'FacTypeID[]': facTypeID.toString(),
-          'MoveID[]': moveID,
+          'SpecialFeatureID[]': (specialFeatureID == null || specialFeatureID.isEmpty) ? ["0"]  : specialFeatureID.toString(),
+          'MedicalAcceptanceID[]': (medicalAcceptanceID == null || medicalAcceptanceID.isEmpty) ? ["0"] : medicalAcceptanceID.toString(),
+          'FacTypeID[]': (facTypeID == null || facTypeID.isEmpty) ? ["0"] : facTypeID.toString(),
+          'MoveID[]': (moveID == null || moveID.isEmpty) ? ["0"] :  moveID,
           'Moving_in': movingIn,
           'Per_month': perMonth,
-          'local': '0',
+          'local':'0',
         },
       );
-      //print(uri);
       Response response = await _dio.get(uri.toString());
       if (response.statusCode == HttpStatus.ok) {
         return NursingResponse.fromJson(response.data);
@@ -404,6 +416,23 @@ class NewsRepository {
       //throw SocketException('No Internet');
       print("Exception occured: $error stackTrace: $stacktrace");
       return NursingResponse.withError("$error");
+    }
+  }
+
+  Future<NursingDetailResponse> getNursingDetailData(String nursingId) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var getUrl = "profile/nursing/" + nursingId ;
+      Response response = await _dio.get(getUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return NursingDetailResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return NursingDetailResponse.withError("$error");
     }
   }
 

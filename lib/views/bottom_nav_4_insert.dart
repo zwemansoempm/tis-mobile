@@ -43,7 +43,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   TextEditingController wishController = TextEditingController();
 
   var stream;
-  final format = DateFormat("yyyy-mm-dd");
+  final format = DateFormat("yyyy-MM-dd");
   Gender _gender = Gender.male;
   bool chkAgree = false;
   String _city;
@@ -57,7 +57,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
 
   String pref;
   String city;
-  String street;
+  String _street;
   int city_id;
   String township_id;
   //String _township;
@@ -147,6 +147,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Theme(
                             child: TextField(
                               //obscureText: true,
+
                               controller: nameController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
@@ -205,9 +206,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Column(children: <Widget>[
                             Text('${format.pattern}'),
                             DateTimeField(
-                              //controller: birthdayController,
                               format: format,
-                              //controller: birthdayController,
                               onShowPicker: (context, currentValue) {
                                 return showDatePicker(
                                     context: context,
@@ -215,7 +214,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     initialDate: currentValue ?? DateTime.now(),
                                     lastDate: DateTime(2100));
                               },
-                            ),
+                            )
                           ]),
                         )),
                     _jobHeader("性別", ""),
@@ -234,6 +233,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                               onChanged: (Gender value) {
                                 setState(() {
                                   _gender = value;
+                                  genderController.text = '男性';
                                 });
                               },
                             ),
@@ -246,6 +246,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                               onChanged: (Gender value) {
                                 setState(() {
                                   _gender = value;
+                                  genderController.text = '女性';
                                 });
                               },
                             ),
@@ -286,8 +287,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     borderRadius: BorderRadius.circular(5)),
                                 onPressed: () {
                                   setState(() {
-                                    //print("SEarch" + zipCodeController.text);
-                                    //getJobBloc..getJob();
                                     if (zipCodeController.text != "") {
                                       getPostalBloc
                                         ..getPostalList(zipCodeController.text);
@@ -317,7 +316,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                           decoration: TextDecoration.underline,
                                           color: Colors.blue)),
                                   onTap: () {
-                                    //do what you need to do when "Click here" gets clicked
                                     _launchURL();
                                   }),
                               Text(")"),
@@ -341,6 +339,8 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     city_id = postalList[0].city_id;
                                     _city = city_id.toString();
                                     township_id = tspIdList[0].id.toString();
+                                    _street = postalList[0].street;
+                                    addressController.text = _street;
                                     print(township_id);
                                     return Container();
                                   } else if (snapshot.hasError) {
@@ -405,11 +405,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                       snapshot.data.city.forEach((e) {
                                         cityList.add(e);
                                       });
-                                      // if (postalList != null) {
-                                      //   _city = city_id.toString();
-                                      //   print("ttttt");
-                                      // }
-                                      //print("Before select " + _city);
+
                                       return Container(
                                           //width: 320.0,
                                           child: DropdownButtonHideUnderline(
@@ -434,8 +430,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                                 ..getTownship(newValue);
                                               checkstream = 1;
                                               _city = newValue;
-                                              // print(
-                                              //     "after selecting city" + _city);
                                             });
                                           },
 
@@ -614,7 +608,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                               child: Theme(
                                 child: TextField(
                                   //obscureText: true,
-                                  controller: nameController,
+                                  controller: addressController,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     fillColor: Colors.grey,
@@ -791,11 +785,11 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                 nameController.text,
                                 furiganaController.text,
                                 birthdayController.text,
-                                "Male",
+                                genderController.text,
                                 "zipCode",
                                 "state",
                                 "city",
-                                "address",
+                                addressController.text,
                                 phoneNoController.text,
                                 mailController.text,
                                 wishController.text);

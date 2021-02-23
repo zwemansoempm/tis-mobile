@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
@@ -10,7 +8,6 @@ import 'package:tis/model/job.dart';
 import 'package:tis/model/job_confirm.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tis/views/bottom_nav_4_confirm.dart';
-
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
@@ -61,6 +58,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   int city_id;
   String township_id;
   //String _township;
+  int checkSearch=0;
 
   List<PostalList> postalList;
   List<TownshipModel> tspIdList;
@@ -286,7 +284,9 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5)),
                                 onPressed: () {
+                                  FocusScope.of(context).unfocus();
                                   setState(() {
+                                    checkSearch=1;
                                     if (zipCodeController.text != "") {
                                       getPostalBloc
                                         ..getPostalList(zipCodeController.text);
@@ -338,10 +338,14 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     tspIdList = snapshot.data.tspList;
                                     city_id = postalList[0].city_id;
                                     _city = city_id.toString();
-                                    township_id = tspIdList[0].id.toString();
+
+                                    // getTspBloc.drainStream();
+                                    stream1 = getTspBloc..getTownship(_city);
+                                  
+                                    township_id=checkSearch==1?tspIdList[0].id.toString():'';
                                     _street = postalList[0].street;
-                                    addressController.text = _street;
-                                    print(township_id);
+                                    addressController.text = _street;                                  
+                                  
                                     return Container();
                                   } else if (snapshot.hasError) {
                                     return Container();
@@ -542,10 +546,16 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                               Text("市区町村"),
                                             ],
                                           ),
-                                          value: _township,
+                                          value:township_id==''?_township:township_id,
                                           onChanged: (String newValue) {
                                             setState(
-                                                () => _township = newValue);
+                                                () {
+                                                  if(checkSearch==1){
+                                                      checkSearch=0;                                                    
+                                                  }                                                
+                                                  township_id='';
+                                                  _township = newValue;
+                                                  });
                                           },
                                           items: townships
                                               .map((TownshipModel tspModel) =>

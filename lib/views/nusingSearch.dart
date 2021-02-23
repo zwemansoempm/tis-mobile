@@ -9,6 +9,8 @@ import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/elements/loader.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
+import 'package:tis/model/facTypes.dart';
+import 'package:tis/model/medicalAcceptance.dart';
 import 'package:tis/model/nursing.dart';
 import 'package:tis/model/nursingSearch_response.dart';
 import 'package:tis/model/specialFeatures.dart';
@@ -28,6 +30,13 @@ class NusingSearch extends StatefulWidget {
 
 class _NusingSearchState extends State<NusingSearch> {
 
+  List<CityModel> cityList;
+  List<TownshipModel> townshipList;
+  List<SpecialFeaturesModel> specialFeatList;
+  List<MedicalAcceptanceModel> medicalAptList;
+  List<FacTypeModel> facTypeList;
+  List<String> searchDisplayData;
+
   String _city;
   String _township;
   String _movingIn;
@@ -46,6 +55,25 @@ class _NusingSearchState extends State<NusingSearch> {
   String medAcceptanceText = "施設の種類から探す";
   String facTypeText = "医療面・診療科目から探す";
 
+  Map<String, String> movingInList = {
+    '入居一時金' : '-1',
+    '50万円以下': '500000', '100万円以下': '1000000', '200万円以下': '2000000', 
+    '300万円以下': '3000000', '400万円以下': '4000000', '500万円以下': '5000000', 
+    '600万円以下': '6000000', '700万円以下': '7000000', '800万円以下': '8000000', 
+    '900万円以下': '9000000', '10,00万円以下': '10000000', '2,000万円以下': '20000000', 
+    '3,000万円以下': '30000000', '3,000万円以上': '30000000',
+  };
+
+  Map<String, String> perMonthList = {
+    '月額利用料' : '-1',
+    '10万円以下': '100000', '12万円以下': '120000', '14万円以下': '140000', 
+    '16万円以下': '160000', '18万円以下': '180000', '20万円以下': '200000', 
+    '22万円以下': '220000', '24万円以下': '240000', '26万円以下': '260000', 
+    '28万円以下': '280000', '30万円以下': '300000', '35万円以下': '350000', 
+    '40万円以下': '400000', '45万円以下': '450000', '50万円以下': '500000',
+    '50万円以上': '500000',
+  };
+
   List<String> moveList = [
     '自立', '要支援' , '要介護',
   ];
@@ -55,6 +83,12 @@ class _NusingSearchState extends State<NusingSearch> {
   @override
   void initState() {
     super.initState();
+    cityList = List();
+    townshipList = List();
+    specialFeatList = List();
+    medicalAptList = List();
+    facTypeList = List();
+    searchDisplayData = List();
     getCityBloc..getCity();  
     stream;//getLinkNewsBloc..getLinkedNews("1");
     stream1;
@@ -214,7 +248,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                   snapshot.data.error.length > 0) {
                                 return Container();
                             }
-                            List<CityModel> cityList = List();
+                            cityList = List();
                             cityList.add(new CityModel(-1,""));
                             snapshot.data.city.forEach((e) {
                               cityList.add(e);
@@ -245,7 +279,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                   items: cityList.map((CityModel cityModel) =>
                                       DropdownMenuItem(
                                         value: cityModel.id.toString(),
-                                        child: cityModel.id != -1 ? Text(cityModel.city_name) 
+                                        child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
                                           : Row(
                                             children: [
                                               Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
@@ -311,10 +345,10 @@ class _NusingSearchState extends State<NusingSearch> {
                               return Container();
                             }
                             checkstream=0;
-                            List<TownshipModel> townships = List();
-                            townships.add(new TownshipModel(-1,"",""));
+                            townshipList = List();
+                            townshipList.add(new TownshipModel(-1,"",""));
                             snapshot.data.township.forEach((e) {
-                              townships.add(e);
+                              townshipList.add(e);
                             });
                             return Container(
                               child: DropdownButtonHideUnderline(
@@ -331,11 +365,10 @@ class _NusingSearchState extends State<NusingSearch> {
                                   onChanged: (String newValue) {
                                     setState(() => _township = newValue);
                                   },
-                                  items: townships.map((TownshipModel tspModel) =>
+                                  items: townshipList.map((TownshipModel tspModel) =>
                                       DropdownMenuItem(
                                         value: tspModel.id.toString(),
-                                        //child: Text(tspModel.township_name)
-                                        child: tspModel.id != -1 ? Text(tspModel.township_name) 
+                                        child: tspModel.id != -1 ? Text("  "+tspModel.township_name) 
                                           : Row(
                                             children: [
                                               Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
@@ -397,73 +430,21 @@ class _NusingSearchState extends State<NusingSearch> {
                               onChanged: (String newValue) {
                                 setState(() => _movingIn = newValue);
                               },
-                              items: [
+                              items: movingInList.keys.map((String key) => key == "入居一時金"? 
                                 DropdownMenuItem(
                                   child: Row(
                                     children: [
                                       Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                      Text("入居一時金"),
+                                      Text(key),
                                     ],
                                   ),
-                                  value: "-1",
-                                ),
+                                  value: movingInList[key],
+                                ) :
                                 DropdownMenuItem(
-                                  child: Text("50万円以下"),
-                                  value: "500000",
+                                  child: Text("  "+key),
+                                  value: movingInList[key],
                                 ),
-                                DropdownMenuItem(
-                                  child: Text("100万円以下"),
-                                  value: "1000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("200万円以下"),
-                                  value: "2000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("300万円以下"),
-                                  value: "3000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("400万円以下"),
-                                  value: "4000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("500万円以下"),
-                                  value: "5000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("600万円以下"),
-                                  value: "6000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("700万円以下"),
-                                  value: "7000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("800万円以下"),
-                                  value: "8000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("900万円以下"),
-                                  value: "9000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("1,000万円以下"),
-                                  value: "10000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("2,000万円以下"),
-                                  value: "20000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("3,000万円以下"),
-                                  value: "30000000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("3,000万円以上"),
-                                  value: "30000000", // more
-                                ),
-                              ],
+                              ).toList(),
                             ),
                           )
               
@@ -493,81 +474,21 @@ class _NusingSearchState extends State<NusingSearch> {
                               onChanged: (String newValue) {
                                 setState(() => _perMonth = newValue);
                               },
-                              items: [
+                              items: perMonthList.keys.map((String key) => key == "月額利用料"? 
                                 DropdownMenuItem(
                                   child: Row(
                                     children: [
                                       Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                      Text("月額利用料"),
+                                      Text(key),
                                     ],
                                   ),
-                                  value: "-1",
-                                ),
+                                  value: perMonthList[key],
+                                ) :
                                 DropdownMenuItem(
-                                  child: Text("10万円以下"),
-                                  value: "100000",
+                                  child: Text("  "+key),
+                                  value: perMonthList[key],
                                 ),
-                                DropdownMenuItem(
-                                  child: Text("12万円以下"),
-                                  value: "120000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("14万円以下"),
-                                  value: "140000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("16万円以下"),
-                                  value: "160000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("18万円以下"),
-                                  value: "180000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("20万円以下"),
-                                  value: "200000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("22万円以下"),
-                                  value: "220000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("24万円以下"),
-                                  value: "240000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("26万円以下"),
-                                  value: "260000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("28万円以下"),
-                                  value: "280000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("30万円以下"),
-                                  value: "300000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("35万円以下"),
-                                  value: "350000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("40万円以下"),
-                                  value: "400000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("45万円以下"),
-                                  value: "450000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("50万円以下"),
-                                  value: "500000",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("50万円以上"),
-                                  value: "500000", //more
-                                ),
-                              ],
+                              ).toList(),
                             ),
                           )
               
@@ -595,7 +516,7 @@ class _NusingSearchState extends State<NusingSearch> {
                           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                           child: ListTile(
                             dense: true,
-                            contentPadding: EdgeInsets.zero,
+                            contentPadding: EdgeInsets.only(left: 7),
                             leading: Text(moveText),
                             trailing: Icon(Icons.arrow_drop_down_outlined),
                           ),
@@ -658,9 +579,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                 );
                               });
                               setState(() {
-                                if(result != null){
-                                  countMove = result;
-                                }
+                                countMove = result;
                               });
                           },
                         ),
@@ -710,6 +629,9 @@ class _NusingSearchState extends State<NusingSearch> {
                          stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
                         return Container();
                       }else {
+                        specialFeatList = snapshot.data.specialFeatures;
+                        medicalAptList = snapshot.data.medicalAcceptances;
+                        facTypeList = snapshot.data.facTypes;
                         return Container(
                           child: Column(
                             children: [
@@ -728,7 +650,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                                             child: ListTile(
                                               dense: true,
-                                              contentPadding: EdgeInsets.zero,
+                                              contentPadding: EdgeInsets.only(left: 7),
                                               leading: Text(specFeatureText),
                                               trailing: Icon(Icons.arrow_drop_down_outlined),
                                             ),
@@ -814,7 +736,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                                             child: ListTile(
                                               dense: true,
-                                              contentPadding: EdgeInsets.zero,
+                                              contentPadding: EdgeInsets.only(left: 7),
                                               leading: Text(medAcceptanceText),
                                               trailing: Icon(Icons.arrow_drop_down_outlined),
                                             ),
@@ -900,7 +822,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                                             child: ListTile(
                                               dense: true,
-                                              contentPadding: EdgeInsets.zero,
+                                              contentPadding: EdgeInsets.only(left: 7),
                                               leading: Text(facTypeText),
                                               trailing: Icon(Icons.arrow_drop_down_outlined),
                                             ),
@@ -972,7 +894,6 @@ class _NusingSearchState extends State<NusingSearch> {
                                       ),
                                 ),
 
-
                             ]
                           ),
                         );
@@ -1027,6 +948,8 @@ class _NusingSearchState extends State<NusingSearch> {
                     resultStream = getNursingResultBloc..getNursingResult(_city,_township,_movingIn,_perMonth,selectedMoveId,selectedSpeFeature,selectedMedAcceptance,selectedFacType);
                     setState((){
                       _load=true;
+                      searchDisplayData = List();
+                      searchDisplayData = _getDisplaySearchData();
                     });
                   },
                   color: Colors.green,
@@ -1040,6 +963,19 @@ class _NusingSearchState extends State<NusingSearch> {
 
                 ),
               ),
+              
+              searchDisplayData.length > 0 ? Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.0),
+                ),
+               
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(searchDisplayData.join(", ")),
+                ),
+              ): Container(),
 
               //ResultData
               _load ? Container(
@@ -1108,6 +1044,21 @@ class _NusingSearchState extends State<NusingSearch> {
     );
   
   }
+
+  List<String> _getDisplaySearchData(){
+    List<String> st = List();
+    cityList.map((e) => (e.id.toString() == _city && e.id != -1 ) ? st.add(e.city_name): null).toList();
+    townshipList.map((e) => (e.id.toString() == _township && e.id != -1 ) ? st.add(e.township_name): null).toList();
+    movingInList.entries.map((e) => (e.value == _movingIn && e.value != "-1" ) ? st.add(e.key): null).toList();
+    perMonthList.entries.map((e) => (e.value == _perMonth && e.value != "-1" ) ? st.add(e.key):null).toList();
+    selectedMoveId.map((e) =>  st.add(e.toString())).toList();
+    specialFeatList.map((e) => selectedSpeFeature.contains(e.id)? st.add(e.name) : null).toList();
+    medicalAptList.map((e) => selectedMedAcceptance.contains(e.id)? st.add(e.name) : null).toList();
+    facTypeList.map((e) => selectedFacType.contains(e.id) ? st.add(e.description) : null).toList();
+    
+    return st;
+  }
+
 
   List<Widget> _getSearchResultWidget(NursingResponse data) {
     List<NursingModel> nursingList = data.nursingList;

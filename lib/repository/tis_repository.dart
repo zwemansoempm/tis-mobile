@@ -422,7 +422,7 @@ class NewsRepository {
   Future<NursingDetailResponse> getNursingDetailData(String nursingId) async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      var getUrl = "profile/nursing/" + nursingId ;
+      var getUrl = "$mainUrl/profile/nursing/" + nursingId ;
       Response response = await _dio.get(getUrl);
       if (response.statusCode == HttpStatus.ok) {
         return NursingDetailResponse.fromJson(response.data);

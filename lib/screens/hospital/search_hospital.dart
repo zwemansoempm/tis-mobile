@@ -498,12 +498,32 @@ class _SearchHospitalState extends State<SearchHospital> {
                           stream: getFeaturesBloc.subject.stream,
                           builder: (context,
                               AsyncSnapshot<SpecialFeaturesResponse> snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data.error != null &&
-                                  snapshot.data.error.length > 0) {
-                                return Container();
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Stack(
+                                    children: <Widget>[
+                                      _dropDown("  特長から探す"),                            
+                                      Center(
+                                        child: Opacity(
+                                          opacity:1.0, 
+                                          child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    ],
+                                  );
                               }
-
+                              else if (snapshot.hasError) {
+                                      return Container();
+                              }     
+                              else if (snapshot.hasData) {
+                                if (snapshot.data.error != null &&
+                                    snapshot.data.error.length > 0) {
+                                  return Container();
+                                }
+                              List<SpecialFeaturesModel> sfList = List();
+                              sfList.add(new SpecialFeaturesModel(-1, "","",null,"",null,));
+                              snapshot.data.special_feature.forEach((e) {
+                                sfList.add(e);
+                              });
                               return Container(
                                   child: DropdownButtonHideUnderline(
                                 child: new DropdownButton<String>(
@@ -511,7 +531,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                   isExpanded: true,
                                   hint: Row(
                                     children: [
-                                      Text("特長から探す"),
+                                      Text("  特長から探す"),
                                     ],
                                   ),
                                   value: _feature,
@@ -521,27 +541,77 @@ class _SearchHospitalState extends State<SearchHospital> {
                                       // _feature = newValue;
                                     });
                                   },
-                                  items: snapshot.data.special_feature
-                                      .toList()
-                                      .map<DropdownMenuItem<String>>((SpecialFeaturesModel
-                                              featuresModel) =>
-                                          DropdownMenuItem(
-                                              child: Row(
-                                                children: [
-                                                  Checkbox(
-                                                    value: _selectedfea.contains(featuresModel.id),
-                                                  ),
-                                                  Text(featuresModel.name.toString()),
-                                                ],
-                                              )
-                                              ))
-                                      .toList(),
+                                  items: 
+                                  sfList
+                                        .map((SpecialFeaturesModel sfModel) =>
+                                            DropdownMenuItem(
+                                              value: sfModel.id.toString(),
+                                              child: sfModel.id != -1
+                                                  ? Row(
+                                                      children: [
+                                                        Checkbox(
+                                                          value: _selectedfea.contains(sfModel.id),
+                                                        ),
+                                                          Text(sfModel.name.toString()),
+                                                      ],
+                                                    ) 
+                                                  : Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_drop_down_outlined,
+                                                          size: 35.0,
+                                                        ),
+                                                        Text("  特長から探す"),
+                                                      ],
+                                                    ),
+                                            ))
+                                        .toList(),
+                                  // snapshot.data.special_feature
+                                  //     .toList()
+                                  //     .map<DropdownMenuItem<String>>((SpecialFeaturesModel
+                                  //             featuresModel) =>
+                                  //         DropdownMenuItem(
+                                  //             child: Row(
+                                  //               children: [
+                                  //                 Checkbox(
+                                  //                   value: _selectedfea.contains(featuresModel.id),
+                                  //                 ),
+                                  //                 Text(featuresModel.name.toString()),
+                                  //               ],
+                                  //             )
+                                  //             ))
+                                  //     .toList(),
                                 ),
                               ));
-                            } else if (snapshot.hasError) {
-                              return Container();
                             } else {
-                              return Container(); //buildLoadingWidget();
+                              return Stack(
+                              children: <Widget>[
+                                Container(
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                        isExpanded: true,
+                                        //value: _value,
+                                        hint: Row(
+                                          children: [
+                                            Text("  特長から探す"),
+                                          ],
+                                        ),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            //_value = value;
+                                          });
+                                        }),
+                                  ),
+                                ),                                                               
+                                Center(
+                                  child: Opacity(
+                                    opacity:1.0, 
+                                    child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            );
                             }
                           }),
                     ),

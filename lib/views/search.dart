@@ -70,13 +70,11 @@ class SearchScreen extends  SearchDelegate {
                       for (var j = 0; j < allPosts.length; j++) {
                         result.add(allPosts[j]);
                       }      
-                      final myList=query.isEmpty?result:result.where((p) => p.mainPoint.startsWith(query)).toList();  
-                        print('sdfsfs');            
-                      print(myList.length);
+                      final myList=query.isEmpty?result:result.where((p) => p.mainPoint.startsWith(query)).toList();                       
                      return                    
                       Container(
                         width:MediaQuery.of(context).size.width,
-                          height: 35.0* result.length,
+                          height: 30.0* result.length,
                           child:ListView.builder(
                           itemCount:myList.length,// result.length,
                           itemBuilder: (context, index) {

@@ -712,12 +712,12 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                     ),                                          
                                 ),    
                                   Container(
-                                    width: 300,
+                                    width: MediaQuery.of(context).size.width/1.5,
                                     margin: const EdgeInsets.only(left: 20.0, top: 0, right: 0.0,bottom:3),  
                                     child: Text(textdata,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color:Color(int.parse(colorcode)),)),
                                   ), 
                                   SizedBox(
-                                    width:5,//numb!=3?MediaQuery.of(context).size.width/1.8:MediaQuery.of(context).size.width/2.03,
+                                    width:17,//numb!=3?MediaQuery.of(context).size.width/1.8:MediaQuery.of(context).size.width/2.03,
                                   ) ,
                                   new IconButton(                  
                                       icon:new Icon(                                       

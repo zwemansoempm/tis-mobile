@@ -18,6 +18,7 @@ import 'package:tis/model/nursing_detail_response.dart';
 import 'package:tis/model/old_people_response.dart';
 import 'package:tis/model/other_response.dart';
 import 'package:tis/model/posts_response.dart';
+import 'package:tis/model/profile_features_response.dart';
 import 'package:tis/model/related_news_response.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/model/speialfeatures_response.dart';
@@ -47,6 +48,7 @@ class NewsRepository {
       "$mainUrl/getmap?id=-1&township_id=-1&moving_in=-1&per_month=-1&local=0&feature=hospital&SpecialFeatureID[]=0&MedicalAcceptanceID[]=0&FacTypeID[]=0&MoveID[]=0";
   var getLinkedNewsUrl = "$mainUrl/getLinkedNews/";
   var getHostListUrl = "$mainUrl/hospital/postList/";
+  var getProfileFeatureUrl = "$mainUrl/profile/specialfeature/";
 
   Future<Categories> getHome() async {
     await Future.delayed(Duration(milliseconds: 500));
@@ -471,6 +473,25 @@ class NewsRepository {
       // throw SocketException('No Internet');
       print("Exception occured: $error stackTrace: $stacktrace");
       return SpecialFeaturesResponse.withError("$error");
+    }
+  }
+
+  Future<ProfileFeaturesResponse> getProfileSpecialFeatures(String type, String id) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response = await _dio.get(getProfileFeatureUrl+type+"/"+id);
+      if (response.statusCode == HttpStatus.ok) {
+        if(response.data != ""){
+          return ProfileFeaturesResponse.fromJson(response.data);
+        }
+        return ProfileFeaturesResponse.withError("データがありません。");
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return ProfileFeaturesResponse.withError("$error");
     }
   }
 

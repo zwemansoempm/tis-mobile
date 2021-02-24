@@ -144,7 +144,14 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
  
       
           _controller = TabController(initialIndex:checknum,vsync: this, length:snapshot.data.categories.length)
-          ..addListener(() {            
+          ..addListener(() {  
+            if(_controller.index != _controller.previousIndex){
+                // Tab Changed swiping to a new tab
+                setState(() {
+                  tabViewData(_controller.index);
+                });     
+            }    
+          
             if(_tabData.isNotEmpty){         
               setState(() {
                   _tabs=[];
@@ -211,33 +218,7 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
                       bottom: //getHome(),
                       TabBar(
                          onTap: (index) {                             
-                              getNewsCategoryMobileBloc..drainStream(); 
-                              setState(() {                                   
-                                _tabs=[];                       
-                                _activeColor = _tabDataRes[index].color;                                  
-                                check=true;
-                                checknum=index;
-                              });
-                              if(index==1){     
-                                    getNewsCategoryMobileBloc..getNewsCategoryMobile(1.toString());
-                              }else if(index==2){
-                                     getNewsCategoryMobileBloc..getNewsCategoryMobile(2.toString());
-                              }else if(index==3){                                  
-                                   getNewsCategoryMobileBloc..getNewsCategoryMobile(3.toString());
-                              }else if(index==4){
-                                   getNewsCategoryMobileBloc..getNewsCategoryMobile(4.toString());
-                              }else if(index==5){
-                                   getNewsCategoryMobileBloc..getNewsCategoryMobile(5.toString());
-                              }else if(index==6){
-                                   getNewsCategoryMobileBloc..getNewsCategoryMobile(22.toString());
-                              }else if(index==7){
-                                   getNewsCategoryMobileBloc..getNewsCategoryMobile(30.toString());
-                              }else if(index==8){
-                                   getNewsCategoryMobileBloc..getNewsCategoryMobile(27.toString());
-                              }else if(index==9){
-                                   getNewsCategoryMobileBloc..getNewsCategoryMobile(40.toString());
-                              }                         
-                                                
+                            tabViewData(index); 
                         },
                         isScrollable: true,
                         indicator: UnderlineTabIndicator(
@@ -284,6 +265,35 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
       },
     );
   }  
+
+ void tabViewData(index){
+      getNewsCategoryMobileBloc..drainStream(); 
+      setState(() {                                   
+        _tabs=[];                       
+        _activeColor = _tabDataRes[index].color;                                  
+        check=true;
+        checknum=index;
+      });
+      if(index==1){     
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(1.toString());
+      }else if(index==2){
+              getNewsCategoryMobileBloc..getNewsCategoryMobile(2.toString());
+      }else if(index==3){                                  
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(3.toString());
+      }else if(index==4){
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(4.toString());
+      }else if(index==5){
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(5.toString());
+      }else if(index==6){
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(22.toString());
+      }else if(index==7){
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(30.toString());
+      }else if(index==8){
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(27.toString());
+      }else if(index==9){
+            getNewsCategoryMobileBloc..getNewsCategoryMobile(40.toString());
+      }           
+  }
 
   fotoSize(BuildContext context) {  
        return MediaQuery.of(context).size.width/2;    

@@ -6,6 +6,7 @@ import 'package:tis/model/corona_response.dart';
 import 'package:tis/model/day_service_response.dart';
 import 'package:tis/model/department_response.dart';
 import 'package:tis/model/group_response.dart';
+import 'package:tis/model/hospital_response.dart';
 import 'package:tis/model/link_response.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
@@ -545,6 +546,27 @@ class NewsRepository {
       }
     } catch (error, stacktrace) {
       throw SocketException('No Internet');
+    }
+  }
+
+  Future<HospitalResponse> getHospital() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var getHospitalUrl =
+          "$mainUrl/gethospitalsearch/null?id=-1&townshipID[]=0&specialfeatureID[]=0&subjectID[]=0&local=0";
+
+      Response response = await _dio.get(getHospitalUrl);
+
+      if (response.statusCode == HttpStatus.ok) {
+        print(response.statusCode);
+        return HospitalResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return HospitalResponse.withError("$error");
     }
   }
 }

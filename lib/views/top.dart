@@ -16,7 +16,8 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController _tabController;  
+  int _selectedIndex = 0;
 
   // int _currentIndex = 0;
   final List<Widget> _children = [
@@ -40,6 +41,14 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
     _connectivitySubscription =
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _tabController = TabController(vsync: this, length: 4);
+    _tabController.addListener(() {
+    if(_tabController.index != _tabController.previousIndex){
+          // Tab Changed swiping to a new tab
+          setState(() {
+            _selectedIndex =   _tabController.index;
+          });     
+      }     
+    });
   }
 
   @override
@@ -92,7 +101,6 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
     }
   }
 
-  int _selectedIndex = 0; 
 
   @override
   Widget build(BuildContext context) { 
@@ -116,7 +124,8 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                color: Colors.green,
+                color: _selectedIndex==1 || _selectedIndex==2?Color(int.parse("0xff63b7ff")):(_selectedIndex==0?Colors.green:(_selectedIndex == 3
+                                  ?Color(int.parse("0xff828282")):Colors.white)),
               ),
               height: 60,
               // color: Colors.green,
@@ -140,13 +149,13 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                         CustomApp.newspaper,
                         size: 24,
                         color:
-                            _selectedIndex == 0 ? Colors.green : Colors.white,
+                            _selectedIndex == 0 ? Colors.green :(_selectedIndex==1 || _selectedIndex==2 || _selectedIndex==3?Colors.white:(Color(int.parse("0xff63b7ff")))),
                       ),
                       child: Text("ニュース",
                           style: TextStyle(
                             color: _selectedIndex == 0
                                 ? Colors.green
-                                : Colors.white,
+                                :(_selectedIndex==1 || _selectedIndex==2 || _selectedIndex==3?Colors.white:Color(int.parse("0xff63b7ff"))),
                             fontSize: 10.0,
                           ))),
                   Tab(
@@ -154,13 +163,13 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                         CustomApp.user_md,
                         size: 24,
                         color:
-                            _selectedIndex == 1 ? Colors.green : Colors.white,
+                            _selectedIndex == 1? Color(int.parse("0xff63b7ff")) :Colors.white,
                       ),
                       child: Text("介護施設検索",
                           style: TextStyle(
                               color: _selectedIndex == 1
-                                  ? Colors.green
-                                  : Colors.white,
+                                  ? Color(int.parse("0xff63b7ff"))
+                                 :Colors.white,
                                    fontSize: 10.0,
                           ))),
                   Tab(
@@ -168,27 +177,26 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                         CustomApp.briefcase_medical,
                         size: 24,
                         color:
-                            _selectedIndex == 2 ? Colors.green : Colors.white,
+                           (_selectedIndex==1 || _selectedIndex==0  || _selectedIndex==3 ?Colors.white: Color(int.parse("0xff63b7ff"))),
                       ),
                       child: Text("病院検索",
                           style: TextStyle(
-                              color: _selectedIndex == 2
-                                  ? Colors.green
-                                  : Colors.white,
+                              color:(_selectedIndex==1 || _selectedIndex==0 || _selectedIndex==3?Colors.white:Color(int.parse("0xff63b7ff"))),
                                    fontSize: 10.0,
                           ))),
                   Tab(
                       icon: new Icon(
                         CustomApp.users,
                         size: 24,
-                        color:
-                            _selectedIndex == 3 ? Colors.green : Colors.white,
+                        color:_selectedIndex == 3
+                                  ?Color(int.parse("0xff828282")):
+                            (_selectedIndex==1 || _selectedIndex==0 || _selectedIndex==2 ?Colors.white:Color(int.parse("0xff63b7ff"))),
                       ),
                       child: Text("求人検索",
                           style: TextStyle(
                               color: _selectedIndex == 3
-                                  ? Colors.green
-                                  : Colors.white,
+                                  ?Color(int.parse("0xff828282"))
+                                  :(_selectedIndex==1 || _selectedIndex==0 || _selectedIndex==2?Colors.white:Color(int.parse("0xff63b7ff"))),
                                    fontSize: 10.0,
                           ))),
                 ],

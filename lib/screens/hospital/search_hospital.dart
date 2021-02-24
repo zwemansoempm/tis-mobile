@@ -470,10 +470,38 @@ class _SearchHospitalState extends State<SearchHospital> {
                           stream: getFeaturesBloc.subject.stream,
                           builder: (context,
                               AsyncSnapshot<SpecialFeaturesResponse> snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data.error != null &&
-                                  snapshot.data.error.length > 0) {
-                                  return Container();
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Stack(
+                                    children: <Widget>[
+                                     Container(
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton(
+                                              isExpanded: true,
+                                              //value: _value,
+                                              hint: Row(
+                                                children: [
+                                                  Text("  特長から探す"),
+                                                ],
+                                              ),
+                                           ),
+                                        ),
+                                      ),                   
+                                      Center(
+                                        child: Opacity(
+                                          opacity:1.0, 
+                                          child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                              }
+                              else if (snapshot.hasError) {
+                                      return Container();
+                              }     
+                              else if (snapshot.hasData) {
+                                if (snapshot.data.error != null &&
+                                    snapshot.data.error.length > 0) {
+                                    return Container();
                               }
 
                               checkstream=0;

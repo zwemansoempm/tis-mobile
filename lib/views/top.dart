@@ -127,7 +127,7 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                 color: _selectedIndex==1 || _selectedIndex==2?Color(int.parse("0xff63b7ff")):(_selectedIndex==0?Colors.green:(_selectedIndex == 3
                                   ?Color(int.parse("0xff828282")):Colors.white)),
               ),
-              height: 60,
+              height: 65,
               // color: Colors.green,
               child: TabBar(
                 onTap: (tabIndex) {
@@ -170,7 +170,7 @@ class _TopPageState extends State<TopPage> with SingleTickerProviderStateMixin {
                               color: _selectedIndex == 1
                                   ? Color(int.parse("0xff63b7ff"))
                                  :Colors.white,
-                                   fontSize: 10.0,
+                                   fontSize: 9.0,
                           ))),
                   Tab(
                       icon: new Icon(

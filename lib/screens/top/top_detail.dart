@@ -27,7 +27,8 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
   void initState() {     
     super.initState();     
     // ignore: unnecessary_statements   
-    
+     getRelatedNewsBloc.drainStream();
+     getNewdetailsBloc.drainStream(); 
      stream=getRelatedNewsBloc..getRelatedNews(widget.top.toString());
      stream1=getNewdetailsBloc..getNewsDetails(widget.top.toString());
   }

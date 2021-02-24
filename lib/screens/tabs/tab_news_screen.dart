@@ -84,7 +84,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                 SliverToBoxAdapter(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8),
-                    height: MediaQuery.of(context).size.height / 3.1,
+                    height: MediaQuery.of(context).size.height / 3.0,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data.bigNews.length,
@@ -152,7 +152,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                               posts.length > 0 ? _widgetBig(posts[0]) : Container(),
                               SizedBox(width: 8,),
                               Container(
-                                height: MediaQuery.of(context).size.height / 3.1,
+                                height: MediaQuery.of(context).size.height / 3.0,
                                 width: MediaQuery.of(context).size.width /2 -12 ,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -182,7 +182,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           child: Row(
                             children: [
                               Container(
-                                height: MediaQuery.of(context).size.height / 3.1,
+                                height: MediaQuery.of(context).size.height / 3.0,
                                 width: MediaQuery.of(context).size.width /2 - 12 ,
                                 child: Column(
                                   children: [
@@ -246,7 +246,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
   Widget _widgetBigNews(PostsModel post , Color color) {
     return Container(
         
-        height: MediaQuery.of(context).size.height / 3.1,
+        height: MediaQuery.of(context).size.height / 3.0,
         width: MediaQuery.of(context).size.width /2 - 12,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,7 +406,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
         decoration: BoxDecoration(
           color: Colors.grey[200]
         ),
-        height: MediaQuery.of(context).size.height / 3.1,
+        height: MediaQuery.of(context).size.height / 3.0,
         width: MediaQuery.of(context).size.width /2 - 12,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

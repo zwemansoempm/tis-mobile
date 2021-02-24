@@ -501,7 +501,19 @@ class _SearchHospitalState extends State<SearchHospital> {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                   return Stack(
                                     children: <Widget>[
-                                      _dropDown("  特長から探す"),                            
+                                     Container(
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton(
+                                              isExpanded: true,
+                                              //value: _value,
+                                              hint: Row(
+                                                children: [
+                                                  Text("  特長から探す"),
+                                                ],
+                                              ),
+                                           ),
+                                        ),
+                                      ),                   
                                       Center(
                                         child: Opacity(
                                           opacity:1.0, 

@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:dotted_line/dotted_line.dart';
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/model/job.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:tis/model/job_confirm.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:tis/views/bottom_nav_4_confirm.dart';
+import 'package:tis/model/job_confirm.dart';
+import 'package:tis/model/township.dart';
+import 'package:tis/model/township_response.dart';
+import 'package:tis/bloc/get_tsp_bloc.dart';
+import 'package:tis/model/postal_list.dart';
+import 'package:tis/model/postal_list_response.dart';
+import 'package:tis/bloc/get_postalList_block.dart';
+import 'package:tis/elements/loader.dart';
 
 class JobInsertWidget extends StatefulWidget {
   final JobModel value;
@@ -19,20 +30,36 @@ class JobInsertWidget extends StatefulWidget {
 enum Gender { male, female }
 
 class _BottomNav4InsertState extends State<JobInsertWidget> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController furiganaController = TextEditingController();
+  TextEditingController birthdayController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+  TextEditingController zipCodeController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
+  TextEditingController mailController = TextEditingController();
+  TextEditingController wishController = TextEditingController();
+
   var stream;
   final format = DateFormat("yyyy-mm-dd");
   Gender _gender = Gender.male;
   bool chkAgree = false;
   static String _city;
 
-  void initState() {
-    super.initState();
-    getCityBloc..getCity();
-  }
+  var stream1;
+  var checkstream = 0;
+
+  String dropdownValue = 'One';
+
+  String _township;
 
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    getCityBloc..getCity();
+
+    super.initState();
   }
 
   @override
@@ -53,21 +80,11 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
           child: Padding(
             padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
             child: Column(children: [
-              Row(children: [
-                // SizedBox(width: 5.0),
-                // Icon(Icons.map, color: Colors.blue),
-                // SizedBox(width: 5.0),
-                // Text("地図検索"),
-              ]),
-              // DottedLine(
-              //   dashColor: Colors.blue,
-              // ),
+              Row(children: []),
               _header("${widget.value.title}"),
               Container(
                 padding: EdgeInsets.all(10.0),
                 margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                // decoration:
-                //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -109,7 +126,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                             ),
                           ),
                         ]),
-
                     _jobHeader("お名前", "必須"),
                     Container(
                       decoration: BoxDecoration(
@@ -121,6 +137,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Theme(
                             child: TextField(
                               //obscureText: true,
+                              controller: nameController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
@@ -139,9 +156,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         //Text('例）探し太郎')
                       ]),
                     ),
-
                     _jobHeader("フリガナ", "必須"),
-
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
@@ -152,6 +167,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Theme(
                             child: TextField(
                               //obscureText: true,
+                              controller: furiganaController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
@@ -170,20 +186,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         //Text('例）探し太郎')
                       ]),
                     ),
-
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(color: Colors.grey, width: 1.0),
-                    //   ),
-                    //   child: ListTile(
-                    //     title: Text("生年月日"),
-                    //     trailing: Card(
-                    //       margin: EdgeInsets.all(10.0),
-                    //       color: Colors.red,
-                    //     ),
-                    //   ),
-                    // ),
-
                     _jobHeader("生年月日", ""),
                     Container(
                         decoration: BoxDecoration(
@@ -193,7 +195,9 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Column(children: <Widget>[
                             Text('${format.pattern}'),
                             DateTimeField(
+                              //controller: birthdayController,
                               format: format,
+                              //controller: birthdayController,
                               onShowPicker: (context, currentValue) {
                                 return showDatePicker(
                                     context: context,
@@ -204,7 +208,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                             ),
                           ]),
                         )),
-
                     _jobHeader("性別", ""),
                     Container(
                         margin: EdgeInsets.only(bottom: 10.0),
@@ -215,6 +218,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           ListTile(
                             title: const Text('男性'),
                             leading: Radio(
+                              //controller: nameController,
                               value: Gender.male,
                               groupValue: _gender,
                               onChanged: (Gender value) {
@@ -238,7 +242,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           ),
                         ])),
                     _jobHeader("ご住所", ""),
-
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
@@ -252,6 +255,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Theme(
                             child: TextField(
                               //obscureText: true,
+                              controller: zipCodeController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
@@ -271,7 +275,16 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5)),
                                 onPressed: () {
-                                  setState(() {});
+                                  setState(() {
+                                    print("SEarch" + zipCodeController.text);
+                                    //getJobBloc..getJob();
+                                    if (zipCodeController.text != "") {
+                                      getPostalBloc
+                                        ..getPostalList(zipCodeController.text);
+                                    } else {
+                                      print(zipCodeController.text);
+                                    }
+                                  });
                                 },
                                 color: Colors.green,
                                 textColor: Colors.white,
@@ -286,20 +299,25 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                         )),
                                   ],
                                 )),
-                            Text(
-                              "例）1006740（郵便番号検索）",
-                              style: TextStyle(color: Colors.black),
-                            ),
+                            Row(children: [
+                              Text("例）1006740（"),
+                              GestureDetector(
+                                  child: Text("郵便番号検索",
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.blue)),
+                                  onTap: () {
+                                    // do what you need to do when "Click here" gets clicked
+                                    //_launchURL();
+                                  }),
+                              Text(")"),
+                            ]),
                           ],
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             Container(
-                              // decoration: BoxDecoration(
-                              //   border:
-                              //       Border.all(color: Colors.grey, width: 1.0),
-                              // ),
                               child: ListTile(
                                 title: Text("都道府県"),
                                 trailing: Card(
@@ -316,8 +334,8 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.all(8),
-                              padding: EdgeInsets.symmetric(horizontal: 5.0),
+                              //padding: EdgeInsets.all(5.0),
+                              padding: EdgeInsets.only(left: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5.0),
                                   color: Colors.white,
@@ -326,57 +344,99 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                   stream: getCityBloc.subject.stream,
                                   builder: (context,
                                       AsyncSnapshot<CityResponse> snapshot) {
-                                    if (snapshot.hasData) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("市区町村"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child:
+                                                  buildLoadingWidget(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Container();
+                                    } else if (snapshot.hasData) {
                                       if (snapshot.data.error != null &&
                                           snapshot.data.error.length > 0) {
                                         return Container();
                                       }
-
+                                      List<CityModel> cityList = List();
+                                      cityList.add(new CityModel(-1, ""));
+                                      snapshot.data.city.forEach((e) {
+                                        cityList.add(e);
+                                      });
                                       return Container(
-                                        child: DropdownButtonHideUnderline(
-                                          child: new DropdownButton<String>(
-                                            //isDense: true,
-                                            isExpanded: true,
-                                            //hint: new Text("市区町"),
-                                            hint: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons
-                                                      .arrow_drop_down_outlined,
-                                                  size: 35.0,
-                                                ),
-                                                Text("選択してください。"),
-                                              ],
-                                            ),
-
-                                            value: _city,
-                                            onChanged: (String newValue) {
-                                              setState(() => _city = newValue);
-                                            },
-                                            items: snapshot.data.city
-                                                .toList()
-                                                .map((CityModel cityModel) =>
-                                                    DropdownMenuItem(
-                                                        value: cityModel.id
-                                                            .toString(),
-                                                        child: Text(cityModel
-                                                            .city_name)))
-                                                .toList(),
+                                          //width: 320.0,
+                                          child: DropdownButtonHideUnderline(
+                                        child: new DropdownButton<String>(
+                                          //isDense: true,
+                                          isExpanded: true,
+                                          hint: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.arrow_drop_down_outlined,
+                                                size: 35.0,
+                                              ),
+                                              Text("市区町村"),
+                                            ],
                                           ),
+                                          value: _city,
+                                          onChanged: (String newValue) {
+                                            setState(() {
+                                              _township = null;
+                                              getTspBloc.drainStream();
+                                              stream1 = getTspBloc
+                                                ..getTownship(newValue);
+                                              checkstream = 1;
+                                              _city = newValue;
+                                            });
+                                          },
+
+                                          items: cityList
+                                              .map((CityModel cityModel) =>
+                                                  DropdownMenuItem(
+                                                    value:
+                                                        cityModel.id.toString(),
+                                                    child: cityModel.id != -1
+                                                        ? Text(
+                                                            cityModel.city_name)
+                                                        : Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_outlined,
+                                                                size: 35.0,
+                                                              ),
+                                                              Text("市区町村"),
+                                                            ],
+                                                          ),
+                                                  ))
+                                              .toList(),
                                         ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Container();
+                                      ));
                                     } else {
-                                      return Container(); //buildLoadingWidget();
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("市区町村"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child:
+                                                  buildLoadingWidget(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                      // );//_dropDown("市区町村"); //buildLoadingWidget();
                                     }
                                   }),
                             ),
                             Container(
-                              // decoration: BoxDecoration(
-                              //   border:
-                              //       Border.all(color: Colors.grey, width: 1.0),
-                              // ),
                               child: ListTile(
                                 title: Text("市区町村"),
                                 trailing: Card(
@@ -393,67 +453,105 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.all(8),
-                              padding: EdgeInsets.symmetric(horizontal: 5.0),
+                              padding: EdgeInsets.only(left: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5.0),
                                   color: Colors.white,
                                   border: Border.all(color: Colors.grey[400])),
-                              child: StreamBuilder<CityResponse>(
-                                  stream: getCityBloc.subject.stream,
+                              child: StreamBuilder<TownshipResponse>(
+                                  stream: getTspBloc.subject.stream,
                                   builder: (context,
-                                      AsyncSnapshot<CityResponse> snapshot) {
-                                    if (snapshot.hasData) {
+                                      AsyncSnapshot<TownshipResponse>
+                                          snapshot) {
+                                    if (snapshot.connectionState ==
+                                            ConnectionState.waiting &&
+                                        checkstream == 1) {
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("市区町村"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child:
+                                                  buildLoadingWidget(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Container();
+                                    } else if (snapshot.hasData) {
                                       if (snapshot.data.error != null &&
                                           snapshot.data.error.length > 0) {
                                         return Container();
                                       }
-
+                                      checkstream = 0;
+                                      List<TownshipModel> townships = List();
+                                      townships
+                                          .add(new TownshipModel(-1, "", ""));
+                                      snapshot.data.township.forEach((e) {
+                                        townships.add(e);
+                                      });
                                       return Container(
-                                        child: DropdownButtonHideUnderline(
-                                          child: new DropdownButton<String>(
-                                            //isDense: true,
-                                            isExpanded: true,
-                                            //hint: new Text("市区町"),
-                                            hint: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons
-                                                      .arrow_drop_down_outlined,
-                                                  size: 35.0,
-                                                ),
-                                                Text("選択してください。"),
-                                              ],
-                                            ),
-
-                                            value: _city,
-                                            onChanged: (String newValue) {
-                                              setState(() => _city = newValue);
-                                            },
-                                            items: snapshot.data.city
-                                                .toList()
-                                                .map((CityModel cityModel) =>
-                                                    DropdownMenuItem(
-                                                        value: cityModel.id
-                                                            .toString(),
-                                                        child: Text(cityModel
-                                                            .city_name)))
-                                                .toList(),
+                                          child: DropdownButtonHideUnderline(
+                                        child: new DropdownButton<String>(
+                                          //isDense: true,
+                                          isExpanded: true,
+                                          hint: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.arrow_drop_down_outlined,
+                                                size: 35.0,
+                                              ),
+                                              Text("市区町村"),
+                                            ],
                                           ),
+                                          value: _township,
+                                          onChanged: (String newValue) {
+                                            setState(
+                                                () => _township = newValue);
+                                          },
+                                          items: townships
+                                              .map((TownshipModel tspModel) =>
+                                                  DropdownMenuItem(
+                                                    value:
+                                                        tspModel.id.toString(),
+                                                    //child: Text(tspModel.township_name)
+                                                    child: tspModel.id != -1
+                                                        ? Text(tspModel
+                                                            .township_name)
+                                                        : Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_outlined,
+                                                                size: 35.0,
+                                                              ),
+                                                              Text("市区町村"),
+                                                            ],
+                                                          ),
+                                                  ))
+                                              .toList(),
                                         ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Container();
+                                      ));
                                     } else {
-                                      return Container(); //buildLoadingWidget();
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("市区町村"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child: checkstream == 1
+                                                  ? buildLoadingWidget()
+                                                  : Container(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     }
                                   }),
                             ),
                             Container(
-                              // decoration: BoxDecoration(
-                              //   border:
-                              //       Border.all(color: Colors.grey, width: 1.0),
-                              // ),
                               child: ListTile(
                                 title: Text("番地（建物名）"),
                                 trailing: Card(
@@ -469,69 +567,29 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                 ),
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.all(8),
-                              padding: EdgeInsets.symmetric(horizontal: 5.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.grey[400])),
-                              child: StreamBuilder<CityResponse>(
-                                  stream: getCityBloc.subject.stream,
-                                  builder: (context,
-                                      AsyncSnapshot<CityResponse> snapshot) {
-                                    if (snapshot.hasData) {
-                                      if (snapshot.data.error != null &&
-                                          snapshot.data.error.length > 0) {
-                                        return Container();
-                                      }
-
-                                      return Container(
-                                        child: DropdownButtonHideUnderline(
-                                          child: new DropdownButton<String>(
-                                            //isDense: true,
-                                            isExpanded: true,
-                                            //hint: new Text("市区町"),
-                                            hint: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons
-                                                      .arrow_drop_down_outlined,
-                                                  size: 35.0,
-                                                ),
-                                                Text("番地を入力してください。"),
-                                              ],
-                                            ),
-
-                                            value: _city,
-                                            onChanged: (String newValue) {
-                                              setState(() => _city = newValue);
-                                            },
-                                            items: snapshot.data.city
-                                                .toList()
-                                                .map((CityModel cityModel) =>
-                                                    DropdownMenuItem(
-                                                        value: cityModel.id
-                                                            .toString(),
-                                                        child: Text(cityModel
-                                                            .city_name)))
-                                                .toList(),
-                                          ),
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Container();
-                                    } else {
-                                      return Container(); //buildLoadingWidget();
-                                    }
-                                  }),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Theme(
+                                child: TextField(
+                                  //obscureText: true,
+                                  controller: nameController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Colors.grey,
+                                    //labelText: 'Password',
+                                    hintText: '番地を入力してください。',
+                                  ),
+                                ),
+                                data: Theme.of(context).copyWith(
+                                  primaryColor: Colors.blue,
+                                ),
+                              ),
                             ),
                             Text("例）区丸の内1-9-1 グラントウキョウサウスタワー40階")
                           ],
                         ),
                       ]),
                     ),
-
                     _jobHeader("電話番号", ""),
                     Container(
                       decoration: BoxDecoration(
@@ -559,6 +617,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Theme(
                             child: TextField(
                               //obscureText: true,
+                              controller: phoneNoController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
@@ -583,9 +642,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         ),
                       ]),
                     ),
-
                     _jobHeader("メールアドレス", ""),
-
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
@@ -595,6 +652,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           padding: EdgeInsets.all(15),
                           child: Theme(
                             child: TextField(
+                              controller: mailController,
                               //obscureText: true,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
@@ -617,9 +675,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         ),
                       ]),
                     ),
-
                     _jobHeader("ご希望等", ""),
-
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
@@ -630,6 +686,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           child: Theme(
                             child: TextFormField(
                               //obscureText: true,
+                              controller: wishController,
                               maxLines: 3,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
@@ -643,9 +700,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         ),
                       ]),
                     ),
-
                     _jobHeader("個人情報について", "必須"),
-
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
@@ -658,9 +713,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           ),
                         ),
 
-                        // ListTile(
-                        //   title: Text("例）探し太郎"),
-                        // ),
                         Row(
                           children: <Widget>[
                             Checkbox(
@@ -677,7 +729,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         //Text('例）探し太郎')
                       ]),
                     ),
-
                     Container(
                         child: Text(
                       "※未入力の必須項目がございます。",
@@ -686,23 +737,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       ),
                     )),
                     SizedBox(height: 10.0),
-
-                    //SizedBox(height: 10.0),
-                    // RaisedButton(
-                    //   onPressed: () {
-                    //     // var route = new MaterialPageRoute(
-                    //     //   builder: (BuildContext context) =>
-                    //     //       new JobDetailWidget(),
-                    //     // );
-                    //     // Navigator.of(context).push(route);
-                    //   },
-                    //   color: Colors.green[600],
-                    //   textColor: Colors.white,
-                    //   child: Center(
-                    //     child: Text("確認画面へ進む"),
-                    //   ),
-                    // ),
-
                     Container(
                       padding: EdgeInsets.only(left: 80.0),
                       child: SizedBox(
@@ -711,11 +745,25 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         //height: 100.0,
                         child: RaisedButton(
                           onPressed: () {
-                            // var route = new MaterialPageRoute(
-                            //   builder: (BuildContext context) =>
-                            //       new JobInsertWidget(value: widget.value),
-                            // );
-                            // Navigator.of(context).push(route);
+                            JobConfirmModel user = new JobConfirmModel(
+                                nameController.text,
+                                furiganaController.text,
+                                birthdayController.text,
+                                "Male",
+                                "zipCode",
+                                "state",
+                                "city",
+                                "address",
+                                phoneNoController.text,
+                                mailController.text,
+                                wishController.text);
+                            var route = new MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new JobConfirmWidget(
+                                      value: widget.value,
+                                      jobConfirmModel: user),
+                            );
+                            Navigator.of(context).push(route);
                           },
                           color: Colors.green[600],
                           textColor: Colors.white,
@@ -735,26 +783,23 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
     );
   }
 
-  Widget _header(String name) {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(color: Colors.blue),
-          height: 42.0,
-          width: 10.0,
-        ),
-        Expanded(
-            child: Align(
-          alignment: Alignment.topRight,
-          child: Text(
-            name,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18.0,
+  Widget _dropDown(String hintText) {
+    return DropdownButtonHideUnderline(
+      child: new DropdownButton<String>(
+        //isDense: true,
+        isExpanded: true,
+        hint: Row(
+          children: [
+            Icon(
+              Icons.arrow_drop_down_outlined,
+              size: 35.0,
             ),
-          ),
-        )),
-      ],
+            Text(hintText),
+          ],
+        ),
+        onChanged: (String newValue) {},
+        items: [],
+      ),
     );
   }
 
@@ -789,6 +834,29 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _header(String name) {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(color: Colors.blue),
+          height: 42.0,
+          width: 10.0,
+        ),
+        Expanded(
+            child: Align(
+          alignment: Alignment.topRight,
+          child: Text(
+            name,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0,
+            ),
+          ),
+        )),
+      ],
     );
   }
 }

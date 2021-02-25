@@ -27,7 +27,7 @@ class SearchHospital extends StatefulWidget {
 }
 
 class _SearchHospitalState extends State<SearchHospital> {
-  var stream;var stream1;var stream2;int checkstream=0;
+  var stream;var stream1;var stream2;var stream3;int checkstream=0;
   Map<String, bool> cityList = {
     'item1': false,
     'item2': false,
@@ -47,6 +47,7 @@ class _SearchHospitalState extends State<SearchHospital> {
 
   List _selectetsp = List();
   List _selectedfea = List();
+ 
 
   @override
   void initState() {
@@ -58,6 +59,7 @@ class _SearchHospitalState extends State<SearchHospital> {
     stream;//=getLinkNewsBloc..getLinkedNews('2');
     stream1;
     stream2;
+    stream3;
   }
 
   @override
@@ -120,14 +122,24 @@ class _SearchHospitalState extends State<SearchHospital> {
           padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              Row(
-                children: [
-                  SizedBox(width: 5.0),
-                  Icon(Icons.map, color: Colors.blue),
-                  SizedBox(width: 5.0),
-                  Text("地図検索"),
-                ],
-              ),
+               Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text("病院検索",
+                      style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),)),
+                 ),
+              // Row(
+              //   children: [
+               
+              //     // SizedBox(width: 5.0),
+              //     // Icon(Icons.map, color: Colors.blue),
+              //     // SizedBox(width: 5.0),
+              //     // Text("地図検索"),
+              //   ],
+              // ),
               DottedLine(
                 dashColor: Colors.blue,
               ),
@@ -370,7 +382,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                         "  市から探す",
                                         // style: TextStyle(color: Colors.grey[600]),
                                       ),
-                                      SizedBox(width:MediaQuery.of(context).size.width/1.71,),
+                                      SizedBox(width:MediaQuery.of(context).size.width/1.76,),
                                       Icon(Icons.arrow_drop_down_outlined,),
                                     ],
                                   ),
@@ -496,15 +508,16 @@ class _SearchHospitalState extends State<SearchHospital> {
                                   );
                               }
                               else if (snapshot.hasError) {
-                                      return Container();
+                                    stream3=getFeaturesBloc..getFeatures();
+                                    return Container();
                               }     
                               else if (snapshot.hasData) {
                                 if (snapshot.data.error != null &&
                                     snapshot.data.error.length > 0) {
+                                    stream3=getFeaturesBloc..getFeatures();
                                     return Container();
                               }
 
-                              checkstream=0;
                               List<SpecialFeaturesModel> allSpec =
                                   snapshot.data.special_feature;
                               List<int> selectedSpec = [];
@@ -519,10 +532,10 @@ class _SearchHospitalState extends State<SearchHospital> {
                                       //   size: 35.0,
                                       // ),
                                       Text(
-                                        "  市から探す",
+                                        "  特長から探す",
                                         // style: TextStyle(color: Colors.grey[600]),
                                       ),
-                                      SizedBox(width:MediaQuery.of(context).size.width/1.71,),
+                                      SizedBox(width:MediaQuery.of(context).size.width/1.76,),
                                       Icon(Icons.arrow_drop_down_outlined,),
                                     ],
                                   ),
@@ -560,10 +573,34 @@ class _SearchHospitalState extends State<SearchHospital> {
                                 
                                 //),
                               );
-                            } else if (snapshot.hasError) {
-                              return Container();
                             } else {
-                              return Container(); //buildLoadingWidget();
+                               return Stack(
+                                  children: <Widget>[
+                                      Container(
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton(
+                                            isExpanded: true,
+                                            //value: _value,
+                                            hint: Row(
+                                              children: [
+                                                Text("  特長から探す"),
+                                              ],
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                //_value = value;
+                                              });
+                                            }),
+                                      ),
+                                    ),                   
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),
+                                      ),
+                                    ),
+                                ],
+                              );
                             }
                           }),
                     ),
@@ -594,14 +631,13 @@ class _SearchHospitalState extends State<SearchHospital> {
                               AsyncSnapshot<DepartmentResponse> snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 1.5,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      // Center(child: CircularProgressIndicator()),
-                                    ]),
+                              return Container(                              
+                                child:  Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
                               ); //
                             } else if (snapshot.hasError) {
                               return Container();
@@ -615,7 +651,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                         snapshot.data.department));
                               }
                             } else {
-                              return Container(); //buildLoadingWidget();
+                              return buildLoadingWidget(); //buildLoadingWidget();
                             }
                           }),
                     ),

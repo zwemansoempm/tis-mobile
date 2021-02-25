@@ -7,8 +7,10 @@ class GetJobBloc {
   final NewsRepository _repository = NewsRepository();
   final BehaviorSubject<JobResponse> _subject = BehaviorSubject<JobResponse>();
 
-  getJob() async {
-    JobResponse response = await _repository.getJob();
+  getJob(String _city, var selectedTspID, var selectedOccID,
+      var selectedEmpstatus) async {
+    JobResponse response = await _repository.getJob(
+        _city, selectedTspID, selectedOccID, selectedEmpstatus);
     _subject.sink.add(response);
   }
 

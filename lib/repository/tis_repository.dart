@@ -379,16 +379,16 @@ class NewsRepository {
       var specialFeatureID,
       var medicalAcceptanceID,
       var facTypeID) async {
-    if(city == null || city.isEmpty){
+    if (city == null || city.isEmpty) {
       city = "-1";
     }
-    if(township == null || township.isEmpty){
+    if (township == null || township.isEmpty) {
       township = "-1";
     }
-    if(movingIn == null || movingIn.isEmpty){
+    if (movingIn == null || movingIn.isEmpty) {
       movingIn = "-1";
     }
-    if(perMonth == null || perMonth.isEmpty){
+    if (perMonth == null || perMonth.isEmpty) {
       perMonth = "-1";
     }
     await Future.delayed(Duration(milliseconds: 500));
@@ -398,15 +398,23 @@ class NewsRepository {
         host: url,
         path: '/api/getnursingsearch/null',
         queryParameters: {
-          'id': city, 
+          'id': city,
           'townshipID': township,
-          'SpecialFeatureID[]': (specialFeatureID == null || specialFeatureID.isEmpty) ? ["0"]  : specialFeatureID.toString(),
-          'MedicalAcceptanceID[]': (medicalAcceptanceID == null || medicalAcceptanceID.isEmpty) ? ["0"] : medicalAcceptanceID.toString(),
-          'FacTypeID[]': (facTypeID == null || facTypeID.isEmpty) ? ["0"] : facTypeID.toString(),
-          'MoveID[]': (moveID == null || moveID.isEmpty) ? ["0"] :  moveID,
+          'SpecialFeatureID[]':
+              (specialFeatureID == null || specialFeatureID.isEmpty)
+                  ? ["0"]
+                  : specialFeatureID.toString(),
+          'MedicalAcceptanceID[]':
+              (medicalAcceptanceID == null || medicalAcceptanceID.isEmpty)
+                  ? ["0"]
+                  : medicalAcceptanceID.toString(),
+          'FacTypeID[]': (facTypeID == null || facTypeID.isEmpty)
+              ? ["0"]
+              : facTypeID.toString(),
+          'MoveID[]': (moveID == null || moveID.isEmpty) ? ["0"] : moveID,
           'Moving_in': movingIn,
           'Per_month': perMonth,
-          'local':'0',
+          'local': '0',
         },
       );
       Response response = await _dio.get(uri.toString());
@@ -425,7 +433,7 @@ class NewsRepository {
   Future<NursingDetailResponse> getNursingDetailData(String nursingId) async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      var getUrl = "$mainUrl/profile/nursing/" + nursingId ;
+      var getUrl = "$mainUrl/profile/nursing/" + nursingId;
       Response response = await _dio.get(getUrl);
       if (response.statusCode == HttpStatus.ok) {
         return NursingDetailResponse.fromJson(response.data);
@@ -439,16 +447,42 @@ class NewsRepository {
     }
   }
 
-  Future<JobResponse> getJob() async {
+  Future<JobResponse> getJob(String city, var selectedTspID, var selectedOccID,
+      var selectedEmpstatus) async {
     await Future.delayed(Duration(milliseconds: 500));
+    print(city);
+    if (city == 'null' || city.isEmpty) {
+      city = "-1";
+    }
+    print(city);
     try {
-      var getJobUrl =
-          "$mainUrl/getjobsearch/null?id=-1&townshipID[]=0&occupationID[]=0&empstatus[]=0";
+      //print(selectedTspID);
+      var uri = Uri(
+        scheme: 'https',
+        host: url,
+        path: '/api/getjobsearch/null',
+        queryParameters: {
+          'id': city,
+          'townshipID[]': (selectedTspID == null || selectedTspID.isEmpty)
+              ? ["0"]
+              : selectedTspID.toString(),
+          'occupationID[]': (selectedOccID == null || selectedOccID.isEmpty)
+              ? ["0"]
+              : selectedOccID.toString(),
+          'empstatus[]':
+              (selectedEmpstatus == null || selectedEmpstatus.isEmpty)
+                  ? ["0"]
+                  : selectedEmpstatus,
+        },
+      );
+      // var getJobUrl =
+      //     "$mainUrl/getjobsearch/null?id=-1&townshipID[]=0&occupationID[]=0&empstatus[]=0";
 
-      Response response = await _dio.get(getJobUrl);
+      print(uri.toString());
+      Response response = await _dio.getUri(uri);
 
       if (response.statusCode == HttpStatus.ok) {
-        print(response.statusCode);
+        //print(response.statusCode);
         return JobResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');
@@ -476,12 +510,14 @@ class NewsRepository {
     }
   }
 
-  Future<ProfileFeaturesResponse> getProfileSpecialFeatures(String type, String id) async {
+  Future<ProfileFeaturesResponse> getProfileSpecialFeatures(
+      String type, String id) async {
     await Future.delayed(Duration(milliseconds: 500));
     try {
-      Response response = await _dio.get(getProfileFeatureUrl+type+"/"+id);
+      Response response =
+          await _dio.get(getProfileFeatureUrl + type + "/" + id);
       if (response.statusCode == HttpStatus.ok) {
-        if(response.data != ""){
+        if (response.data != "") {
           return ProfileFeaturesResponse.fromJson(response.data);
         }
         return ProfileFeaturesResponse.withError("データがありません。");

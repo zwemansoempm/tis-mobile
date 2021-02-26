@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
 import 'package:intl/intl.dart';
-import 'package:tis/model/city.dart';
-import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/model/job.dart';
 import 'package:tis/model/job_confirm.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tis/views/bottom_nav_4_complete.dart';
+import 'package:tis/views/top.dart';
 
-class JobConfirmWidget extends StatefulWidget {
+class JobCompleteWidget extends StatefulWidget {
   final JobModel value;
   final JobConfirmModel jobConfirmModel;
 
-  JobConfirmWidget({Key key, this.value, this.jobConfirmModel})
+  JobCompleteWidget({Key key, this.value, this.jobConfirmModel})
       : super(key: key);
   @override
-  _BottomNav4ConfirmState createState() => _BottomNav4ConfirmState();
+  _BottomNav4CompleteState createState() => _BottomNav4CompleteState();
 }
 
 enum Gender { male, female }
 
-class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
+class _BottomNav4CompleteState extends State<JobCompleteWidget> {
   var stream;
   final format = DateFormat("yyyy-mm-dd");
   Gender _gender = Gender.male;
@@ -70,12 +68,12 @@ class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
                         children: [
                           Card(
                             margin: EdgeInsets.all(10.0),
-                            //color: Colors.blue,
+                            color: Colors.blue,
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Text(
                                 "1.入力",
-                                style: TextStyle(color: Colors.blue),
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
@@ -92,38 +90,54 @@ class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
                           ),
                           Card(
                             margin: EdgeInsets.all(10.0),
-                            //color: Colors.blue,
+                            color: Colors.blue,
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Text(
                                 "3.完了",
-                                style: TextStyle(color: Colors.blue),
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
                         ]),
-                    _jobHeader("お名前"),
-                    _jobObject("${widget.jobConfirmModel.name}"),
-                    _jobHeader("フリガナ"),
-                    _jobObject("${widget.jobConfirmModel.furigana}"),
-                    _jobHeader("生年月日"),
-                    _jobObject("${widget.jobConfirmModel.birthday}"),
-                    _jobHeader("性別"),
-                    _jobObject("${widget.jobConfirmModel.gender}"),
-                    _jobHeader("郵便番号"),
-                    _jobObject("${widget.jobConfirmModel.zip_code}"),
-                    _jobHeader("都道府県"),
-                    _jobObject("${widget.jobConfirmModel.state}"),
-                    _jobHeader("市区町村"),
-                    _jobObject("${widget.jobConfirmModel.city}"),
-                    _jobHeader("番地（建物名）"),
-                    _jobObject("${widget.jobConfirmModel.address}"),
-                    _jobHeader("電話番号"),
-                    _jobObject("${widget.jobConfirmModel.phoneno}"),
-                    _jobHeader("メールアドレス"),
-                    _jobObject("${widget.jobConfirmModel.mail}"),
-                    _jobHeader("ご希望等"),
-                    _jobObject("${widget.jobConfirmModel.wish}"),
+                    Row(
+                      children: <Widget>[
+                        Center(
+                          child: Container(
+                            //height: 120.0,
+                            //width: 120.0,
+                            //color: Colors.blue[50],
+                            child: Align(
+                              alignment: Alignment(0.0, 1.0),
+                              child: Text(
+                                "求人への応募が完了しました",
+                                style: TextStyle(
+                                  //fontWeight: FontWeight.bold,
+                                  fontSize: 19.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Center(
+                            child: Container(
+                              //height: 120.0,
+                              //width: 120.0,
+                              //color: Colors.blue[50],
+                              child: Align(
+                                alignment: Alignment(0.0, 1.0),
+                                child: Text("担当者より連絡があるまでしばらくおまちください。"),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                     SizedBox(height: 10.0),
                     Container(
                       padding: EdgeInsets.only(left: 80.0),
@@ -133,16 +147,15 @@ class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
                         //height: 100.0,
                         child: RaisedButton(
                           onPressed: () {
-                            var route = new MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  new JobCompleteWidget(value: widget.value),
-                            );
-                            Navigator.of(context).push(route);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TopPage()));
                           },
                           color: Colors.green[600],
                           textColor: Colors.white,
                           child: Center(
-                            child: Text("対応する"),
+                            child: Text("ホームへ戻る"),
                           ),
                         ),
                       ),

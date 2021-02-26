@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:rxdart/subjects.dart';
+
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
@@ -10,7 +10,7 @@ import 'package:tis/model/job.dart';
 import 'package:tis/model/job_confirm.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tis/views/bottom_nav_4_confirm.dart';
-import 'package:tis/model/job_confirm.dart';
+
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/bloc/get_tsp_bloc.dart';
@@ -46,7 +46,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   final format = DateFormat("yyyy-mm-dd");
   Gender _gender = Gender.male;
   bool chkAgree = false;
-  static String _city;
+  String _city;
 
   var stream1;
   var checkstream = 0;
@@ -54,6 +54,16 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   String dropdownValue = 'One';
 
   String _township;
+
+  String pref;
+  String city;
+  String street;
+  int city_id;
+  String township_id;
+  //String _township;
+
+  List<PostalList> postalList;
+  List<TownshipModel> tspIdList;
 
   @override
   void initState() {
@@ -276,13 +286,13 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     borderRadius: BorderRadius.circular(5)),
                                 onPressed: () {
                                   setState(() {
-                                    print("SEarch" + zipCodeController.text);
+                                    //print("SEarch" + zipCodeController.text);
                                     //getJobBloc..getJob();
                                     if (zipCodeController.text != "") {
                                       getPostalBloc
                                         ..getPostalList(zipCodeController.text);
                                     } else {
-                                      print(zipCodeController.text);
+                                      //print(zipCodeController.text);
                                     }
                                   });
                                 },
@@ -307,13 +317,38 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                           decoration: TextDecoration.underline,
                                           color: Colors.blue)),
                                   onTap: () {
-                                    // do what you need to do when "Click here" gets clicked
-                                    //_launchURL();
+                                    //do what you need to do when "Click here" gets clicked
+                                    _launchURL();
                                   }),
                               Text(")"),
                             ]),
                           ],
                         ),
+                        Container(
+                            child: StreamBuilder<PostalListResponse>(
+                                stream: getPostalBloc.subject.stream,
+                                builder: (context,
+                                    AsyncSnapshot<PostalListResponse>
+                                        snapshot) {
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data.error != null &&
+                                        snapshot.data.error.length > 0) {
+                                      return Container();
+                                    }
+
+                                    postalList = snapshot.data.postalList;
+                                    tspIdList = snapshot.data.tspList;
+                                    city_id = postalList[0].city_id;
+                                    _city = city_id.toString();
+                                    township_id = tspIdList[0].id.toString();
+                                    print(township_id);
+                                    return Container();
+                                  } else if (snapshot.hasError) {
+                                    return Container();
+                                  } else {
+                                    return Container();
+                                  }
+                                })),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
@@ -370,6 +405,11 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                       snapshot.data.city.forEach((e) {
                                         cityList.add(e);
                                       });
+                                      // if (postalList != null) {
+                                      //   _city = city_id.toString();
+                                      //   print("ttttt");
+                                      // }
+                                      //print("Before select " + _city);
                                       return Container(
                                           //width: 320.0,
                                           child: DropdownButtonHideUnderline(
@@ -394,6 +434,8 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                                 ..getTownship(newValue);
                                               checkstream = 1;
                                               _city = newValue;
+                                              // print(
+                                              //     "after selecting city" + _city);
                                             });
                                           },
 
@@ -858,5 +900,14 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
         )),
       ],
     );
+  }
+
+  _launchURL() async {
+    const url = 'https://www.post.japanpost.jp/zipcode/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

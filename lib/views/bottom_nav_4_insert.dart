@@ -56,6 +56,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   String city;
   String _street;
   int city_id;
+  // String _cityId;
   String township_id;
   //String _township;
   int checkSearch=0;
@@ -66,8 +67,20 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   @override
   void initState() {
     getCityBloc..getCity();
-
+    // getPostalBloc..getPostalList('1006740');
+    stream;
+    stream1;
+    // getPostalBloc..getPostalList(zipCodeController.text);
+    // getTspBloc..getTownship(_city);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    getCityBloc.drainStream();
+    getPostalBloc.drainStream();
+    getTspBloc.drainStream();
+    super.dispose();
   }
 
   @override
@@ -283,16 +296,19 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                             RaisedButton(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5)),
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    checkSearch=1;
-                                    if (zipCodeController.text != "") {
-                                      getPostalBloc
+                                onPressed: () {                                       
+                                  if (zipCodeController.text != "") {
+                                      stream=getPostalBloc
                                         ..getPostalList(zipCodeController.text);
-                                    } else {
-                                      //print(zipCodeController.text);
-                                    }
+                                  }                         
+                                  setState(() {
+                                    _city=null;_township=null;township_id=null;
+                                    if (zipCodeController.text != "") {
+                                        checkSearch=1;  
+                                    }else{
+                                        checkSearch=0;  
+                                    }                             
+                                      FocusScope.of(context).unfocus();
                                   });
                                 },
                                 color: Colors.green,
@@ -321,14 +337,30 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                               Text(")"),
                             ]),
                           ],
-                        ),
-                        Container(
+                        ),                        
+                        checkSearch==0?columnData():Container(
                             child: StreamBuilder<PostalListResponse>(
                                 stream: getPostalBloc.subject.stream,
                                 builder: (context,
                                     AsyncSnapshot<PostalListResponse>
                                         snapshot) {
-                                  if (snapshot.hasData) {
+                                   if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Stack(
+                                  children: <Widget>[                                  
+                                    Center(
+                                      child: Opacity(
+                                        opacity: 1.0,
+                                        child:
+                                            buildLoadingWidget(), //CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else if (snapshot.hasError) {
+                                return Container();
+                              }        
+                               else if (snapshot.hasData) {
                                     if (snapshot.data.error != null &&
                                         snapshot.data.error.length > 0) {
                                       return Container();
@@ -337,303 +369,28 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     postalList = snapshot.data.postalList;
                                     tspIdList = snapshot.data.tspList;
                                     city_id = postalList[0].city_id;
-                                    _city = city_id.toString();
-
-                                    // getTspBloc.drainStream();
+                                    _city=city_id.toString();                                
+                                    // _cityId =checkSearch==1?city_id.toString():'';
+                                    getTspBloc.drainStream();
                                     stream1 = getTspBloc..getTownship(_city);
                                   
                                     township_id=checkSearch==1?tspIdList[0].id.toString():'';
                                     _street = postalList[0].street;
                                     addressController.text = _street;                                  
-                                  
-                                    return Container();
-                                  } else if (snapshot.hasError) {
-                                    return Container();
-                                  } else {
-                                    return Container();
+                                    //  print(township_id);
+                                    // return Container();
+                                     return columnData();  
+                                  }else {
+                                    return  Center(
+                                      child: Opacity(
+                                        opacity: 1.0,
+                                        child:
+                                            buildLoadingWidget(), //CircularProgressIndicator(),
+                                      ),
+                                    );
                                   }
-                                })),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Container(
-                              child: ListTile(
-                                title: Text("都道府県"),
-                                trailing: Card(
-                                  margin: EdgeInsets.all(10.0),
-                                  color: Colors.red,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      "必須",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              //padding: EdgeInsets.all(5.0),
-                              padding: EdgeInsets.only(left: 5),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.grey[400])),
-                              child: StreamBuilder<CityResponse>(
-                                  stream: getCityBloc.subject.stream,
-                                  builder: (context,
-                                      AsyncSnapshot<CityResponse> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Stack(
-                                        children: <Widget>[
-                                          _dropDown("市区町村"),
-                                          Center(
-                                            child: Opacity(
-                                              opacity: 1.0,
-                                              child:
-                                                  buildLoadingWidget(), //CircularProgressIndicator(),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Container();
-                                    } else if (snapshot.hasData) {
-                                      if (snapshot.data.error != null &&
-                                          snapshot.data.error.length > 0) {
-                                        return Container();
-                                      }
-                                      List<CityModel> cityList = List();
-                                      cityList.add(new CityModel(-1, ""));
-                                      snapshot.data.city.forEach((e) {
-                                        cityList.add(e);
-                                      });
-
-                                      return Container(
-                                          //width: 320.0,
-                                          child: DropdownButtonHideUnderline(
-                                        child: new DropdownButton<String>(
-                                          //isDense: true,
-                                          isExpanded: true,
-                                          hint: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.arrow_drop_down_outlined,
-                                                size: 35.0,
-                                              ),
-                                              Text("市区町村"),
-                                            ],
-                                          ),
-                                          value: _city,
-                                          onChanged: (String newValue) {
-                                            setState(() {
-                                              _township = null;
-                                              getTspBloc.drainStream();
-                                              stream1 = getTspBloc
-                                                ..getTownship(newValue);
-                                              checkstream = 1;
-                                              _city = newValue;
-                                            });
-                                          },
-
-                                          items: cityList
-                                              .map((CityModel cityModel) =>
-                                                  DropdownMenuItem(
-                                                    value:
-                                                        cityModel.id.toString(),
-                                                    child: cityModel.id != -1
-                                                        ? Text(
-                                                            cityModel.city_name)
-                                                        : Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_drop_down_outlined,
-                                                                size: 35.0,
-                                                              ),
-                                                              Text("市区町村"),
-                                                            ],
-                                                          ),
-                                                  ))
-                                              .toList(),
-                                        ),
-                                      ));
-                                    } else {
-                                      return Stack(
-                                        children: <Widget>[
-                                          _dropDown("市区町村"),
-                                          Center(
-                                            child: Opacity(
-                                              opacity: 1.0,
-                                              child:
-                                                  buildLoadingWidget(), //CircularProgressIndicator(),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                      // );//_dropDown("市区町村"); //buildLoadingWidget();
-                                    }
-                                  }),
-                            ),
-                            Container(
-                              child: ListTile(
-                                title: Text("市区町村"),
-                                trailing: Card(
-                                  margin: EdgeInsets.all(10.0),
-                                  color: Colors.red,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      "必須",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(left: 5),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.grey[400])),
-                              child: StreamBuilder<TownshipResponse>(
-                                  stream: getTspBloc.subject.stream,
-                                  builder: (context,
-                                      AsyncSnapshot<TownshipResponse>
-                                          snapshot) {
-                                    if (snapshot.connectionState ==
-                                            ConnectionState.waiting &&
-                                        checkstream == 1) {
-                                      return Stack(
-                                        children: <Widget>[
-                                          _dropDown("市区町村"),
-                                          Center(
-                                            child: Opacity(
-                                              opacity: 1.0,
-                                              child:
-                                                  buildLoadingWidget(), //CircularProgressIndicator(),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Container();
-                                    } else if (snapshot.hasData) {
-                                      if (snapshot.data.error != null &&
-                                          snapshot.data.error.length > 0) {
-                                        return Container();
-                                      }
-                                      checkstream = 0;
-                                      List<TownshipModel> townships = List();
-                                      townships
-                                          .add(new TownshipModel(-1, "", ""));
-                                      snapshot.data.township.forEach((e) {
-                                        townships.add(e);
-                                      });
-                                      return Container(
-                                          child: DropdownButtonHideUnderline(
-                                        child: new DropdownButton<String>(
-                                          //isDense: true,
-                                          isExpanded: true,
-                                          hint: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.arrow_drop_down_outlined,
-                                                size: 35.0,
-                                              ),
-                                              Text("市区町村"),
-                                            ],
-                                          ),
-                                          value:township_id==''?_township:township_id,
-                                          onChanged: (String newValue) {
-                                            setState(
-                                                () {
-                                                  if(checkSearch==1){
-                                                      checkSearch=0;                                                    
-                                                  }                                                
-                                                  township_id='';
-                                                  _township = newValue;
-                                                  });
-                                          },
-                                          items: townships
-                                              .map((TownshipModel tspModel) =>
-                                                  DropdownMenuItem(
-                                                    value:
-                                                        tspModel.id.toString(),
-                                                    //child: Text(tspModel.township_name)
-                                                    child: tspModel.id != -1
-                                                        ? Text(tspModel
-                                                            .township_name)
-                                                        : Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_drop_down_outlined,
-                                                                size: 35.0,
-                                                              ),
-                                                              Text("市区町村"),
-                                                            ],
-                                                          ),
-                                                  ))
-                                              .toList(),
-                                        ),
-                                      ));
-                                    } else {
-                                      return Stack(
-                                        children: <Widget>[
-                                          _dropDown("市区町村"),
-                                          Center(
-                                            child: Opacity(
-                                              opacity: 1.0,
-                                              child: checkstream == 1
-                                                  ? buildLoadingWidget()
-                                                  : Container(), //CircularProgressIndicator(),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                  }),
-                            ),
-                            Container(
-                              child: ListTile(
-                                title: Text("番地（建物名）"),
-                                trailing: Card(
-                                  margin: EdgeInsets.all(10.0),
-                                  color: Colors.red,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      "必須",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(15),
-                              child: Theme(
-                                child: TextField(
-                                  //obscureText: true,
-                                  controller: addressController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Colors.grey,
-                                    //labelText: 'Password',
-                                    hintText: '番地を入力してください。',
-                                  ),
-                                ),
-                                data: Theme.of(context).copyWith(
-                                  primaryColor: Colors.blue,
-                                ),
-                              ),
-                            ),
-                            Text("例）区丸の内1-9-1 グラントウキョウサウスタワー40階")
-                          ],
-                        ),
+                        })),
+                       
                       ]),
                     ),
                     _jobHeader("電話番号", ""),
@@ -827,6 +584,302 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
         ),
       ),
     );
+  }
+  Widget  columnData(){
+       return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Container(
+                              child: ListTile(
+                                title: Text("都道府県"),
+                                trailing: Card(
+                                  margin: EdgeInsets.all(10.0),
+                                  color: Colors.red,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      "必須",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              //padding: EdgeInsets.all(5.0),
+                              padding: EdgeInsets.only(left: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey[400])),
+                              child: StreamBuilder<CityResponse>(
+                                  stream: getCityBloc.subject.stream,
+                                  builder: (context,
+                                      AsyncSnapshot<CityResponse> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("都道府県33"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child:
+                                                  buildLoadingWidget(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Container();
+                                    } else if (snapshot.hasData) {
+                                      if (snapshot.data.error != null &&
+                                          snapshot.data.error.length > 0) {
+                                        return Container();
+                                      }
+                                      List<CityModel> cityList = List();
+                                      cityList.add(new CityModel(-1, ""));
+                                      snapshot.data.city.forEach((e) {
+                                        cityList.add(e);
+                                      });
+
+                                      return Container(
+                                          //width: 320.0,
+                                          child: DropdownButtonHideUnderline(
+                                        child: new DropdownButton<String>(
+                                          //isDense: true,
+                                          isExpanded: true,
+                                          hint: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.arrow_drop_down_outlined,
+                                                size: 35.0,
+                                              ),
+                                              Text("都道府県"),
+                                            ],
+                                          ),
+                                          value: _city,
+                                          onChanged: (String newValue) {
+                                            _city='';
+                                            setState(() {
+
+                                               if(checkSearch == 1){
+                                                  checkSearch =0;                                                    
+                                               }                                             
+                                                // township_id='';
+                                                // _township = newValue;
+
+                                              // _township = null;
+                                                  // _township=newValue;
+                                              getTspBloc.drainStream();
+                                              stream1 = getTspBloc
+                                                ..getTownship(newValue);                                            
+                                              _city = newValue;
+                                              if(township_id!=''){
+                                                township_id='';
+                                              }                                             
+                                              // print('okiu');
+                                              // print(_city);
+                                              // print(township_id);
+                                              // print(_township);
+                                            });
+                                          },
+
+                                          items: cityList
+                                              .map((CityModel cityModel) =>
+                                                  DropdownMenuItem(
+                                                    value:
+                                                        cityModel.id.toString(),
+                                                    child: cityModel.id != -1
+                                                        ? Text(
+                                                            cityModel.city_name)
+                                                        : Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_outlined,
+                                                                size: 35.0,
+                                                              ),
+                                                              Text("市区町村"),
+                                                            ],
+                                                          ),
+                                                  ))
+                                              .toList(),
+                                        ),
+                                      ));
+                                    } else {
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("都道府県222"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child:
+                                                  buildLoadingWidget(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                      // );//_dropDown("市区町村"); //buildLoadingWidget();
+                                    }
+                                  }),
+                            ),
+                            Container(
+                              child: ListTile(
+                                title: Text("市区町村"),
+                                trailing: Card(
+                                  margin: EdgeInsets.all(10.0),
+                                  color: Colors.red,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      "必須",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey[400])),
+                              child: StreamBuilder<TownshipResponse>(
+                                  stream: getTspBloc.subject.stream,
+                                  builder: (context,
+                                      AsyncSnapshot<TownshipResponse>
+                                          snapshot) {
+                                    if (snapshot.connectionState ==
+                                            ConnectionState.waiting && checkstream == 1) {// 
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("市区町村"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child:
+                                                  buildLoadingWidget(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Container();
+                                    } else if (snapshot.hasData) {
+                                      if (snapshot.data.error != null &&
+                                          snapshot.data.error.length > 0) {
+                                        return Container();
+                                      }
+                                      checkstream = 0;
+                                      List<TownshipModel> townships = List();
+                                      townships
+                                          .add(new TownshipModel(-1, "", ""));
+                                      snapshot.data.township.forEach((e) {
+                                        townships.add(e);
+                                      });
+                                      return Container(
+                                          child: DropdownButtonHideUnderline(
+                                        child: new DropdownButton<String>(
+                                          //isDense: true,
+                                          isExpanded: true,
+                                          hint: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.arrow_drop_down_outlined,
+                                                size: 35.0,
+                                              ),
+                                              Text("市区町村"),
+                                            ],
+                                          ),
+                                          value:township_id==''?_township:township_id,
+                                          onChanged: (String newValue) {
+                                            setState(
+                                                () {
+                                                  if(checkSearch==1){
+                                                      checkSearch=0;                                                    
+                                                  }                                               
+                                                  township_id='';
+                                                  _township = newValue;
+                                                  });
+                                          },
+                                          items: townships
+                                              .map((TownshipModel tspModel) =>
+                                                  DropdownMenuItem(
+                                                    value:
+                                                        tspModel.id.toString(),
+                                                    //child: Text(tspModel.township_name)
+                                                    child: tspModel.id != -1
+                                                        ? Text(tspModel
+                                                            .township_name)
+                                                        : Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_outlined,
+                                                                size: 35.0,
+                                                              ),
+                                                              Text("市区町村"),
+                                                            ],
+                                                          ),
+                                                  ))
+                                              .toList(),
+                                        ),
+                                      ));
+                                    } else {
+                                      return Stack(
+                                        children: <Widget>[
+                                          _dropDown("市区町村"),
+                                          Center(
+                                            child: Opacity(
+                                              opacity: 1.0,
+                                              child:  checkstream==1?buildLoadingWidget()
+                                                   : Container(), //CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  }),
+                            ),
+                            Container(
+                              child: ListTile(
+                                title: Text("番地（建物名）"),
+                                trailing: Card(
+                                  margin: EdgeInsets.all(10.0),
+                                  color: Colors.red,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      "必須",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Theme(
+                                child: TextField(
+                                  //obscureText: true,
+                                  controller: addressController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Colors.grey,
+                                    //labelText: 'Password',
+                                    hintText: '番地を入力してください。',
+                                  ),
+                                ),
+                                data: Theme.of(context).copyWith(
+                                  primaryColor: Colors.blue,
+                                ),
+                              ),
+                            ),
+                            Text("例）区丸の内1-9-1 グラントウキョウサウスタワー40階")
+                          ],
+                        );
   }
 
   Widget _dropDown(String hintText) {

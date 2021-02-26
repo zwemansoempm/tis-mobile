@@ -479,25 +479,30 @@ class _BottomNav4State extends State<JobWidget> {
                   Divider(
                     color: Colors.grey[300],
                     thickness: 1,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      "職種",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
+                  ),                  
 
                   Container(
                     child: StreamBuilder<CityOccListResponse>(
                         stream: getCityOccBloc.subject.stream,
                         builder: (context,
-                            AsyncSnapshot<CityOccListResponse> snapshot) {
-                          if (snapshot.hasData) {
+                          AsyncSnapshot<CityOccListResponse> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return    Stack(
+                                  children: <Widget>[
+                                    _paddings("  職種"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                          }
+                          else if (snapshot.hasError) {
+                                return Container();
+                          } 
+                          else if (snapshot.hasData) {
                             if (snapshot.data.error != null &&
                                 snapshot.data.error.length > 0) {
                               return Container();
@@ -520,11 +525,10 @@ class _BottomNav4State extends State<JobWidget> {
                               }
 
                               List<Widget> list = new List<Widget>();
-
+                              list.add(_paddings("  職種"));
                               for (var i = 0; i < occList.length; i++) {
                                 List<OccupationChildModel> allOcc =
-                                    occList[i].child;
-
+                                    occList[i].child;                               
                                 list.add(new Container(
                                   //margin: EdgeInsets.all(8),
                                   padding:
@@ -651,15 +655,24 @@ class _BottomNav4State extends State<JobWidget> {
                                   ),
                                 ));
                               }
-                              return Column(children: list
-
+                              return Column( 
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: list
                                   //getTextWidgets(snapshot.data.occList)
                                   );
                             }
-                          } else if (snapshot.hasError) {
-                            return Container();
-                          } else {
-                            return Column(); //buildLoadingWidget();
+                          }  else {
+                            return Stack(
+                                  children: <Widget>[
+                                    _paddings("  職種"),                            
+                                    Center(
+                                      child: Opacity(
+                                        opacity:1.0, 
+                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                            );
                           }
                         }),
                   ),
@@ -1082,6 +1095,19 @@ class _BottomNav4State extends State<JobWidget> {
       ));
     }
     return list;
+  }
+
+  Widget _paddings(String name){
+      return Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  );
   }
 
   Widget _dropDown(String hintText) {

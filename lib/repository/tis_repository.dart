@@ -115,9 +115,9 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
-      // print("Exception occured: $error stackTrace: $stacktrace");
-      // return PostsResponse.withError("$error");
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return PostsResponse.withError("$error");
     }
   }
 
@@ -585,7 +585,8 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      throw SocketException('No Internet');
+       print("Exception occured: $error stackTrace: $stacktrace");
+      return PostalListResponse.withError("$error");
     }
   }
 

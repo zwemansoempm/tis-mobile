@@ -28,13 +28,22 @@ class _BottomNav4State extends State<JobWidget> {
   var stream1;
   String _city;
   String _township;
-  int checkstream=0;
+  int checkstream = 0;
   Map<String, bool> jobTypeList = {
     '正社員': false,
     '契約社員': false,
     '非常勤': false,
     'その他': false,
   };
+  bool _load = false;
+
+  var selectedTspID = [];
+  var selectedOccID = [];
+  var selectedEmpstatus = [];
+  int countTspID = 0;
+  int countOccId = 0;
+  int countEmpStatus = 0;
+  String tspText = "市から探す";
 
   @override
   void initState() {
@@ -44,8 +53,6 @@ class _BottomNav4State extends State<JobWidget> {
 
   @override
   void dispose() {
-    // getCityBloc.drainStream();
-    // getTspBloc.drainStream();
     super.dispose();
   }
 
@@ -61,7 +68,8 @@ class _BottomNav4State extends State<JobWidget> {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(
+              top: 10, left: 10, right: 10), //const EdgeInsets.all(10.0),
           child: Column(children: [
             Row(children: [
               SizedBox(width: 5.0),
@@ -155,7 +163,8 @@ class _BottomNav4State extends State<JobWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                      padding: const EdgeInsets.only(top: 10.0 , left : 20.0 , right: 20.0),
+                      padding: const EdgeInsets.only(
+                          top: 10.0, left: 20.0, right: 20.0),
                       child: Container(
                         //padding: EdgeInsets.all(5.0),
                         padding: EdgeInsets.only(left: 5),
@@ -213,7 +222,8 @@ class _BottomNav4State extends State<JobWidget> {
                                       setState(() {
                                         _township = null;
                                         getTspBloc.drainStream();
-                                        stream1 = getTspBloc..getTownship(newValue);
+                                        stream1 = getTspBloc
+                                          ..getTownship(newValue);
                                         checkstream = 1;
                                         _city = newValue;
                                       });
@@ -259,7 +269,8 @@ class _BottomNav4State extends State<JobWidget> {
 
                   //township
                   Padding(
-                    padding: const EdgeInsets.only(left: 20,right: 20,bottom: 10,top: 10),
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, bottom: 10, top: 10),
                     child: Container(
                       //padding: EdgeInsets.all(5.0),
                       padding: EdgeInsets.only(left: 5),
@@ -271,87 +282,169 @@ class _BottomNav4State extends State<JobWidget> {
                           stream: getTspBloc.subject.stream,
                           builder: (context,
                               AsyncSnapshot<TownshipResponse> snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting && checkstream==1) {
-                                return Stack(
-                                  children: <Widget>[
-                                    _dropDown("  市から探す"),                            
-                                    Center(
-                                      child: Opacity(
-                                        opacity:1.0, 
-                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
-                                      ),
+                            if (snapshot.connectionState ==
+                                    ConnectionState.waiting &&
+                                checkstream == 1) {
+                              return Stack(
+                                children: <Widget>[
+                                  _dropDown("  市から探す"),
+                                  Center(
+                                    child: Opacity(
+                                      opacity: 1.0,
+                                      child:
+                                          buildLoadingWidget(), //CircularProgressIndicator(),
                                     ),
-                                  ],
-                                );
-                            }
-                            else if (snapshot.hasError) {
-                                  return Container();
-                            }     
-                            else if (snapshot.hasData) {
+                                  ),
+                                ],
+                              );
+                            } else if (snapshot.hasError) {
+                              return Container();
+                            } else if (snapshot.hasData) {
                               if (snapshot.data.error != null &&
                                   snapshot.data.error.length > 0) {
                                 return Container();
                               }
-                              checkstream=0;
+                              checkstream = 0;
                               List<TownshipModel> allTsp =
                                   snapshot.data.township;
                               List<int> selectedTsp = [];
 
                               return RaisedButton(
-                                  padding: const EdgeInsets.only(
-                                      left:0,top: 0.0, right: 0.0),
-                                  child: Row(
-                                    children: [
-                                      // Icon(
-                                      //   Icons.arrow_drop_down_outlined,
-                                      //   size: 35.0,
-                                      // ),
-                                      Text(
-                                        "  市から探す",
-                                        // style: TextStyle(color: Colors.grey[600]),
+                                padding: const EdgeInsets.only(
+                                    left: 0, top: 0.0, right: 0.0),
+                                child: Row(
+                                  children: [
+                                    // Icon(
+                                    //   Icons.arrow_drop_down_outlined,
+                                    //   size: 35.0,
+                                    // ),
+                                    Text(
+                                      "  市から探す",
+                                      // style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                    Expanded(
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.71,
                                       ),
-                                      SizedBox(width:MediaQuery.of(context).size.width/1.71,),
-                                      Icon(Icons.arrow_drop_down_outlined,),
-                                    ],
-                                  ),
-                                  
-                                  // ListTile(
-                                  //   // dense: true,
-                                  //   // contentPadding: EdgeInsets.only(left: 10.0),
-                                  //   leading: Text(
-                                  //     "市から探す",
-                                  //     style: TextStyle(color: Colors.grey[600]),
-                                  //   ),
-                                  //   trailing:
-                                  //       Icon(Icons.arrow_drop_down_outlined),
-                                  // ),
-                                  color: Colors.white,
-                                  elevation: 0,
-                                  // shape: RoundedRectangleBorder(
-                                  //     side: BorderSide(
-                                  //         color: Colors.grey[400], width: 1),
-                                  //     borderRadius: BorderRadius.circular(5.0)),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return _TspDialog(
-                                              tsp: allTsp,
-                                              selectedTsp: selectedTsp,
-                                              onSelectedTspListChanged: (tsp) {
-                                                selectedTsp = tsp;
-                                                // selectedTspText = selectedTsp;
-                                                // print(selectedTspText.length);
-                                              });
-                                        });
-                                  },
-                                
+                                    ),
+                                    Icon(
+                                      Icons.arrow_drop_down_outlined,
+                                    ),
+                                  ],
+                                ),
+
+                                // ListTile(
+                                //   // dense: true,
+                                //   // contentPadding: EdgeInsets.only(left: 10.0),
+                                //   leading: Text(
+                                //     "市から探す",
+                                //     style: TextStyle(color: Colors.grey[600]),
+                                //   ),
+                                //   trailing:
+                                //       Icon(Icons.arrow_drop_down_outlined),
+                                // ),
+                                color: Colors.white,
+                                elevation: 0,
+                                // shape: RoundedRectangleBorder(
+                                //     side: BorderSide(
+                                //         color: Colors.grey[400], width: 1),
+                                //     borderRadius: BorderRadius.circular(5.0)),
+                                onPressed: () async {
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (context) {
+                                  //       return _TspDialog(
+                                  //           tsp: allTsp,
+                                  //           selectedTsp: selectedTsp,
+                                  //           onSelectedTspListChanged: (tsp) {
+                                  //             selectedTsp = tsp;
+                                  //             // selectedTspText = selectedTsp;
+                                  //           });
+                                  //     });
+
+                                  int result = await showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(
+                                          builder: (context, setState) {
+                                            return AlertDialog(
+                                              title: Text(tspText),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context,
+                                                        selectedTspID.length);
+                                                  },
+                                                  child: Text('Done'),
+                                                ),
+                                              ],
+                                              content: Container(
+                                                width: double.minPositive,
+                                                height: 400,
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: allTsp.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    String _move = allTsp[index]
+                                                        .township_name;
+                                                    return CheckboxListTile(
+                                                        value: selectedTspID
+                                                            .contains(
+                                                                allTsp[index]
+                                                                    .id),
+                                                        title: Text(_move),
+                                                        onChanged:
+                                                            (bool value) {
+                                                          if (value) {
+                                                            if (!selectedTspID
+                                                                .contains(
+                                                                    allTsp[index]
+                                                                        .id)) {
+                                                              setState(() {
+                                                                selectedTspID
+                                                                    .add(allTsp[
+                                                                            index]
+                                                                        .id);
+                                                              });
+                                                            }
+                                                          } else {
+                                                            if (selectedTspID
+                                                                .contains(
+                                                                    allTsp[index]
+                                                                        .id)) {
+                                                              setState(() {
+                                                                selectedTspID
+                                                                    .removeWhere((s) =>
+                                                                        s ==
+                                                                        allTsp[index]
+                                                                            .id);
+                                                              });
+                                                            }
+                                                          }
+                                                        });
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      });
+                                  setState(() {
+                                    countTspID = result;
+                                  });
+                                },
+
                                 //),
                               );
                             } else {
-                               return Stack(
+                              return Stack(
                                 children: <Widget>[
-                                    Container(
+                                  Container(
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownButton(
                                           isExpanded: true,
@@ -367,15 +460,17 @@ class _BottomNav4State extends State<JobWidget> {
                                             });
                                           }),
                                     ),
-                                  ),                   
+                                  ),
                                   Center(
                                     child: Opacity(
-                                      opacity:1.0, 
-                                      child:checkstream==1?buildLoadingWidget():Container(),
+                                      opacity: 1.0,
+                                      child: checkstream == 1
+                                          ? buildLoadingWidget()
+                                          : Container(),
                                     ),
                                   ),
                                 ],
-                               );
+                              );
                             }
                           }),
                     ),
@@ -407,9 +502,159 @@ class _BottomNav4State extends State<JobWidget> {
                                 snapshot.data.error.length > 0) {
                               return Container();
                             } else {
-                              return Column(
-                                  children:
-                                      getTextWidgets(snapshot.data.occList));
+                              List products = [];
+                              //List<int> selectedOcc = [];
+                              List<OccupationModel> occList =
+                                  snapshot.data.occList;
+                              var j = 0;
+
+                              for (var i = 0; i < occList.length; i++) {
+                                j = j + 1;
+                                var productMap = {
+                                  'item' + j.toString(): false,
+                                  'id': occList[i].id,
+                                  'name': occList[i].name
+                                };
+
+                                products.add(productMap);
+                              }
+
+                              List<Widget> list = new List<Widget>();
+
+                              for (var i = 0; i < occList.length; i++) {
+                                List<OccupationChildModel> allOcc =
+                                    occList[i].child;
+
+                                list.add(new Container(
+                                  //margin: EdgeInsets.all(8),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.0),
+                                  // decoration: BoxDecoration(
+                                  //     borderRadius: BorderRadius.circular(5.0),
+                                  //     color: Colors.white,
+                                  //     border: Border.all(color: Colors.grey[400])),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: RaisedButton(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 1),
+                                      child: ListTile(
+                                        dense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                        leading: Text(occList[i].name),
+                                        trailing: Icon(
+                                            Icons.arrow_drop_down_outlined),
+                                      ),
+                                      color: Colors.white,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: Colors.grey[400],
+                                              width: 1),
+                                          borderRadius:
+                                              BorderRadius.circular(5.0)),
+                                      onPressed: () async {
+                                        // showDialog(
+                                        //     context: context,
+                                        //     builder: (context) {
+                                        //       return _OccupationDialog(
+                                        //           occ: allOcc,
+                                        //           selectedOcc: selectedOcc,
+                                        //           onSelectedOccListChanged: (occ) {
+                                        //             selectedOcc = occ;
+                                        //             //print(selectedCities);
+                                        //           });
+                                        //     });
+
+                                        int result = await showDialog(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return StatefulBuilder(
+                                                builder: (context, setState) {
+                                                  return AlertDialog(
+                                                    title:
+                                                        Text(occList[i].name),
+                                                    actions: <Widget>[
+                                                      FlatButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context,
+                                                              selectedOccID
+                                                                  .length);
+                                                        },
+                                                        child: Text('Done'),
+                                                      ),
+                                                    ],
+                                                    content: Container(
+                                                      width: double.minPositive,
+                                                      height: 400,
+                                                      child: ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount:
+                                                            allOcc.length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          String _move =
+                                                              allOcc[index]
+                                                                  .name;
+                                                          return CheckboxListTile(
+                                                              value: selectedOccID
+                                                                  .contains(
+                                                                      allOcc[index]
+                                                                          .id),
+                                                              title:
+                                                                  Text(_move),
+                                                              onChanged:
+                                                                  (bool value) {
+                                                                if (value) {
+                                                                  if (!selectedOccID
+                                                                      .contains(
+                                                                          allOcc[index]
+                                                                              .id)) {
+                                                                    setState(
+                                                                        () {
+                                                                      selectedOccID.add(
+                                                                          allOcc[index]
+                                                                              .id);
+                                                                    });
+                                                                  }
+                                                                } else {
+                                                                  if (selectedOccID
+                                                                      .contains(
+                                                                          allOcc[index]
+                                                                              .id)) {
+                                                                    setState(
+                                                                        () {
+                                                                      selectedOccID.removeWhere((s) =>
+                                                                          s ==
+                                                                          allOcc[index]
+                                                                              .id);
+                                                                    });
+                                                                  }
+                                                                }
+                                                              });
+                                                        },
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            });
+                                        setState(() {
+                                          countOccId = result;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ));
+                              }
+                              return Column(children: list
+
+                                  //getTextWidgets(snapshot.data.occList)
+                                  );
                             }
                           } else if (snapshot.hasError) {
                             return Container();
@@ -442,18 +687,82 @@ class _BottomNav4State extends State<JobWidget> {
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.grey[400], width: 1),
                           borderRadius: BorderRadius.circular(5.0)),
-                      onPressed: () {
-                        showDialog(
+                      onPressed: () async {
+                        // showDialog(
+                        //     context: context,
+                        //     builder: (context) {
+                        //       return _EmpTypeDialog(
+                        //           empType: allEmpType,
+                        //           selectedEmpType: selectedEmpType,
+                        //           onSelectedEmpTypeListChanged: (empType) {
+                        //             selectedEmpType = empType;
+                        //             //print(selectedCities);
+                        //           });
+                        //     });
+                        int result = await showDialog(
+                            barrierDismissible: false,
                             context: context,
-                            builder: (context) {
-                              return _EmpTypeDialog(
-                                  empType: allEmpType,
-                                  selectedEmpType: selectedEmpType,
-                                  onSelectedEmpTypeListChanged: (empType) {
-                                    selectedEmpType = empType;
-                                    //print(selectedCities);
-                                  });
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: Text("雇用形態から探す"),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context,
+                                              selectedEmpstatus.length);
+                                        },
+                                        child: Text('Done'),
+                                      ),
+                                    ],
+                                    content: Container(
+                                      width: double.minPositive,
+                                      height: 400,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: allEmpType.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          String _move = allEmpType[index];
+                                          return CheckboxListTile(
+                                              value: selectedEmpstatus
+                                                  .contains(allEmpType[index]),
+                                              title: Text(_move),
+                                              onChanged: (bool value) {
+                                                if (value) {
+                                                  if (!selectedEmpstatus
+                                                      .contains(
+                                                          allEmpType[index])) {
+                                                    setState(() {
+                                                      selectedEmpstatus.add(
+                                                          allEmpType[index]);
+                                                    });
+                                                  }
+                                                } else {
+                                                  if (selectedEmpstatus
+                                                      .contains(
+                                                          allEmpType[index])) {
+                                                    setState(() {
+                                                      selectedEmpstatus
+                                                          .removeWhere((s) =>
+                                                              s ==
+                                                              allEmpType[
+                                                                  index]);
+                                                    });
+                                                  }
+                                                }
+                                              });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
                             });
+                        setState(() {
+                          countEmpStatus = result;
+                        });
                       },
                     ),
                   ),
@@ -468,7 +777,10 @@ class _BottomNav4State extends State<JobWidget> {
                     // count = count + 1;
                     // // stream = getJobBloc..getJob();
                     // //print(stream);
-                    getJobBloc..getJob();
+                    _load = true;
+                    getJobBloc
+                      ..getJob(_city.toString(), selectedTspID, selectedOccID,
+                          selectedEmpstatus);
                   });
                 },
                 color: Colors.green,
@@ -485,33 +797,95 @@ class _BottomNav4State extends State<JobWidget> {
                   ],
                 )),
 
-            Container(
-                child: StreamBuilder<JobResponse>(
-                    stream: getJobBloc.subject.stream,
-                    builder: (context, AsyncSnapshot<JobResponse> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                          // height: MediaQuery.of(context).size.height / 1.5,
-                          // child: Column(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          // ),
-                        ); //
-                      } else if (snapshot.hasError) {
-                        return Container();
-                      } else if (snapshot.hasData) {
-                        //print(snapshot.data);
-                        if (snapshot.data.error != null &&
-                            snapshot.data.error.length > 0) {
-                          return Container();
-                        }
-                        //return _getSearchResultWidget(snapshot.data);
-                        return Column(
-                            children: _getSearchResultWidget(snapshot.data));
-                      } else {
-                        return Container(
-                            child: Column()); //return buildLoadingWidget();
-                      }
-                    })),
+            // Container(
+            //     child: StreamBuilder<JobResponse>(
+            //         stream: getJobBloc.subject.stream,
+            //         builder: (context, AsyncSnapshot<JobResponse> snapshot) {
+            //           if (snapshot.connectionState == ConnectionState.waiting) {
+            //             return Container(
+            //                 // height: MediaQuery.of(context).size.height / 1.5,
+            //                 // child: Column(
+            //                 //   mainAxisAlignment: MainAxisAlignment.center,
+            //                 // ),
+            //                 ); //
+            //           } else if (snapshot.hasError) {
+            //             return Container();
+            //           } else if (snapshot.hasData) {
+            //             //print(snapshot.data);
+            //             if (snapshot.data.error != null &&
+            //                 snapshot.data.error.length > 0) {
+            //               return Container();
+            //             }
+            //             //return _getSearchResultWidget(snapshot.data);
+            //             return Column(
+            //                 children: _getSearchResultWidget(snapshot.data));
+            //           } else {
+            //             return Container(
+            //                 child: Column()); //return buildLoadingWidget();
+            //           }
+            //         })),
+            _load
+                ? Container(
+                    child: StreamBuilder<JobResponse>(
+                        stream: getJobBloc.subject.stream,
+                        builder:
+                            (context, AsyncSnapshot<JobResponse> snapshot) {
+                          if (snapshot.hasError) {
+                            return Container(child: Text("error"));
+                          } else if (snapshot.hasData) {
+                            if (snapshot.data.error != null &&
+                                snapshot.data.error.length > 0) {
+                              return Container(
+                                  child: Text(snapshot.data.error));
+                            } else if (snapshot.data.job.isEmpty) {
+                              return Container(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Card(
+                                        color: Colors.grey[300],
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(6.0),
+                                          child: Icon(Icons.search_off_sharp,
+                                              color: Colors.grey[600]),
+                                        ),
+                                      ),
+                                      Text(
+                                        "お探しの条件に合う施設は見つかりませんでした。",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Color(0xff2980b9),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      Text(
+                                        "条件の変更を行い再度ご検索いだだくと見つかる可能性がございます。",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                    ]),
+                              ));
+                            } else {
+                              return Column(
+                                  children:
+                                      _getSearchResultWidget(snapshot.data));
+                            }
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: buildLoadingWidget(),
+                            );
+                          }
+                        }),
+                  )
+                : Container(),
           ]),
         ),
       ),
@@ -811,17 +1185,17 @@ class _BottomNav4State extends State<JobWidget> {
                 side: BorderSide(color: Colors.grey[400], width: 1),
                 borderRadius: BorderRadius.circular(5.0)),
             onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return _OccupationDialog(
-                        occ: allOcc,
-                        selectedOcc: selectedOcc,
-                        onSelectedOccListChanged: (occ) {
-                          selectedOcc = occ;
-                          //print(selectedCities);
-                        });
-                  });
+              // showDialog(
+              //     context: context,
+              //     builder: (context) {
+              //       return _OccupationDialog(
+              //           occ: allOcc,
+              //           selectedOcc: selectedOcc,
+              //           onSelectedOccListChanged: (occ) {
+              //             selectedOcc = occ;
+              //             //print(selectedCities);
+              //           });
+              //     });
             },
           ),
         ),
@@ -916,92 +1290,93 @@ class _EmpTypeDialogState extends State<_EmpTypeDialog> {
   }
 }
 
-class _TspDialog extends StatefulWidget {
-  _TspDialog({
-    this.tsp,
-    this.selectedTsp,
-    this.onSelectedTspListChanged,
-  });
+// class _TspDialog extends StatefulWidget {
+//   _TspDialog({
+//     this.tsp,
+//     this.selectedTsp,
+//     this.onSelectedTspListChanged,
+//   });
 
-  final List<TownshipModel> tsp;
-  final List<int> selectedTsp;
-  final ValueChanged<List<int>> onSelectedTspListChanged;
+//   final List<TownshipModel> tsp;
+//   final List<int> selectedTsp;
+//   final ValueChanged<List<int>> onSelectedTspListChanged;
 
-  @override
-  _TspDialogState createState() => _TspDialogState();
-}
+//   @override
+//   _TspDialogState createState() => _TspDialogState();
+// }
 
-class _TspDialogState extends State<_TspDialog> {
-  List<int> _tempSelectedTsp = [];
+// class _TspDialogState extends State<_TspDialog> {
+//   List<int> _tempSelectedTsp = [];
 
-  @override
-  void initState() {
-    _tempSelectedTsp = widget.selectedTsp;
-    super.initState();
-  }
+//   @override
+//   void initState() {
+//     _tempSelectedTsp = widget.selectedTsp;
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                '市',
-                style: TextStyle(fontSize: 18.0, color: Colors.black),
-                textAlign: TextAlign.center,
-              ),
-              RaisedButton(
-                onPressed: () {
-                  String text = "Data that we want to pass. Can be anything.";
-                  Navigator.pop(context, text);
-                },
-                color: Color(0xFFfab82b),
-                child: Text(
-                  'Done',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: widget.tsp.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final tspObject = widget.tsp[index];
-                  //print(cityName.township_name);
-                  //return null;
-                  return Container(
-                    child: CheckboxListTile(
-                        title: Text(tspObject.township_name),
-                        value: _tempSelectedTsp.contains(tspObject.id),
-                        onChanged: (bool value) {
-                          if (value) {
-                            if (!_tempSelectedTsp.contains(tspObject.id)) {
-                              setState(() {
-                                _tempSelectedTsp.add(tspObject.id);
-                              });
-                            }
-                          } else {
-                            if (_tempSelectedTsp.contains(tspObject.id)) {
-                              setState(() {
-                                _tempSelectedTsp.removeWhere(
-                                    (int city) => city == tspObject.id);
-                              });
-                            }
-                          }
-                          widget.onSelectedTspListChanged(_tempSelectedTsp);
-                        }),
-                  );
-                }),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Dialog(
+//       child: Column(
+//         children: <Widget>[
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: <Widget>[
+//               Text(
+//                 '市',
+//                 style: TextStyle(fontSize: 18.0, color: Colors.black),
+//                 textAlign: TextAlign.center,
+//               ),
+//               RaisedButton(
+//                 onPressed: () {
+//                   String text = "Data that we want to pass. Can be anything.";
+//                   Navigator.pop(context, _tempSelectedTsp.length);
+//                 },
+//                 color: Color(0xFFfab82b),
+//                 child: Text(
+//                   'Done',
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Expanded(
+//             child: ListView.builder(
+//                 itemCount: widget.tsp.length,
+//                 itemBuilder: (BuildContext context, int index) {
+//                   final tspObject = widget.tsp[index];
+//                   //print(tspObject);
+//                   //return null;
+//                   return Container(
+//                     child: CheckboxListTile(
+//                         title: Text(tspObject.township_name),
+//                         value: _tempSelectedTsp.contains(tspObject.id),
+//                         onChanged: (bool value) {
+//                           if (value) {
+//                             if (!_tempSelectedTsp.contains(tspObject.id)) {
+//                               setState(() {
+//                                 print(tspObject.id);
+//                                 _tempSelectedTsp.add(tspObject.id);
+//                               });
+//                             }
+//                           } else {
+//                             if (_tempSelectedTsp.contains(tspObject.id)) {
+//                               setState(() {
+//                                 _tempSelectedTsp.removeWhere(
+//                                     (int city) => city == tspObject.id);
+//                               });
+//                             }
+//                           }
+//                           widget.onSelectedTspListChanged(_tempSelectedTsp);
+//                         }),
+//                   );
+//                 }),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class _OccupationDialog extends StatefulWidget {
   _OccupationDialog({

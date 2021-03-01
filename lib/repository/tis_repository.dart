@@ -579,7 +579,7 @@ class NewsRepository {
       Response response = await _dio.post(getHostListUrl + id);
 
       if (response.statusCode == HttpStatus.ok) {
-        print(response.data);
+        // print(response.data);
         return PostalListResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');
@@ -597,7 +597,7 @@ class NewsRepository {
       Response response = await _dio.get(getFeatureUrl);
 
       if (response.statusCode == HttpStatus.ok) {
-        print(response.data);
+        // print(response.data);
         return CityOccListResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');
@@ -616,7 +616,7 @@ class NewsRepository {
       Response response = await _dio.get(getHospitalUrl);
 
       if (response.statusCode == HttpStatus.ok) {
-        print(response.statusCode);
+        // print(response.statusCode);
         return HospitalResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');

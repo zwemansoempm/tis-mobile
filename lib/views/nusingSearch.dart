@@ -61,7 +61,7 @@ class _NusingSearchState extends State<NusingSearch> {
     '300万円以下': '3000000', '400万円以下': '4000000', '500万円以下': '5000000', 
     '600万円以下': '6000000', '700万円以下': '7000000', '800万円以下': '8000000', 
     '900万円以下': '9000000', '10,00万円以下': '10000000', '2,000万円以下': '20000000', 
-    '3,000万円以下': '30000000', '3,000万円以上': '30000000',
+    '3,000万円以下': '30000000', '3,000万円以上': '30000001',
   };
 
   Map<String, String> perMonthList = {
@@ -71,7 +71,7 @@ class _NusingSearchState extends State<NusingSearch> {
     '22万円以下': '220000', '24万円以下': '240000', '26万円以下': '260000', 
     '28万円以下': '280000', '30万円以下': '300000', '35万円以下': '350000', 
     '40万円以下': '400000', '45万円以下': '450000', '50万円以下': '500000',
-    '50万円以上': '500000',
+    '50万円以上': '500001',
   };
 
   List<String> moveList = [
@@ -511,7 +511,8 @@ class _NusingSearchState extends State<NusingSearch> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (countMove != null && countMove != 0) ?Text("[${countMove.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
+                        (selectedMoveId != null && selectedMoveId.length != 0) ?Text("[${selectedMoveId.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
+                        //(countMove != null && countMove != 0) ?Text("[${countMove.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
                         RaisedButton(
                           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                           child: ListTile(
@@ -527,8 +528,8 @@ class _NusingSearchState extends State<NusingSearch> {
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                           onPressed: () async {
-                            int result = await showDialog(
-                              barrierDismissible: false,
+                            var result = await showDialog(
+                              barrierDismissible: true,
                               context: context,
                               builder: (BuildContext context) {
                                 return StatefulBuilder(
@@ -644,8 +645,8 @@ class _NusingSearchState extends State<NusingSearch> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            countFeature != 0 ? Text("[${countFeature.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),)
-                                              : Container(),
+                                            (selectedSpeFeature != null && selectedSpeFeature.length != 0) ?Text("[${selectedSpeFeature.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
+                                            //countFeature != 0 ? Text("[${countFeature.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : Container(),
                                             RaisedButton(
                                             padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                                             child: ListTile(
@@ -662,7 +663,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             ),
                                             onPressed: () async  {
                                               var result = await showDialog(
-                                                barrierDismissible: false,
+                                                barrierDismissible: true,
                                                 context: context,
                                                 builder: (BuildContext context) {
                                                   return StatefulBuilder(
@@ -730,8 +731,8 @@ class _NusingSearchState extends State<NusingSearch> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            countAcceptance != 0 ? Text("[${countAcceptance.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),)
-                                              : Container(),
+                                            (selectedMedAcceptance != null && selectedMedAcceptance.length != 0) ?Text("[${selectedMedAcceptance.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
+                                            //countAcceptance != 0 ? Text("[${countAcceptance.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : Container(),
                                             RaisedButton(
                                             padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                                             child: ListTile(
@@ -749,7 +750,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             onPressed: () async {
                                               var result = await showDialog(
                                                 context: context,
-                                                barrierDismissible: false,
+                                                barrierDismissible: true,
                                                 builder: (BuildContext context) {
                                                   return StatefulBuilder(
                                                     builder: (context, setState) {
@@ -816,8 +817,8 @@ class _NusingSearchState extends State<NusingSearch> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          countFacType != 0 ? Text("[${countFacType.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),)
-                                              : Container(),
+                                          (selectedFacType != null && selectedFacType.length != 0) ?Text("[${selectedFacType.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
+                                          //countFacType != 0 ? Text("[${countFacType.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : Container(),
                                           RaisedButton(
                                             padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                                             child: ListTile(
@@ -835,7 +836,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                             onPressed: () async {
                                               var result = await showDialog(
                                                 context: context,
-                                                barrierDismissible: false,
+                                                barrierDismissible: true,
                                                 builder: (BuildContext context) {
                                                   return StatefulBuilder(
                                                     builder: (context, setState) {
@@ -924,13 +925,6 @@ class _NusingSearchState extends State<NusingSearch> {
                                 ), 
                               ],
                       );
-                      // return Column(
-                      //   children: [
-                      //      _checkBoxLoadBuildWidget(specFeatureText),
-                      //      _checkBoxLoadBuildWidget(medAcceptanceText),
-                      //      _checkBoxLoadBuildWidget(facTypeText),
-                      //   ],
-                      // ); //buildLoadingWidget();
                     }
               }),
 
@@ -963,19 +957,6 @@ class _NusingSearchState extends State<NusingSearch> {
 
                 ),
               ),
-              
-              searchDisplayData.length > 0 ? Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
-                ),
-               
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(searchDisplayData.join(", ")),
-                ),
-              ): Container(),
 
               //ResultData
               _load ? Container(
@@ -992,11 +973,26 @@ class _NusingSearchState extends State<NusingSearch> {
                       } else  if (snapshot.data.nursingList.isEmpty){
                         return Container(
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                searchDisplayData.length > 0 ? Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey, width: 1.0),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Column (
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                      Text(searchDisplayData.join(", ")) ,
+                                    ],),
+                                  ),
+                                ) : Container(),
                                 Card(
                                   color: Colors.grey[300],
                                   child:Padding(
@@ -1025,8 +1021,31 @@ class _NusingSearchState extends State<NusingSearch> {
                           )
                         );
                       } else {
+                        
                         return Column(
-                            children: _getSearchResultWidget(snapshot.data));
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey, width: 1.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Column (
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                  searchDisplayData.length > 0 ? Text(searchDisplayData.join(", ")) : Container(),
+                                  snapshot.data.nursingList.length != null ?  
+                                    Text("「介護施設 ${snapshot.data.nursingList.length} 件」") : Container(),
+                                ],),
+                              ),
+                            ),
+                            Column(
+                              children:_getSearchResultWidget(snapshot.data),
+                            )
+                          ]
+                        );
                       }
                     }else {
                       return Padding(
@@ -1079,7 +1098,7 @@ class _NusingSearchState extends State<NusingSearch> {
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
-                     Container(
+                    Container(
                        padding: EdgeInsets.all(5.0),
                       margin: EdgeInsets.only(bottom: 8.0),
                       decoration: BoxDecoration(
@@ -1095,11 +1114,12 @@ class _NusingSearchState extends State<NusingSearch> {
                         nursingList[i].name,
                         style: TextStyle(
                           color: Colors.blue,
-                          //fontSize: 18.0,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline)
                       ),
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail(nursingId: nursingList[i].id.toString(),)));
                       },
                     ),
                     Divider( thickness: 2),
@@ -1109,7 +1129,7 @@ class _NusingSearchState extends State<NusingSearch> {
                         children: [
                           Text(nursingList[i].city_name),
                           SizedBox(width: 4.0),
-                          Icon(Icons.double_arrow ),
+                          Icon(Icons.double_arrow_rounded,color: Colors.grey,size: 18, ),
                           SizedBox(width: 4.0),
                           Text(nursingList[i].township_name)
                         ]
@@ -1246,7 +1266,7 @@ class _NusingSearchState extends State<NusingSearch> {
                     SizedBox(height: 10.0),
                     RaisedButton(
                       onPressed: () {
-                         Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail()));
+                         Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail(nursingId: nursingList[i].id.toString())));
                       },
                       color: Colors.blue,
                       textColor: Colors.white,

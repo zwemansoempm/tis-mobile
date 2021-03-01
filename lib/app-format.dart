@@ -19,8 +19,11 @@ String moneyChangeFormat(int value) {
 }
 
 String parseHtmlString(String htmlString) {
-  final document = parse(htmlString);
-  final String parsedString = parse(document.body.text).documentElement.text;
+  String parsedString;
+  if(htmlString != null){
+    final document = parse(htmlString);
+    parsedString = parse(document.body.text).documentElement.text;
+  }
 
   return parsedString;
 }

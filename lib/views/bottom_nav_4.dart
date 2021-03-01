@@ -71,14 +71,23 @@ class _BottomNav4State extends State<JobWidget> {
           padding: const EdgeInsets.only(
               top: 10, left: 10, right: 10), //const EdgeInsets.all(10.0),
           child: Column(children: [
-            Row(children: [
-              SizedBox(width: 5.0),
-              Icon(Icons.map, color: Colors.blue),
-              SizedBox(width: 5.0),
-              Text("地図検索"),
-            ]),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text("求人検索",
+                  style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),)),
+            ),
+            // Row(children: [
+            //   SizedBox(width: 5.0),
+            //   Icon(Icons.map, color: Colors.blue),
+            //   SizedBox(width: 5.0),
+            //   Text("求人検索"),//地図検索
+            // ]),
             DottedLine(
-              dashColor: Colors.blue,
+              dashColor:Color(int.parse("0xff828282")),//Colors.blue,
             ),
             SizedBox(height: 20),
             Stack(
@@ -88,7 +97,7 @@ class _BottomNav4State extends State<JobWidget> {
                 Row(
                   children: [
                     Container(
-                      decoration: BoxDecoration(color: Colors.blue),
+                      decoration: BoxDecoration(color: Color(int.parse("0xff828282")),),
                       height: 36.0,
                       width: 10.0,
                     ),
@@ -142,7 +151,7 @@ class _BottomNav4State extends State<JobWidget> {
                               });
                         },
                         elevation: 1.0,
-                        fillColor: Colors.blue,
+                        fillColor: Color(int.parse("0xff828282")),
                         child: Icon(
                           CustomApp.bell,
                           size: 30.0,
@@ -545,7 +554,7 @@ class _BottomNav4State extends State<JobWidget> {
                                       child: ListTile(
                                         dense: true,
                                         contentPadding: EdgeInsets.zero,
-                                        leading: Text(occList[i].name),
+                                        leading: Text("   "+occList[i].name),
                                         trailing: Icon(
                                             Icons.arrow_drop_down_outlined),
                                       ),
@@ -690,7 +699,7 @@ class _BottomNav4State extends State<JobWidget> {
                         dense: true,
                         contentPadding: EdgeInsets.zero,
                         leading: Text(
-                          "雇用形態から探す",
+                          "   雇用形態から探す",
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                         trailing: Icon(Icons.arrow_drop_down_outlined),
@@ -918,7 +927,7 @@ class _BottomNav4State extends State<JobWidget> {
       list.add(new Container(
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-        decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+        decoration: BoxDecoration(border: Border.all(color:Color(int.parse("0xff828282")),)),//Colors.blueAccent
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -936,7 +945,7 @@ class _BottomNav4State extends State<JobWidget> {
             InkWell(
               child: Text("ベストライフ三鷹",
                   style: TextStyle(
-                      color: Colors.blue,
+                      color: Color(int.parse("0xff828282")),
                       //fontSize: 18.0,
                       decoration: TextDecoration.underline)),
               onTap: () {
@@ -963,7 +972,7 @@ class _BottomNav4State extends State<JobWidget> {
             ),
             Card(
               margin: EdgeInsets.all(10.0),
-              color: Colors.blue,
+              color: Color(int.parse("0xff828282")),
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
@@ -983,7 +992,7 @@ class _BottomNav4State extends State<JobWidget> {
                       backgroundColor: Colors.grey[200],
                       child: Icon(
                         Icons.location_on,
-                        color: Colors.blue,
+                        color:Color(int.parse("0xff828282")),
                       )),
                   //leading: Icon(Icons.location_on,color: Colors.blue,),
                   title: Text("最寄駅"),
@@ -1010,7 +1019,7 @@ class _BottomNav4State extends State<JobWidget> {
                     radius: 18.0,
                     backgroundColor: Colors.grey[200],
                     child: Text("¥",
-                        style: TextStyle(fontSize: 20, color: Colors.blue)),
+                        style: TextStyle(fontSize: 20, color: Color(int.parse("0xff828282")),)),
                   ),
                   title: Text("給料"),
                 )),
@@ -1036,7 +1045,7 @@ class _BottomNav4State extends State<JobWidget> {
                     radius: 18.0,
                     backgroundColor: Colors.grey[200],
                     child: Text("時",
-                        style: TextStyle(fontSize: 20, color: Colors.blue)),
+                        style: TextStyle(fontSize: 20, color: Color(int.parse("0xff828282")),)),
                   ),
                   title: Text("就業時間/休日休暇"),
                 )),
@@ -1060,7 +1069,7 @@ class _BottomNav4State extends State<JobWidget> {
                       backgroundColor: Colors.grey[200],
                       child: Icon(
                         Icons.shopping_bag_sharp,
-                        color: Colors.blue,
+                        color: Color(int.parse("0xff828282")),
                       )),
                   title: Text("特別な条件"),
                 )),
@@ -1084,7 +1093,7 @@ class _BottomNav4State extends State<JobWidget> {
                 );
                 Navigator.of(context).push(route);
               },
-              color: Colors.blue,
+              color: Color(int.parse("0xff828282")),
               textColor: Colors.white,
               child: Center(
                 child: Text("詳細を見る"),
@@ -1104,7 +1113,7 @@ class _BottomNav4State extends State<JobWidget> {
                       name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 15,
                       ),
                     ),
                   );
@@ -1147,7 +1156,7 @@ class _BottomNav4State extends State<JobWidget> {
     return Row(
       children: [
         Container(
-          decoration: BoxDecoration(color: Colors.blue),
+          decoration: BoxDecoration(color: Color(int.parse("0xff828282")),),
           height: 42.0,
           width: 10.0,
         ),

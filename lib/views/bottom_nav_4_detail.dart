@@ -273,27 +273,32 @@ class _BottomNav4DetailState extends State<JobDetailWidget> {
                   "放設名"),
               _jobValue(""),
               SizedBox(height: 10.0),
-              Container(
-                padding: EdgeInsets.only(left: 80.0),
-                child: SizedBox(
-                  width: 160,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    // padding: EdgeInsets.only(left: 80.0),
+                    child: SizedBox(
+                      width: 160,
 
-                  //height: 100.0,
-                  child: RaisedButton(
-                    onPressed: () {
-                      var route = new MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            new JobInsertWidget(value: widget.value),
-                      );
-                      Navigator.of(context).push(route);
-                    },
-                    color: Colors.grey,
-                    textColor: Colors.white,
-                    child: Center(
-                      child: Text("この条件に対応する"),
+                      //height: 100.0,
+                      child: RaisedButton(
+                        onPressed: () {
+                          var route = new MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                new JobInsertWidget(value: widget.value),
+                          );
+                          Navigator.of(context).push(route);
+                        },
+                        color: Colors.grey,
+                        textColor: Colors.white,
+                        child: Center(
+                          child: Text("この条件に対応する"),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               )
             ]),
           ),

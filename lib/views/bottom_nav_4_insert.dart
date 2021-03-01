@@ -39,6 +39,8 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   TextEditingController mailController = TextEditingController();
   TextEditingController wishController = TextEditingController();
 
+  TextEditingController _textEditingController = TextEditingController();
+  DateTime _selectedDate;
   var stream;
   final format = DateFormat("yyyy-MM-dd");
   Gender _gender = Gender.male;
@@ -214,18 +216,34 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           border: Border.all(color: Colors.grey, width: 1.0),
                         ),
                         child: Container(
-                          child: Column(children: <Widget>[
-                            Text('${format.pattern}'),
-                            DateTimeField(
-                              format: format,
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime(1900),
-                                    initialDate: currentValue ?? DateTime.now(),
-                                    lastDate: DateTime(2100));
-                              },
-                            )
+                          child: Column(children: <Widget>[  
+
+                            TextField(                                                  
+                            focusNode: AlwaysDisabledFocusNode(),
+                             decoration: const InputDecoration(     
+                                 contentPadding: EdgeInsets.fromLTRB(30.0, 10.0, 100.0, 10.0),     
+                                 labelText: '年 - 月 - 日',
+                            ),
+                            controller: _textEditingController,
+                            onTap: () {
+                              _selectDate(context);
+                            },
+                          ),
+
+                            // Text('${format.pattern}'),
+                            // DateTimeField(
+                            //   decoration: const InputDecoration(          
+                            //      labelText: '年 - 月 - 日',
+                            //   ),
+                            //   format: format,
+                            //   onShowPicker: (context, currentValue) {
+                            //     return showDatePicker(
+                            //         context: context,
+                            //         firstDate: DateTime(1900),
+                            //         initialDate: currentValue ?? DateTime.now(),
+                            //         lastDate: DateTime(2100));
+                            //   },
+                            // )
                           ]),
                         )),
                     _jobHeader("性別", ""),
@@ -585,6 +603,38 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
       ),
     );
   }
+
+  _selectDate(BuildContext context) async {
+    DateTime newSelectedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2040),
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: Colors.white,
+                onPrimary: Colors.blueGrey,
+                surface: Colors.blueAccent,
+                onSurface: Colors.white,
+              ),
+              dialogBackgroundColor: Colors.brown,
+            ),
+            child: child,
+          );
+        });
+
+    if (newSelectedDate != null) {
+      _selectedDate = newSelectedDate;
+      _textEditingController
+        ..text = DateFormat("yyyy-MM-dd").format(_selectedDate)
+        ..selection = TextSelection.fromPosition(TextPosition(
+            offset: _textEditingController.text.length,
+            affinity: TextAffinity.upstream));
+    }
+  }
+
   Widget  columnData(){
        return Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -967,4 +1017,8 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
       throw 'Could not launch $url';
     }
   }
+}
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

@@ -218,9 +218,10 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         child: Container(
                           child: Column(children: <Widget>[  
 
-                            TextField(
+                            TextField(                                                  
                             focusNode: AlwaysDisabledFocusNode(),
-                             decoration: const InputDecoration(          
+                             decoration: const InputDecoration(     
+                                 contentPadding: EdgeInsets.fromLTRB(30.0, 10.0, 100.0, 10.0),     
                                  labelText: '年 - 月 - 日',
                             ),
                             controller: _textEditingController,

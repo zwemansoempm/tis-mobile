@@ -36,6 +36,25 @@ class NursingModel {
   int moving_in_to;
   int per_month_from;
   int per_month_to;
+  String operatorName;
+  String feature;
+
+  String businessEntity;
+  String dateOfEstablishment;
+  String landRightForm;
+  String buildingRightForm;
+  String siteArea;
+  String floorArea;
+  String construction;
+  String capacity;
+  String numRooms;
+  String residenceForm;
+  int facType;
+  String occupancyCondition;
+  String roomFloor;
+  String livingRoomFacilities;
+  String equipment;
+  String website;
 
   NursingModel(
     this.id,
@@ -56,6 +75,24 @@ class NursingModel {
     this.moving_in_to,
     this.per_month_from,
     this.per_month_to,
+    this.operatorName,
+    this.feature,
+    this.businessEntity,
+    this.dateOfEstablishment,
+    this.landRightForm,
+    this.buildingRightForm,
+    this.siteArea,
+    this.floorArea,
+    this.construction,
+    this.capacity,
+    this.numRooms,
+    this.residenceForm,
+    this.facType,
+    this.occupancyCondition,
+    this.roomFloor,
+    this.livingRoomFacilities,
+    this.equipment,
+    this.website,
   );
 
   NursingModel.fromJson(Map<String , dynamic> json) :
@@ -76,6 +113,25 @@ class NursingModel {
     moving_in_from = json['moving_in_from'],
     moving_in_to = json['moving_in_to'],
     per_month_from = json['per_month_from'],
-    per_month_to = json['per_month_to'];
+    per_month_to = json['per_month_to'],
+    operatorName = json['operator'],
+    feature = json['feature'],
+
+    businessEntity = json['business_entity'],
+    dateOfEstablishment = json['date_of_establishment'],
+    landRightForm = json['land_right_form'],
+    buildingRightForm = json['building_right_form'],
+    siteArea = json['site_area'],
+    floorArea = json['floor_area'],
+    construction = json['construction'],
+    capacity = json['capacity'],
+    numRooms = json['num_rooms'],
+    residenceForm = json['residence_form'],
+    facType = json['fac_type'],
+    occupancyCondition = json['occupancy_condition'],
+    roomFloor = json['room_floor'],
+    livingRoomFacilities = json['living_room_facilities'],
+    equipment = json['equipment'],
+    website = json['website'];
       
 }

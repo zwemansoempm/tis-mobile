@@ -29,12 +29,6 @@ class _NusingDetailState extends State<NusingDetail> {
   var stream;var stream1;
 
   List<int> _visibleId = List();
-  
-    // void showToast() {
-    //   setState(() {
-    //     _isVisible = !_isVisible;
-    //   });
-    // }
 
   @override
   void initState() {
@@ -590,7 +584,7 @@ class _NusingDetailState extends State<NusingDetail> {
               onTap: (){
                 setState(() {
                   _visibleId.contains(payment.id) ? 
-                    _visibleId.remove(payment.id) : _visibleId.add(payment.id);
+                  _visibleId.remove(payment.id) : _visibleId.add(payment.id);
                 });
               },
               child:Container(
@@ -896,7 +890,7 @@ class _NusingDetailState extends State<NusingDetail> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(name),
+          Text(name ,style: TextStyle(fontSize: 15),),
           SizedBox(
             height: 20.0,
             width: 30.0,

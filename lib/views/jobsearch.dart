@@ -1072,31 +1072,34 @@ class _JobSearchState extends State<JobSearch> {
             Icon(Icons.arrow_drop_down, size: 30,),
                   
             Expanded(
-                                child: DropdownButton<String>(
-                      
-                itemHeight: 50,
-                dropdownColor: Colors.grey[100],
-                value: dropdownValue,
-                icon: Icon(Icons.arrow_drop_down),
-                iconSize: 0,
-                elevation: 16,
-                style: TextStyle(color: Colors.black, fontSize: 18),
-                underline: Container(
-                  height: 0,
-                ),
-                onChanged: (String data) {
-                  setState(() {
-                    holder = data;
-                    dropdownValue = data;
-                  });
-                },
-                items: items.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                child: ButtonTheme(
+                  alignedDropdown: true,
+                  child: DropdownButton<String>(
+                        
+                  itemHeight: 50,
+                  dropdownColor: Colors.grey[100],
+                  value: dropdownValue,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 0,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  underline: Container(
+                    height: 0,
+                  ),
+                  onChanged: (String data) {
+                    setState(() {
+                      holder = data;
+                      dropdownValue = data;
+                    });
+                  },
+                  items: items.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
               ),
+                ),
             ),
 
             Column(
@@ -1145,8 +1148,10 @@ class _JobSearchState extends State<JobSearch> {
             // Icon(Icons.arrow_drop_down, size: 30,),
                   
             Expanded(
-                                child: DropdownButton<String>(
-                      
+                child: ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton<String>(
+                    
                 itemHeight: 50,
                 dropdownColor: Colors.grey[100],
                 value: dropdownValue1,
@@ -1170,6 +1175,7 @@ class _JobSearchState extends State<JobSearch> {
                   );
                 }).toList(),
               ),
+                                ),
             ),
 
             Column(

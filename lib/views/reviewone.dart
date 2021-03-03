@@ -542,32 +542,35 @@ class _ReviewPostState extends State<ReviewPost> {
               // Icon(Icons.arrow_drop_down, size: 30,),
 
               Expanded(
-                child: DropdownButton<String>(
-                  itemHeight: 50,
-                  dropdownColor: Colors.grey[100],
-                  value: dropdownValue,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 0,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                  underline: Container(
-                    height: 0,
+                child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton<String>(
+                    itemHeight: 50,
+                    dropdownColor: Colors.grey[100],
+                    value: dropdownValue,
+                    icon: Icon(Icons.arrow_drop_down),
+                    iconSize: 0,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    underline: Container(
+                      height: 0,
+                    ),
+                    onChanged: (String data) {
+                      setState(() {
+                        holder = data;
+                        dropdownValue = data;
+                      });
+                    },
+                    items: items.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(value),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  onChanged: (String data) {
-                    setState(() {
-                      holder = data;
-                      dropdownValue = data;
-                    });
-                  },
-                  items: items.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(value),
-                      ),
-                    );
-                  }).toList(),
                 ),
               ),
 

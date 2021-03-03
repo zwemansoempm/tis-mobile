@@ -256,39 +256,42 @@ class _NusingSearchState extends State<NusingSearch> {
                             return Container(
                               //width: 320.0,
                               child: DropdownButtonHideUnderline(
-                                child: new DropdownButton<String>(
-                                  //isDense: true,
-                                  isExpanded: true,
-                                  hint:  Row(
-                                    children: [
-                                      Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                      Text("市区町村"),
-                                    ],
+                                child: ButtonTheme(
+                                   alignedDropdown: true,
+                                    child: new DropdownButton<String>(
+                                    //isDense: true,
+                                    isExpanded: true,
+                                    hint:  Row(
+                                      children: [
+                                        Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                        Text("市区町村"),
+                                      ],
+                                    ),
+                                    value: _city,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        _township = null;
+                                          getTspBloc.drainStream();
+                                          stream1=getTspBloc..getTownship(newValue);
+                                          checkstream=1;
+                                        _city = newValue;
+                                      });
+                                    },
+                                    
+                                    items: cityList.map((CityModel cityModel) =>
+                                        DropdownMenuItem(
+                                          value: cityModel.id.toString(),
+                                          child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
+                                            : Row(
+                                              children: [
+                                                Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                                Text("市区町村"),
+                                              ],
+                                            ),
+                                        )
+                                        )
+                                      .toList(),
                                   ),
-                                  value: _city,
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      _township = null;
-                                        getTspBloc.drainStream();
-                                        stream1=getTspBloc..getTownship(newValue);
-                                        checkstream=1;
-                                      _city = newValue;
-                                    });
-                                  },
-                                  
-                                  items: cityList.map((CityModel cityModel) =>
-                                      DropdownMenuItem(
-                                        value: cityModel.id.toString(),
-                                        child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
-                                          : Row(
-                                            children: [
-                                              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                              Text("市区町村"),
-                                            ],
-                                          ),
-                                      )
-                                      )
-                                    .toList(),
                                 ),
                               ));
                           } else {
@@ -352,33 +355,36 @@ class _NusingSearchState extends State<NusingSearch> {
                             });
                             return Container(
                               child: DropdownButtonHideUnderline(
-                                child: new DropdownButton<String>(
-                                  //isDense: true,
-                                  isExpanded: true,
-                                  hint: Row(
-                                    children: [
-                                      Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                      Text("市区町村"),
-                                    ],
-                                  ),
-                                  value: _township,
-                                  onChanged: (String newValue) {
-                                    setState(() => _township = newValue);
-                                  },
-                                  items: townshipList.map((TownshipModel tspModel) =>
-                                      DropdownMenuItem(
-                                        value: tspModel.id.toString(),
-                                        child: tspModel.id != -1 ? Text("  "+tspModel.township_name) 
-                                          : Row(
-                                            children: [
-                                              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                              Text("市区町村"),
-                                            ],
-                                          ),
+                                child: ButtonTheme(
+                                    alignedDropdown: true,
+                                    child: new DropdownButton<String>(
+                                    //isDense: true,
+                                    isExpanded: true,
+                                    hint: Row(
+                                      children: [
+                                        Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                        Text("市区町村"),
+                                      ],
+                                    ),
+                                    value: _township,
+                                    onChanged: (String newValue) {
+                                      setState(() => _township = newValue);
+                                    },
+                                    items: townshipList.map((TownshipModel tspModel) =>
+                                        DropdownMenuItem(
+                                          value: tspModel.id.toString(),
+                                          child: tspModel.id != -1 ? Text("  "+tspModel.township_name) 
+                                            : Row(
+                                              children: [
+                                                Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                                Text("市区町村"),
+                                              ],
+                                            ),
+                                        )
                                       )
-                                    )
-                                    .toList(),
-                                  
+                                      .toList(),
+                                    
+                                  ),
                                 ),
                             ));
                           } else {
@@ -417,34 +423,37 @@ class _NusingSearchState extends State<NusingSearch> {
                           color: Colors.white,
                           border: Border.all(color: Colors.grey[400])),
                           child: DropdownButtonHideUnderline(
-                            child: new DropdownButton<String>(
-                              //isDense: true,
-                              isExpanded: true,
-                              hint:  Row(
-                                children: [
-                                  Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                  Text("入居一時金"),
-                                ],
-                              ),
-                              value: _movingIn,
-                              onChanged: (String newValue) {
-                                setState(() => _movingIn = newValue);
-                              },
-                              items: movingInList.keys.map((String key) => key == "入居一時金"? 
-                                DropdownMenuItem(
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                      Text(key),
-                                    ],
-                                  ),
-                                  value: movingInList[key],
-                                ) :
-                                DropdownMenuItem(
-                                  child: Text("  "+key),
-                                  value: movingInList[key],
+                            child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: new DropdownButton<String>(
+                                //isDense: true,
+                                isExpanded: true,
+                                hint:  Row(
+                                  children: [
+                                    Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                    Text("入居一時金"),
+                                  ],
                                 ),
-                              ).toList(),
+                                value: _movingIn,
+                                onChanged: (String newValue) {
+                                  setState(() => _movingIn = newValue);
+                                },
+                                items: movingInList.keys.map((String key) => key == "入居一時金"? 
+                                  DropdownMenuItem(
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                        Text(key),
+                                      ],
+                                    ),
+                                    value: movingInList[key],
+                                  ) :
+                                  DropdownMenuItem(
+                                    child: Text("  "+key),
+                                    value: movingInList[key],
+                                  ),
+                                ).toList(),
+                              ),
                             ),
                           )
               
@@ -461,34 +470,37 @@ class _NusingSearchState extends State<NusingSearch> {
                           color: Colors.white,
                           border: Border.all(color: Colors.grey[400])),
                           child: DropdownButtonHideUnderline(
-                            child: new DropdownButton<String>(
-                              //isDense: true,
-                              isExpanded: true,
-                              hint:  Row(
-                                children: [
-                                  Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                  Text("月額利用料"),
-                                ],
-                              ),
-                              value: _perMonth,
-                              onChanged: (String newValue) {
-                                setState(() => _perMonth = newValue);
-                              },
-                              items: perMonthList.keys.map((String key) => key == "月額利用料"? 
-                                DropdownMenuItem(
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                      Text(key),
-                                    ],
-                                  ),
-                                  value: perMonthList[key],
-                                ) :
-                                DropdownMenuItem(
-                                  child: Text("  "+key),
-                                  value: perMonthList[key],
+                            child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: new DropdownButton<String>(
+                                //isDense: true,
+                                isExpanded: true,
+                                hint:  Row(
+                                  children: [
+                                    Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                    Text("月額利用料"),
+                                  ],
                                 ),
-                              ).toList(),
+                                value: _perMonth,
+                                onChanged: (String newValue) {
+                                  setState(() => _perMonth = newValue);
+                                },
+                                items: perMonthList.keys.map((String key) => key == "月額利用料"? 
+                                  DropdownMenuItem(
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                        Text(key),
+                                      ],
+                                    ),
+                                    value: perMonthList[key],
+                                  ) :
+                                  DropdownMenuItem(
+                                    child: Text("  "+key),
+                                    value: perMonthList[key],
+                                  ),
+                                ).toList(),
+                              ),
                             ),
                           )
               
@@ -1323,17 +1335,20 @@ class _NusingSearchState extends State<NusingSearch> {
 
   Widget _dropDown(String hintText){
     return  DropdownButtonHideUnderline(
-      child: new DropdownButton<String>(
-        //isDense: true,
-        isExpanded: true,
-        hint:  Row(
-          children: [
-            Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-            Text(hintText),
-          ],
+      child: ButtonTheme(
+          alignedDropdown: true,
+          child: new DropdownButton<String>(
+          //isDense: true,
+          isExpanded: true,
+          hint:  Row(
+            children: [
+              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+              Text(hintText),
+            ],
+          ),
+          onChanged: (String newValue) {},
+          items: [],
         ),
-        onChanged: (String newValue) {},
-        items: [],
       ),
     );
   }

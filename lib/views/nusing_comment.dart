@@ -145,25 +145,28 @@ class _NusingCommentState extends State<NusingComment> {
                           color: Colors.white,
                           border: Border.all(color: Colors.grey)),
                           child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              isExpanded: true,
-                            hint: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("選択してください。"),
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                child: Text("First Item"),
-                                value: 1,
+                            child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButton(
+                                isExpanded: true,
+                              hint: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("選択してください。"),
                               ),
-                              DropdownMenuItem(
-                                child: Text("Second Item"),
-                                value: 2,
-                              ),
-                            ],
-                            onChanged: (value) {
-                            }
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text("First Item"),
+                                  value: 1,
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("Second Item"),
+                                  value: 2,
+                                ),
+                              ],
+                              onChanged: (value) {
+                              }
                           ),
+                            ),
                         ),
                       ),
                       SizedBox(height: 10),

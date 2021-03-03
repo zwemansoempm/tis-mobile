@@ -268,52 +268,55 @@ class _SearchHospitalState extends State<SearchHospital> {
                                 snapshot.data.city.forEach((e) {
                                   cityList.add(e);
                               });
-                              return Container(
+                              return Container(                               
                                   child: DropdownButtonHideUnderline(
-                                child: new DropdownButton<String>(
-                                  //isDense: true,
-                                  isExpanded: true,
-                                  hint: Row(
-                                    children: [
-                                      Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                      Text("市区町村"),
-                                    ],
+                                child: ButtonTheme(                               
+                                    alignedDropdown: true,
+                                    child: new DropdownButton<String>(
+                                    //isDense: true,
+                                    isExpanded: true,
+                                    hint: Row(
+                                      children: [
+                                        Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                        Text("市区町村"),
+                                      ],
+                                    ),
+                                    value: _city,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        checkstream=1;
+                                        getTspBloc.drainStream();
+                                        // getDepBloc.drainStream();
+                                        _township = null;
+                                        _city = newValue;     
+                                        stream1=getTspBloc..getTownship(_city);
+                                        // stream2=getDepBloc..getDepartment(_city);
+                                     
+                                     
+                                      });
+                                    },
+                                    items: 
+                                     cityList.map((CityModel cityModel) =>
+                                        DropdownMenuItem(
+                                          value: cityModel.id.toString(),
+                                          child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
+                                            : Row(
+                                              children: [
+                                                Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                                Text("市区町村"),
+                                              ],
+                                            ),
+                                        )
+                                        )
+                                      .toList(),
+                                    // snapshot.data.city
+                                    //     .toList()
+                                    //     .map((CityModel cityModel) =>
+                                    //         DropdownMenuItem(
+                                    //             value: cityModel.id.toString(),
+                                    //             child: Text(cityModel.city_name)))
+                                    //     .toList(),
                                   ),
-                                  value: _city,
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      checkstream=1;
-                                      getTspBloc.drainStream();
-                                      // getDepBloc.drainStream();
-                                      _township = null;
-                                      _city = newValue;
-                                      stream1=getTspBloc..getTownship(_city);
-                                      // stream2=getDepBloc..getDepartment(_city);
-                                   
-                                   
-                                    });
-                                  },
-                                  items: 
-                                   cityList.map((CityModel cityModel) =>
-                                      DropdownMenuItem(
-                                        value: cityModel.id.toString(),
-                                        child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
-                                          : Row(
-                                            children: [
-                                              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                              Text("市区町村"),
-                                            ],
-                                          ),
-                                      )
-                                      )
-                                    .toList(),
-                                  // snapshot.data.city
-                                  //     .toList()
-                                  //     .map((CityModel cityModel) =>
-                                  //         DropdownMenuItem(
-                                  //             value: cityModel.id.toString(),
-                                  //             child: Text(cityModel.city_name)))
-                                  //     .toList(),
                                 ),
                               ));
                             } else {
@@ -425,19 +428,22 @@ class _SearchHospitalState extends State<SearchHospital> {
                                 children: <Widget>[
                                     Container(
                                     child: DropdownButtonHideUnderline(
-                                      child: DropdownButton(
-                                          isExpanded: true,
-                                          //value: _value,
-                                          hint: Row(
-                                            children: [
-                                              Text("  市から探す"),
-                                            ],
-                                          ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              //_value = value;
-                                            });
-                                          }),
+                                       child: ButtonTheme(
+                                            alignedDropdown: true,
+                                            child: DropdownButton(
+                                            isExpanded: true,
+                                            //value: _value,
+                                            hint: Row(
+                                              children: [
+                                                Text("  市から探す"),
+                                              ],
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                //_value = value;
+                                              });
+                                            }),
+                                       ),
                                     ),
                                   ),                   
                                   Center(
@@ -487,14 +493,17 @@ class _SearchHospitalState extends State<SearchHospital> {
                                     children: <Widget>[
                                      Container(
                                         child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                              isExpanded: true,
-                                              //value: _value,
-                                              hint: Row(
-                                                children: [
-                                                  Text("  特長から探す"),
-                                                ],
-                                              ),
+                                           child: ButtonTheme(
+                                                alignedDropdown: true,
+                                                child: DropdownButton(
+                                                isExpanded: true,
+                                                //value: _value,
+                                                hint: Row(
+                                                  children: [
+                                                    Text("  特長から探す"),
+                                                  ],
+                                                ),
+                                             ),
                                            ),
                                         ),
                                       ),                   
@@ -578,19 +587,22 @@ class _SearchHospitalState extends State<SearchHospital> {
                                   children: <Widget>[
                                       Container(
                                       child: DropdownButtonHideUnderline(
-                                        child: DropdownButton(
-                                            isExpanded: true,
-                                            //value: _value,
-                                            hint: Row(
-                                              children: [
-                                                Text("  特長から探す"),
-                                              ],
-                                            ),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                //_value = value;
-                                              });
-                                            }),
+                                         child: ButtonTheme(
+                                              alignedDropdown: true,
+                                              child: DropdownButton(
+                                              isExpanded: true,
+                                              //value: _value,
+                                              hint: Row(
+                                                children: [
+                                                  Text("  特長から探す"),
+                                                ],
+                                              ),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  //_value = value;
+                                                });
+                                              }),
+                                         ),
                                       ),
                                     ),                   
                                     Center(
@@ -1059,18 +1071,21 @@ class _SearchHospitalState extends State<SearchHospital> {
     
   Widget _dropDown(String hintText){
     return  DropdownButtonHideUnderline(
-      child: new DropdownButton<String>(
-        //isDense: true,
-        isExpanded: true,
-        hint:  Row(
-          children: [
-            Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-            Text(hintText),
-          ],
-        ),
-        onChanged: (String newValue) {},
-        items: [],
+        child: ButtonTheme(
+          alignedDropdown: true,
+          child: new DropdownButton<String>(
+          //isDense: true,
+          isExpanded: true,
+          hint:  Row(
+            children: [
+              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+              Text(hintText),
+            ],
+          ),
+          onChanged: (String newValue) {},
+          items: [],
       ),
+        ),
     );
   }
 

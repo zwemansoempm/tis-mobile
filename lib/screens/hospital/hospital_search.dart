@@ -98,33 +98,36 @@ class _HospitalSearchState extends State<HospitalSearch> {
                         color: Colors.white,
                         border: Border.all(color: Colors.grey[400])),
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          isExpanded: true,
-                        //value: _value,
-                        hint: Text("市から探す"),
-                        items: [
-                          DropdownMenuItem(
-                            child: Text("First Item"),
-                            value: 1,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Second Item"),
-                            value: 2,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Third Item"),
-                            value: 3
-                          ),
-                          DropdownMenuItem(
-                              child: Text("Fourth Item"),
-                              value: 4
-                          )
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            //_value = value;
-                          });
-                        }),
+                        child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton(
+                            isExpanded: true,
+                          //value: _value,
+                          hint: Text("市から探す"),
+                          items: [
+                            DropdownMenuItem(
+                              child: Text("First Item"),
+                              value: 1,
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Second Item"),
+                              value: 2,
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Third Item"),
+                              value: 3
+                            ),
+                            DropdownMenuItem(
+                                child: Text("Fourth Item"),
+                                value: 4
+                            )
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              //_value = value;
+                            });
+                          }),
+                        ),
                       ),
                     ),
                     Divider(color: Colors.grey[300],thickness: 1,),
@@ -786,38 +789,41 @@ class _HospitalSearchState extends State<HospitalSearch> {
               color: Colors.white,
               border: Border.all(color: Colors.grey[400])),
               child: DropdownButtonHideUnderline(
-                child: DropdownButton(
-                  isExpanded: true,
-                //value: _value,
-                hint: Row(
-                  children: [
-                    Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                    Text(hintText),
+                child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton(
+                    isExpanded: true,
+                  //value: _value,
+                  hint: Row(
+                    children: [
+                      Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                      Text(hintText),
+                    ],
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("First Item"),
+                      value: 1,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Second Item"),
+                      value: 2,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Third Item"),
+                      value: 3
+                    ),
+                    DropdownMenuItem(
+                        child: Text("Fourth Item"),
+                        value: 4
+                    )
                   ],
+                  onChanged: (value) {
+                    setState(() {
+                      //_value = value;
+                    });
+                  }),
                 ),
-                items: [
-                  DropdownMenuItem(
-                    child: Text("First Item"),
-                    value: 1,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Second Item"),
-                    value: 2,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("Third Item"),
-                    value: 3
-                  ),
-                  DropdownMenuItem(
-                      child: Text("Fourth Item"),
-                      value: 4
-                  )
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    //_value = value;
-                  });
-                }),
               ),
             );
   }

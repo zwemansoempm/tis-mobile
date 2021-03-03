@@ -697,70 +697,73 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
 
                                       return Container(
                                           //width: 320.0,
-                                          child: DropdownButtonHideUnderline(
-                                        child: new DropdownButton<String>(
+                                        child: DropdownButtonHideUnderline(
+                                           child: ButtonTheme(
+                                          alignedDropdown: true,
+                                          child: new DropdownButton<String>(
                                           //isDense: true,
                                           isExpanded: true,
                                           hint: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.arrow_drop_down_outlined,
-                                                size: 35.0,
-                                              ),
-                                              Text("選択してください。"),
-                                            ],
+                                              children: [
+                                                Icon(
+                                                  Icons.arrow_drop_down_outlined,
+                                                  size: 35.0,
+                                                ),
+                                                Text("選択してください。"),
+                                              ],
                                           ),
                                           value: _city,
                                           onChanged: (String newValue) {
-                                            _city='';
-                                            setState(() {
+                                              _city='';
+                                              setState(() {
 
-                                               if(checkSearch == 1){
-                                                  checkSearch =0;                                                    
-                                               }      
-                                              //  else{
-                                              //    checkSearch=1;
-                                              //  }                                             
-                                                // township_id='';
-                                                // _township = newValue;
+                                                 if(checkSearch == 1){
+                                                    checkSearch =0;                                                    
+                                                 }      
+                                                //  else{
+                                                //    checkSearch=1;
+                                                //  }                                             
+                                                  // township_id='';
+                                                  // _township = newValue;
 
-                                              // _township = null;
-                                                  // _township=newValue;
-                                              getTspBloc.drainStream();
-                                              stream1 = getTspBloc
-                                                ..getTownship(newValue);                                            
-                                              _city = newValue;
-                                              if(township_id!=''){
-                                                township_id='';
-                                              }                                             
-                                              // print('okiu');
-                                              // print(_city);
-                                              // print(township_id);
-                                              // print(_township);
-                                            });
+                                                // _township = null;
+                                                    // _township=newValue;
+                                                getTspBloc.drainStream();
+                                                stream1 = getTspBloc
+                                                  ..getTownship(newValue);                                            
+                                                _city = newValue;
+                                                if(township_id!=''){
+                                                  township_id='';
+                                                }                                             
+                                                // print('okiu');
+                                                // print(_city);
+                                                // print(township_id);
+                                                // print(_township);
+                                              });
                                           },
 
                                           items: cityList
-                                              .map((CityModel cityModel) =>
-                                                  DropdownMenuItem(
-                                                    value:
-                                                        cityModel.id.toString(),
-                                                    child: cityModel.id != -1
-                                                        ? Text(
-                                                            cityModel.city_name)
-                                                        : Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_drop_down_outlined,
-                                                                size: 35.0,
-                                                              ),
-                                                              Text("選択してください。"),
-                                                            ],
-                                                          ),
-                                                  ))
-                                              .toList(),
+                                                .map((CityModel cityModel) =>
+                                                    DropdownMenuItem(
+                                                      value:
+                                                          cityModel.id.toString(),
+                                                      child: cityModel.id != -1
+                                                          ? Text(
+                                                              cityModel.city_name)
+                                                          : Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .arrow_drop_down_outlined,
+                                                                  size: 35.0,
+                                                                ),
+                                                                Text("選択してください。"),
+                                                              ],
+                                                            ),
+                                                    ))
+                                                .toList(),
                                         ),
+                                           ),
                                       ));
                                     } else {
                                       return Stack(
@@ -836,14 +839,16 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                       });
                                       return Container(
                                           child: DropdownButtonHideUnderline(
-                                        child: new DropdownButton<String>(
+                                          child: ButtonTheme(
+                                          alignedDropdown: true,
+                                          child: new DropdownButton<String>(
                                           //isDense: true,
                                           isExpanded: true,
                                           hint: Row(
                                             children: [
                                               Icon(
-                                                Icons.arrow_drop_down_outlined,
-                                                size: 35.0,
+                                                  Icons.arrow_drop_down_outlined,
+                                                  size: 35.0,
                                               ),
                                               Text("選択してください。"),
                                             ],
@@ -851,36 +856,37 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                           value:township_id==''?_township:township_id,
                                           onChanged: (String newValue) {
                                             setState(
-                                                () {
-                                                  if(checkSearch==1){
-                                                      checkSearch=0;                                                    
-                                                  }                                               
-                                                  township_id='';
-                                                  _township = newValue;
-                                                  });
+                                                  () {
+                                                    if(checkSearch==1){
+                                                        checkSearch=0;                                                    
+                                                    }                                               
+                                                    township_id='';
+                                                    _township = newValue;
+                                                    });
                                           },
                                           items: townships
                                               .map((TownshipModel tspModel) =>
-                                                  DropdownMenuItem(
-                                                    value:
-                                                        tspModel.id.toString(),
-                                                    //child: Text(tspModel.township_name)
-                                                    child: tspModel.id != -1
-                                                        ? Text(tspModel
-                                                            .township_name)
-                                                        : Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_drop_down_outlined,
-                                                                size: 35.0,
-                                                              ),
-                                                              Text("選択してください。"),
-                                                            ],
-                                                          ),
-                                                  ))
+                                                    DropdownMenuItem(
+                                                      value:
+                                                          tspModel.id.toString(),
+                                                      //child: Text(tspModel.township_name)
+                                                      child: tspModel.id != -1
+                                                          ? Text(tspModel
+                                                              .township_name)
+                                                          : Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .arrow_drop_down_outlined,
+                                                                  size: 35.0,
+                                                                ),
+                                                                Text("選択してください。"),
+                                                              ],
+                                                            ),
+                                                    ))
                                               .toList(),
                                         ),
+                                                ),
                                       ));
                                     } else {
                                       return Stack(
@@ -939,21 +945,24 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
 
   Widget _dropDown(String hintText) {
     return DropdownButtonHideUnderline(
-      child: new DropdownButton<String>(
+        child: ButtonTheme(
+        alignedDropdown: true,
+        child: new DropdownButton<String>(
         //isDense: true,
         isExpanded: true,
         hint: Row(
-          children: [
-            Icon(
-              Icons.arrow_drop_down_outlined,
-              size: 35.0,
-            ),
-            Text(hintText),
-          ],
+            children: [
+              Icon(
+                Icons.arrow_drop_down_outlined,
+                size: 35.0,
+              ),
+              Text(hintText),
+            ],
         ),
         onChanged: (String newValue) {},
         items: [],
       ),
+          ),
     );
   }
 

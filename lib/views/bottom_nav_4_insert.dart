@@ -197,6 +197,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                 fillColor: Colors.grey,
                                 //labelText: 'Password',
                                 hintText: 'フリガナを入力してください。',
+                                hintStyle: TextStyle(fontSize: 15), 
                               ),
                             ),
                             data: Theme.of(context).copyWith(
@@ -301,6 +302,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                 fillColor: Colors.grey,
                                 //labelText: 'Password',
                                 hintText: '郵便番号を入力してください。',
+                                hintStyle: TextStyle(fontSize: 15), 
                               ),
                             ),
                             data: Theme.of(context).copyWith(
@@ -670,7 +672,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                         ConnectionState.waiting) {
                                       return Stack(
                                         children: <Widget>[
-                                          _dropDown("都道府県33"),
+                                          _dropDown("選択してください。"),
                                           Center(
                                             child: Opacity(
                                               opacity: 1.0,
@@ -705,7 +707,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                                 Icons.arrow_drop_down_outlined,
                                                 size: 35.0,
                                               ),
-                                              Text("都道府県"),
+                                              Text("選択してください。"),
                                             ],
                                           ),
                                           value: _city,
@@ -715,7 +717,10 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
 
                                                if(checkSearch == 1){
                                                   checkSearch =0;                                                    
-                                               }                                             
+                                               }      
+                                              //  else{
+                                              //    checkSearch=1;
+                                              //  }                                             
                                                 // township_id='';
                                                 // _township = newValue;
 
@@ -750,7 +755,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                                                     .arrow_drop_down_outlined,
                                                                 size: 35.0,
                                                               ),
-                                                              Text("市区町村"),
+                                                              Text("選択してください。"),
                                                             ],
                                                           ),
                                                   ))
@@ -760,7 +765,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     } else {
                                       return Stack(
                                         children: <Widget>[
-                                          _dropDown("都道府県222"),
+                                          _dropDown("選択してください。"),
                                           Center(
                                             child: Opacity(
                                               opacity: 1.0,
@@ -805,7 +810,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                             ConnectionState.waiting && checkstream == 1) {// 
                                       return Stack(
                                         children: <Widget>[
-                                          _dropDown("市区町村"),
+                                          _dropDown("選択してください。"),
                                           Center(
                                             child: Opacity(
                                               opacity: 1.0,
@@ -840,7 +845,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                                 Icons.arrow_drop_down_outlined,
                                                 size: 35.0,
                                               ),
-                                              Text("市区町村"),
+                                              Text("選択してください。"),
                                             ],
                                           ),
                                           value:township_id==''?_township:township_id,
@@ -870,7 +875,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                                                     .arrow_drop_down_outlined,
                                                                 size: 35.0,
                                                               ),
-                                                              Text("市区町村"),
+                                                              Text("選択してください。"),
                                                             ],
                                                           ),
                                                   ))
@@ -880,7 +885,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     } else {
                                       return Stack(
                                         children: <Widget>[
-                                          _dropDown("市区町村"),
+                                          _dropDown("選択してください。"),
                                           Center(
                                             child: Opacity(
                                               opacity: 1.0,

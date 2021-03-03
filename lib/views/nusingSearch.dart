@@ -978,9 +978,9 @@ class _NusingSearchState extends State<NusingSearch> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                searchDisplayData.length > 0 ? Container(
+                                Container(
                                   width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.only(bottom: 10),
+                                  margin: EdgeInsets.only(top: 10),
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.grey, width: 1.0),
                                   ),
@@ -989,10 +989,12 @@ class _NusingSearchState extends State<NusingSearch> {
                                     child: Column (
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                      Text(searchDisplayData.join(", ")) ,
+                                      searchDisplayData.length > 0 ? Text(searchDisplayData.join(", ")) : Container(),
+                                      snapshot.data.nursingList.length != null ?  
+                                        Text("${snapshot.data.nursingList.length}「件」検索されました。") : Container(),
                                     ],),
                                   ),
-                                ) : Container(),
+                                ),
                                 Card(
                                   color: Colors.grey[300],
                                   child:Padding(
@@ -1026,7 +1028,7 @@ class _NusingSearchState extends State<NusingSearch> {
                           children: [
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.only(bottom: 10),
+                              margin: EdgeInsets.only(top: 10),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey, width: 1.0),
                               ),
@@ -1037,7 +1039,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                   children: [
                                   searchDisplayData.length > 0 ? Text(searchDisplayData.join(", ")) : Container(),
                                   snapshot.data.nursingList.length != null ?  
-                                    Text("「介護施設 ${snapshot.data.nursingList.length} 件」") : Container(),
+                                    Text("${snapshot.data.nursingList.length}「件」検索されました。") : Container(),
                                 ],),
                               ),
                             ),

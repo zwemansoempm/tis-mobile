@@ -155,6 +155,7 @@ class _BottomNav4State extends State<JobWidget> {
                         child: Icon(
                           CustomApp.bell,
                           size: 30.0,
+                          color: Colors.white,
                         ),
                         padding: EdgeInsets.all(15.0),
                         shape: CircleBorder(),

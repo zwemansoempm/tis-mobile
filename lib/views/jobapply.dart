@@ -921,37 +921,40 @@ class _JobScreenState extends State<JobScreen> {
           color: Colors.grey[200],
           border: Border.all(color: Colors.grey[500])),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton(
-            isExpanded: true,
-            //value: _value,
-            hint: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(hintText),
+           child: ButtonTheme(
+              alignedDropdown: true,
+              child: DropdownButton(
+              isExpanded: true,
+              //value: _value,
+              hint: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(hintText),
+                  ),
+                ],
+              ),
+              items: [
+                   
+                DropdownMenuItem(
+                  child: Text("選択してください。1"),
+                  value: 2,
                 ),
+                DropdownMenuItem(
+                  child: Text("選択してください。2"),
+                  value: 3
+                ),
+                DropdownMenuItem(
+                    child: Text("選択してください。3"),
+                    value: 4
+                )
               ],
-            ),
-            items: [
-                 
-              DropdownMenuItem(
-                child: Text("選択してください。1"),
-                value: 2,
-              ),
-              DropdownMenuItem(
-                child: Text("選択してください。2"),
-                value: 3
-              ),
-              DropdownMenuItem(
-                  child: Text("選択してください。3"),
-                  value: 4
-              )
-            ],
-            onChanged: (value) {
-              setState(() {
-                //_value = value;
-              });
-            }),
+              onChanged: (value) {
+                setState(() {
+                  //_value = value;
+                });
+              }),
+           ),
       ),
     );
   }
@@ -1039,31 +1042,34 @@ class _JobScreenState extends State<JobScreen> {
             // Icon(Icons.arrow_drop_down, size: 30,),
                   
             Expanded(
-                                child: DropdownButton<String>(
-                      
-                itemHeight: 50,
-                dropdownColor: Colors.grey[100],
-                value: dropdownValue,
-                icon: Icon(Icons.arrow_drop_down),
-                iconSize: 0,
-                elevation: 16,
-                style: TextStyle(color: Colors.black, fontSize: 18),
-                underline: Container(
-                  height: 0,
-                ),
-                onChanged: (String data) {
-                  setState(() {
-                    holder = data;
-                    dropdownValue = data;
-                  });
-                },
-                items: items.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                child: ButtonTheme(
+                  alignedDropdown: true,
+                  child: DropdownButton<String>(
+                        
+                  itemHeight: 50,
+                  dropdownColor: Colors.grey[100],
+                  value: dropdownValue,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 0,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  underline: Container(
+                    height: 0,
+                  ),
+                  onChanged: (String data) {
+                    setState(() {
+                      holder = data;
+                      dropdownValue = data;
+                    });
+                  },
+                  items: items.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
               ),
+                ),
             ),
 
             Column(
@@ -1111,7 +1117,9 @@ class _JobScreenState extends State<JobScreen> {
             // Icon(Icons.arrow_drop_down, size: 30,),
                   
             Expanded(
-                                child: DropdownButton<String>(
+                child: ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton<String>(
                       
                 itemHeight: 50,
                 dropdownColor: Colors.grey[100],
@@ -1136,6 +1144,7 @@ class _JobScreenState extends State<JobScreen> {
                   );
                 }).toList(),
               ),
+                                ),
             ),
 
             Column(

@@ -252,24 +252,27 @@ class _NusingMailState extends State<NusingMail> {
                         color: Colors.white,
                         border: Border.all(color: Colors.grey)),
                         child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            isExpanded: true,
-                          hint: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("選択してください。"),
+                          child: ButtonTheme(
+                               alignedDropdown: true,
+                              child: DropdownButton(
+                              isExpanded: true,
+                            hint: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("選択してください。"),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                child: Text("First Item"),
+                                value: 1,
+                              ),
+                              DropdownMenuItem(
+                                child: Text("Second Item"),
+                                value: 2,
+                              ),
+                            ],
+                            onChanged: (value) {
+                            }),
                           ),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text("First Item"),
-                              value: 1,
-                            ),
-                            DropdownMenuItem(
-                              child: Text("Second Item"),
-                              value: 2,
-                            ),
-                          ],
-                          onChanged: (value) {
-                          }),
                         ),
                       ),
                       SizedBox(height: 10.0),
@@ -288,24 +291,27 @@ class _NusingMailState extends State<NusingMail> {
                         color: Colors.white,
                         border: Border.all()),
                         child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            isExpanded: true,
-                          hint: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("選択してください。"),
+                          child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton(
+                              isExpanded: true,
+                            hint: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("選択してください。"),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                child: Text("First Item"),
+                                value: 1,
+                              ),
+                              DropdownMenuItem(
+                                child: Text("Second Item"),
+                                value: 2,
+                              ),
+                            ],
+                            onChanged: (value) {
+                            }),
                           ),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text("First Item"),
-                              value: 1,
-                            ),
-                            DropdownMenuItem(
-                              child: Text("Second Item"),
-                              value: 2,
-                            ),
-                          ],
-                          onChanged: (value) {
-                          }),
                         ),
                       ),
                       SizedBox(height: 10.0),
@@ -420,24 +426,27 @@ class _NusingMailState extends State<NusingMail> {
                       color: Colors.white,
                       border: Border.all()),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        isExpanded: true,
-                      hint: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("選択してください。"),
+                      child: ButtonTheme(
+                           alignedDropdown: true,
+                          child: DropdownButton(
+                          isExpanded: true,
+                        hint: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("選択してください。"),
+                        ),
+                        items: [
+                          DropdownMenuItem(
+                            child: Text("First Item"),
+                            value: 1,
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Second Item"),
+                            value: 2,
+                          ),
+                        ],
+                        onChanged: (value) {
+                        }),
                       ),
-                      items: [
-                        DropdownMenuItem(
-                          child: Text("First Item"),
-                          value: 1,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Second Item"),
-                          value: 2,
-                        ),
-                      ],
-                      onChanged: (value) {
-                      }),
                     ),
                   ),
                 ),
@@ -510,24 +519,27 @@ class _NusingMailState extends State<NusingMail> {
                       color: Colors.white,
                       border: Border.all()),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        isExpanded: true,
-                      hint: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("選択してください"),
+                      child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                          isExpanded: true,
+                        hint: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("選択してください"),
+                        ),
+                        items: [
+                          DropdownMenuItem(
+                            child: Text("First Item"),
+                            value: 1,
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Second Item"),
+                            value: 2,
+                          ),
+                        ],
+                        onChanged: (value) {
+                        }),
                       ),
-                      items: [
-                        DropdownMenuItem(
-                          child: Text("First Item"),
-                          value: 1,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Second Item"),
-                          value: 2,
-                        ),
-                      ],
-                      onChanged: (value) {
-                      }),
                     ),
                   ),
                 ),
@@ -544,24 +556,27 @@ class _NusingMailState extends State<NusingMail> {
                       color: Colors.white,
                       border: Border.all()),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        isExpanded: true,
-                      hint: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("選択してください"),
+                      child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                          isExpanded: true,
+                        hint: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("選択してください"),
+                        ),
+                        items: [
+                          DropdownMenuItem(
+                            child: Text("First Item"),
+                            value: 1,
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Second Item"),
+                            value: 2,
+                          ),
+                        ],
+                        onChanged: (value) {
+                        }),
                       ),
-                      items: [
-                        DropdownMenuItem(
-                          child: Text("First Item"),
-                          value: 1,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Second Item"),
-                          value: 2,
-                        ),
-                      ],
-                      onChanged: (value) {
-                      }),
                     ),
                   ),
                 ),

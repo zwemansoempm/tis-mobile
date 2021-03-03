@@ -214,50 +214,53 @@ class _BottomNav4State extends State<JobWidget> {
                                 });
                                 return Container(
                                     //width: 320.0,
-                                    child: DropdownButtonHideUnderline(
-                                  child: new DropdownButton<String>(
+                                  child: DropdownButtonHideUnderline(
+                                     child: ButtonTheme(
+                                    alignedDropdown: true,
+                                    child: new DropdownButton<String>(
                                     //isDense: true,
                                     isExpanded: true,
                                     hint: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_drop_down_outlined,
-                                          size: 35.0,
-                                        ),
-                                        Text("市区町村"),
-                                      ],
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_drop_down_outlined,
+                                            size: 35.0,
+                                          ),
+                                          Text("市区町村"),
+                                        ],
                                     ),
                                     value: _city,
                                     onChanged: (String newValue) {
-                                      setState(() {
-                                        _township = null;
-                                        getTspBloc.drainStream();
-                                        stream1 = getTspBloc
-                                          ..getTownship(newValue);
-                                        checkstream = 1;
-                                        _city = newValue;
-                                      });
+                                        setState(() {
+                                          _township = null;
+                                          getTspBloc.drainStream();
+                                          stream1 = getTspBloc
+                                            ..getTownship(newValue);
+                                          checkstream = 1;
+                                          _city = newValue;
+                                        });
                                     },
 
                                     items: cityList
-                                        .map((CityModel cityModel) =>
-                                            DropdownMenuItem(
-                                              value: cityModel.id.toString(),
-                                              child: cityModel.id != -1
-                                                  ? Text(cityModel.city_name)
-                                                  : Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons
-                                                              .arrow_drop_down_outlined,
-                                                          size: 35.0,
-                                                        ),
-                                                        Text("市区町村"),
-                                                      ],
-                                                    ),
-                                            ))
-                                        .toList(),
+                                          .map((CityModel cityModel) =>
+                                              DropdownMenuItem(
+                                                value: cityModel.id.toString(),
+                                                child: cityModel.id != -1
+                                                    ? Text(cityModel.city_name)
+                                                    : Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .arrow_drop_down_outlined,
+                                                            size: 35.0,
+                                                          ),
+                                                          Text("市区町村"),
+                                                        ],
+                                                      ),
+                                              ))
+                                          .toList(),
                                   ),
+                                     ),
                                 ));
                               } else {
                                 return Stack(
@@ -456,19 +459,22 @@ class _BottomNav4State extends State<JobWidget> {
                                 children: <Widget>[
                                   Container(
                                     child: DropdownButtonHideUnderline(
-                                      child: DropdownButton(
-                                          isExpanded: true,
-                                          //value: _value,
-                                          hint: Row(
-                                            children: [
-                                              Text("  市から探す"),
-                                            ],
-                                          ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              //_value = value;
-                                            });
-                                          }),
+                                      child: ButtonTheme(
+                                            alignedDropdown: true,
+                                            child: DropdownButton(
+                                            isExpanded: true,
+                                            //value: _value,
+                                            hint: Row(
+                                              children: [
+                                                Text("  市から探す"),
+                                              ],
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                //_value = value;
+                                              });
+                                            }),
+                                      ),
                                     ),
                                   ),
                                   Center(
@@ -1122,20 +1128,23 @@ class _BottomNav4State extends State<JobWidget> {
 
   Widget _dropDown(String hintText) {
     return DropdownButtonHideUnderline(
-      child: new DropdownButton<String>(
-        //isDense: true,
-        isExpanded: true,
-        hint: Row(
-          children: [
-            Icon(
-              Icons.arrow_drop_down_outlined,
-              size: 35.0,
-            ),
-            Text(hintText),
-          ],
+      child: ButtonTheme(
+           alignedDropdown: true,
+          child: new DropdownButton<String>(
+          //isDense: true,
+          isExpanded: true,
+          hint: Row(
+            children: [
+              Icon(
+                Icons.arrow_drop_down_outlined,
+                size: 35.0,
+              ),
+              Text(hintText),
+            ],
+          ),
+          onChanged: (String newValue) {},
+          items: [],
         ),
-        onChanged: (String newValue) {},
-        items: [],
       ),
     );
   }

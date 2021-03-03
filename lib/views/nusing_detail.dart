@@ -391,7 +391,7 @@ class _NusingDetailState extends State<NusingDetail> {
               Icon(Icons.clear,color: Colors.red),
               Text(" 受入れ不可"),
               SizedBox(width: 12.0),
-              Icon(Icons.adjust_outlined, color: Colors.blue[600],),
+              Icon(Icons.circle, color: Colors.blue[600],),
               Text(" 応相談"),
             ],
           ),
@@ -802,7 +802,7 @@ class _NusingDetailState extends State<NusingDetail> {
         children: [
           acceptType == 'accept' ? Icon(Icons.check,color: Colors.green) : Container(),
           acceptType == 'unaccept' ? Icon(Icons.clear,color: Colors.red) : Container(),
-          acceptType == 'negotiate' ? Icon(Icons.adjust_outlined, color: Colors.blue[600],) : Container(),
+          acceptType == 'negotiate' ? Icon(Icons.circle,color: Colors.blue[600],) : Container(),
           SizedBox(width: 10),
           Text(acceptance.name),
       ],) 

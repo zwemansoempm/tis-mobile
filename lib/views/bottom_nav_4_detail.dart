@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tis/model/job.dart';
+import 'package:tis/model/job_detail.dart';
 import 'package:tis/views/bottom_nav_4_insert.dart';
 import 'package:tis/views/top.dart';
 import 'package:tis/bloc/get_job_detail_bloc.dart';
@@ -63,7 +63,7 @@ class _BottomNav4DetailState extends State<JobDetailWidget> {
     );
   }
 
-  Widget _getJobDetailResult(JobModel jobObj) {
+  Widget _getJobDetailResult(JobDetailModel jobObj) {
     //print(jobObj.j);
     //return Container();
     return Container(

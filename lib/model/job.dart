@@ -21,6 +21,9 @@ class JobModel {
   final int user_id;
   final int recordstatus;
   final String city_name;
+  final String cusname;
+  final String township_name;
+  final String jobid;
 
   JobModel(
       this.id,
@@ -44,10 +47,13 @@ class JobModel {
       this.jobnum,
       this.user_id,
       this.recordstatus,
-      this.city_name);
+      this.city_name,
+      this.cusname,
+      this.township_name,
+      this.jobid);
 
   JobModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['jobid'],
         title = json['title'],
         customer_id = json['customer_id'],
         profile_id = json['profile_id'],
@@ -68,5 +74,8 @@ class JobModel {
         jobnum = json['jobnum'],
         user_id = json['user_id'],
         recordstatus = json['recordstatus'],
-        city_name = json['city_name'];
+        city_name = json['city_name'],
+        cusname = json['cusname'],
+        township_name = json['township_name'],
+        jobid = json['jobid'];
 }

@@ -28,6 +28,7 @@ import 'package:tis/model/visit_nurse_response.dart';
 import 'package:tis/model/job_response.dart';
 import 'package:tis/model/postal_list_response.dart';
 import 'package:tis/model/city_occ_response.dart';
+import 'package:tis/model/job_detail_response.dart';
 
 class NewsRepository {
   static String url = "test.t-i-s.jp";
@@ -478,11 +479,11 @@ class NewsRepository {
       // var getJobUrl =
       //     "$mainUrl/getjobsearch/null?id=-1&townshipID[]=0&occupationID[]=0&empstatus[]=0";
 
-      print(uri.toString());
+      //print(uri.toString());
       Response response = await _dio.getUri(uri);
 
       if (response.statusCode == HttpStatus.ok) {
-        //print(response.statusCode);
+        print(response.data);
         return JobResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');
@@ -585,7 +586,7 @@ class NewsRepository {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-       print("Exception occured: $error stackTrace: $stacktrace");
+      print("Exception occured: $error stackTrace: $stacktrace");
       return PostalListResponse.withError("$error");
     }
   }
@@ -625,6 +626,26 @@ class NewsRepository {
       // throw SocketException('No Internet');
       print("Exception occured: $error stackTrace: $stacktrace");
       return HospitalResponse.withError("$error");
+    }
+  }
+
+  Future<JobDetailResponse> getJobDetail(String _jobId) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var getUrl = "$mainUrl/job_details/" + _jobId;
+
+      Response response = await _dio.get(getUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        //return null;
+        print(response.data);
+        return JobDetailResponse.fromJson(response.data[0]);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return JobDetailResponse.withError("$error");
     }
   }
 }

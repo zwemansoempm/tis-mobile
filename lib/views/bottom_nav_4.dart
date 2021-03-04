@@ -1209,7 +1209,8 @@ class _BottomNav4State extends State<JobWidget> {
 
       list.add(new Container(
         //margin: EdgeInsets.all(8),
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        padding: EdgeInsets.only(left: 5),
+        // padding: EdgeInsets.symmetric(horizontal: 5.0),
         // decoration: BoxDecoration(
         //     borderRadius: BorderRadius.circular(5.0),
         //     color: Colors.white,

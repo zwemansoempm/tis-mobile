@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
@@ -531,8 +532,24 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       child: Column(children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(left: 3),
-                          child: Text(
-                            '「プライバシーポリシー」をご確認いただき、よろしければ「同意する」にチェックをして、内容を送信してください。',
+                          child:  new RichText(
+                          text: new TextSpan(
+                            children: [               
+                              new TextSpan(
+                                text: 'プライバシーポリシー」',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                      color: Colors.blue),
+                                recognizer: new TapGestureRecognizer()
+                                  ..onTap = () { launch('https://test.t-i-s.jp/privacyPolicy');
+                                },
+                              ),
+                              new TextSpan(
+                                text: 'をご確認いただき、よろしければ「同意する」にチェックをして、内容を送信してください。',
+                                style: new TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),                             
                           ),
                         ),
 
@@ -560,41 +577,46 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       ),
                     )),
                     SizedBox(height: 10.0),
-                    Container(
-                      padding: EdgeInsets.only(left: 80.0),
-                      child: SizedBox(
-                        width: 160,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          // padding: EdgeInsets.only(left: 80.0),
+                          child: SizedBox(
+                            width: 160,
 
-                        //height: 100.0,
-                        child: RaisedButton(
-                          onPressed: () {
-                            JobConfirmModel user = new JobConfirmModel(
-                                nameController.text,
-                                furiganaController.text,
-                                birthdayController.text,
-                                genderController.text,
-                                "zipCode",
-                                "state",
-                                "city",
-                                addressController.text,
-                                phoneNoController.text,
-                                mailController.text,
-                                wishController.text);
-                            var route = new MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  new JobConfirmWidget(
-                                      value: widget.value,
-                                      jobConfirmModel: user),
-                            );
-                            Navigator.of(context).push(route);
-                          },
-                          color: Colors.green[600],
-                          textColor: Colors.white,
-                          child: Center(
-                            child: Text("確認画面へ進む"),
+                            //height: 100.0,
+                            child: RaisedButton(
+                              onPressed: () {
+                                JobConfirmModel user = new JobConfirmModel(
+                                    nameController.text,
+                                    furiganaController.text,
+                                    birthdayController.text,
+                                    genderController.text,
+                                    "zipCode",
+                                    "state",
+                                    "city",
+                                    addressController.text,
+                                    phoneNoController.text,
+                                    mailController.text,
+                                    wishController.text);
+                                var route = new MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      new JobConfirmWidget(
+                                          value: widget.value,
+                                          jobConfirmModel: user),
+                                );
+                                Navigator.of(context).push(route);
+                              },
+                              color: Colors.green[600],
+                              textColor: Colors.white,
+                              child: Center(
+                                child: Text("確認画面へ進む"),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     )
                   ],
                 ),

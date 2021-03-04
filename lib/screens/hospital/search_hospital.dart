@@ -70,7 +70,7 @@ class _SearchHospitalState extends State<SearchHospital> {
     getCityBloc..drainStream();
     getFeaturesBloc..drainStream();
     getLinkNewsBloc.drainStream();
-    
+    getHospitalBloc..drainStream();    
   }
 
   Future<Map<String, bool>> _checkBoxList() async {
@@ -227,13 +227,12 @@ class _SearchHospitalState extends State<SearchHospital> {
                   border: Border.all(color: Colors.grey[300]),
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //City
-
                     Container(
                       margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      padding: EdgeInsets.only(left: 5),
+                      // padding: EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           color: Colors.white,
@@ -245,6 +244,12 @@ class _SearchHospitalState extends State<SearchHospital> {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return Stack(
                                   children: <Widget>[
+                                    // Row(
+                                    //   children: [
+                                    //     Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                    //     Text("  市区町村"),
+                                    //   ],
+                                    // ),
                                     _dropDown("市区町村"),                            
                                     Center(
                                       child: Opacity(
@@ -275,7 +280,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                     child: new DropdownButton<String>(
                                     //isDense: true,
                                     isExpanded: true,
-                                    hint: Row(
+                                    hint:  Row(
                                       children: [
                                         Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
                                         Text("市区町村"),
@@ -322,7 +327,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                             } else {
                               return Stack(
                               children: <Widget>[
-                                _dropDown("市区町村"),                            
+                                _dropDown("市区町村"),                         
                                 Center(
                                   child: Opacity(
                                     opacity:1.0, 
@@ -339,7 +344,7 @@ class _SearchHospitalState extends State<SearchHospital> {
 
                     Container(
                       margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                       padding: EdgeInsets.only(left: 5),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           color: Colors.white,
@@ -351,7 +356,9 @@ class _SearchHospitalState extends State<SearchHospital> {
                             if (snapshot.connectionState == ConnectionState.waiting && checkstream==1) {
                                 return Stack(
                                   children: <Widget>[
-                                    _dropDown("  市から探す"),                            
+                                   Text(
+                                        "市から探す",                                      
+                                    ),                  
                                     Center(
                                       child: Opacity(
                                         opacity:1.0, 
@@ -382,7 +389,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                       //   size: 35.0,
                                       // ),
                                       Text(
-                                        "  市から探す",
+                                        "    市から探す",
                                         // style: TextStyle(color: Colors.grey[600]),
                                       ),
                                       SizedBox(width:MediaQuery.of(context).size.width/1.76,),
@@ -435,7 +442,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                             //value: _value,
                                             hint: Row(
                                               children: [
-                                                Text("  市から探す"),
+                                                Text("市から探す"),
                                               ],
                                             ),
                                             onChanged: (value) {
@@ -479,7 +486,7 @@ class _SearchHospitalState extends State<SearchHospital> {
 
                     Container(
                       margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      padding: EdgeInsets.only(left: 5),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           color: Colors.white,
@@ -500,7 +507,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                                 //value: _value,
                                                 hint: Row(
                                                   children: [
-                                                    Text("  特長から探す"),
+                                                    Text("特長から探す"),
                                                   ],
                                                 ),
                                              ),
@@ -541,7 +548,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                       //   size: 35.0,
                                       // ),
                                       Text(
-                                        "  特長から探す",
+                                        "特長から探す",
                                         // style: TextStyle(color: Colors.grey[600]),
                                       ),
                                       SizedBox(width:MediaQuery.of(context).size.width/1.76,),
@@ -594,7 +601,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                               //value: _value,
                                               hint: Row(
                                                 children: [
-                                                  Text("  特長から探す"),
+                                                  Text("特長から探す"),
                                                 ],
                                               ),
                                               onChanged: (value) {
@@ -1150,7 +1157,9 @@ class _SearchHospitalState extends State<SearchHospital> {
 
       list.add(new Container(
         //margin: EdgeInsets.all(8),
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        padding: EdgeInsets.only(left: 5),
+        // padding: EdgeInsets.symmetric(horizontal: 5.0),
+     
         // decoration: BoxDecoration(
         //     borderRadius: BorderRadius.circular(5.0),
         //     color: Colors.white,

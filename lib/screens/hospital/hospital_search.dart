@@ -92,7 +92,8 @@ class _HospitalSearchState extends State<HospitalSearch> {
 
                     Container(
                       margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                       padding: EdgeInsets.only(left: 5),
+                      // padding: EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.white,

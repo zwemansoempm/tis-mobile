@@ -74,11 +74,13 @@ class _BottomNav4State extends State<JobWidget> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: Text("求人検索",
-                  style: TextStyle(
+                  child: Text(
+                "求人検索",
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,
-                ),)),
+                ),
+              )),
             ),
             // Row(children: [
             //   SizedBox(width: 5.0),
@@ -87,7 +89,7 @@ class _BottomNav4State extends State<JobWidget> {
             //   Text("求人検索"),//地図検索
             // ]),
             DottedLine(
-              dashColor:Color(int.parse("0xff828282")),//Colors.blue,
+              dashColor: Color(int.parse("0xff828282")), //Colors.blue,
             ),
             SizedBox(height: 20),
             Stack(
@@ -97,7 +99,9 @@ class _BottomNav4State extends State<JobWidget> {
                 Row(
                   children: [
                     Container(
-                      decoration: BoxDecoration(color: Color(int.parse("0xff828282")),),
+                      decoration: BoxDecoration(
+                        color: Color(int.parse("0xff828282")),
+                      ),
                       height: 36.0,
                       width: 10.0,
                     ),
@@ -214,53 +218,50 @@ class _BottomNav4State extends State<JobWidget> {
                                 });
                                 return Container(
                                     //width: 320.0,
-                                  child: DropdownButtonHideUnderline(
-                                     child: ButtonTheme(
-                                    alignedDropdown: true,
-                                    child: new DropdownButton<String>(
+                                    child: DropdownButtonHideUnderline(
+                                  child: new DropdownButton<String>(
                                     //isDense: true,
                                     isExpanded: true,
                                     hint: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.arrow_drop_down_outlined,
-                                            size: 35.0,
-                                          ),
-                                          Text("市区町村"),
-                                        ],
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_drop_down_outlined,
+                                          size: 35.0,
+                                        ),
+                                        Text("市区町村"),
+                                      ],
                                     ),
                                     value: _city,
                                     onChanged: (String newValue) {
-                                        setState(() {
-                                          _township = null;
-                                          getTspBloc.drainStream();
-                                          stream1 = getTspBloc
-                                            ..getTownship(newValue);
-                                          checkstream = 1;
-                                          _city = newValue;
-                                        });
+                                      setState(() {
+                                        _township = null;
+                                        getTspBloc.drainStream();
+                                        stream1 = getTspBloc
+                                          ..getTownship(newValue);
+                                        checkstream = 1;
+                                        _city = newValue;
+                                      });
                                     },
 
                                     items: cityList
-                                          .map((CityModel cityModel) =>
-                                              DropdownMenuItem(
-                                                value: cityModel.id.toString(),
-                                                child: cityModel.id != -1
-                                                    ? Text(cityModel.city_name)
-                                                    : Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .arrow_drop_down_outlined,
-                                                            size: 35.0,
-                                                          ),
-                                                          Text("市区町村"),
-                                                        ],
-                                                      ),
-                                              ))
-                                          .toList(),
+                                        .map((CityModel cityModel) =>
+                                            DropdownMenuItem(
+                                              value: cityModel.id.toString(),
+                                              child: cityModel.id != -1
+                                                  ? Text(cityModel.city_name)
+                                                  : Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_drop_down_outlined,
+                                                          size: 35.0,
+                                                        ),
+                                                        Text("市区町村"),
+                                                      ],
+                                                    ),
+                                            ))
+                                        .toList(),
                                   ),
-                                     ),
                                 ));
                               } else {
                                 return Stack(
@@ -459,22 +460,19 @@ class _BottomNav4State extends State<JobWidget> {
                                 children: <Widget>[
                                   Container(
                                     child: DropdownButtonHideUnderline(
-                                      child: ButtonTheme(
-                                            alignedDropdown: true,
-                                            child: DropdownButton(
-                                            isExpanded: true,
-                                            //value: _value,
-                                            hint: Row(
-                                              children: [
-                                                Text("  市から探す"),
-                                              ],
-                                            ),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                //_value = value;
-                                              });
-                                            }),
-                                      ),
+                                      child: DropdownButton(
+                                          isExpanded: true,
+                                          //value: _value,
+                                          hint: Row(
+                                            children: [
+                                              Text("  市から探す"),
+                                            ],
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              //_value = value;
+                                            });
+                                          }),
                                     ),
                                   ),
                                   Center(
@@ -495,30 +493,30 @@ class _BottomNav4State extends State<JobWidget> {
                   Divider(
                     color: Colors.grey[300],
                     thickness: 1,
-                  ),                  
+                  ),
 
                   Container(
                     child: StreamBuilder<CityOccListResponse>(
                         stream: getCityOccBloc.subject.stream,
                         builder: (context,
-                          AsyncSnapshot<CityOccListResponse> snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return    Stack(
-                                  children: <Widget>[
-                                    _paddings("  職種"),                            
-                                    Center(
-                                      child: Opacity(
-                                        opacity:1.0, 
-                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                          }
-                          else if (snapshot.hasError) {
-                                return Container();
-                          } 
-                          else if (snapshot.hasData) {
+                            AsyncSnapshot<CityOccListResponse> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Stack(
+                              children: <Widget>[
+                                _paddings("  職種"),
+                                Center(
+                                  child: Opacity(
+                                    opacity: 1.0,
+                                    child:
+                                        buildLoadingWidget(), //CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            return Container();
+                          } else if (snapshot.hasData) {
                             if (snapshot.data.error != null &&
                                 snapshot.data.error.length > 0) {
                               return Container();
@@ -544,7 +542,7 @@ class _BottomNav4State extends State<JobWidget> {
                               list.add(_paddings("  職種"));
                               for (var i = 0; i < occList.length; i++) {
                                 List<OccupationChildModel> allOcc =
-                                    occList[i].child;                               
+                                    occList[i].child;
                                 list.add(new Container(
                                   //margin: EdgeInsets.all(8),
                                   padding:
@@ -561,7 +559,7 @@ class _BottomNav4State extends State<JobWidget> {
                                       child: ListTile(
                                         dense: true,
                                         contentPadding: EdgeInsets.zero,
-                                        leading: Text("   "+occList[i].name),
+                                        leading: Text("   " + occList[i].name),
                                         trailing: Icon(
                                             Icons.arrow_drop_down_outlined),
                                       ),
@@ -671,23 +669,24 @@ class _BottomNav4State extends State<JobWidget> {
                                   ),
                                 ));
                               }
-                              return Column( 
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: list
+                              return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: list
                                   //getTextWidgets(snapshot.data.occList)
                                   );
                             }
-                          }  else {
+                          } else {
                             return Stack(
-                                  children: <Widget>[
-                                    _paddings("  職種"),                            
-                                    Center(
-                                      child: Opacity(
-                                        opacity:1.0, 
-                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ],
+                              children: <Widget>[
+                                _paddings("  職種"),
+                                Center(
+                                  child: Opacity(
+                                    opacity: 1.0,
+                                    child:
+                                        buildLoadingWidget(), //CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
                             );
                           }
                         }),
@@ -934,7 +933,10 @@ class _BottomNav4State extends State<JobWidget> {
       list.add(new Container(
         padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-        decoration: BoxDecoration(border: Border.all(color:Color(int.parse("0xff828282")),)),//Colors.blueAccent
+        decoration: BoxDecoration(
+            border: Border.all(
+          color: Color(int.parse("0xff828282")),
+        )), //Colors.blueAccent
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -999,7 +1001,7 @@ class _BottomNav4State extends State<JobWidget> {
                       backgroundColor: Colors.grey[200],
                       child: Icon(
                         Icons.location_on,
-                        color:Color(int.parse("0xff828282")),
+                        color: Color(int.parse("0xff828282")),
                       )),
                   //leading: Icon(Icons.location_on,color: Colors.blue,),
                   title: Text("最寄駅"),
@@ -1026,7 +1028,10 @@ class _BottomNav4State extends State<JobWidget> {
                     radius: 18.0,
                     backgroundColor: Colors.grey[200],
                     child: Text("¥",
-                        style: TextStyle(fontSize: 20, color: Color(int.parse("0xff828282")),)),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Color(int.parse("0xff828282")),
+                        )),
                   ),
                   title: Text("給料"),
                 )),
@@ -1052,7 +1057,10 @@ class _BottomNav4State extends State<JobWidget> {
                     radius: 18.0,
                     backgroundColor: Colors.grey[200],
                     child: Text("時",
-                        style: TextStyle(fontSize: 20, color: Color(int.parse("0xff828282")),)),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Color(int.parse("0xff828282")),
+                        )),
                   ),
                   title: Text("就業時間/休日休暇"),
                 )),
@@ -1096,10 +1104,11 @@ class _BottomNav4State extends State<JobWidget> {
               onPressed: () {
                 var route = new MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      new JobDetailWidget(value: jobLst[i]),
+                      new JobDetailWidget(value: jobLst[i].id.toString()),
                 );
                 Navigator.of(context).push(route);
               },
+              //
               color: Color(int.parse("0xff828282")),
               textColor: Colors.white,
               child: Center(
@@ -1113,38 +1122,35 @@ class _BottomNav4State extends State<JobWidget> {
     return list;
   }
 
-  Widget _paddings(String name){
-      return Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    ),
-                  );
+  Widget _paddings(String name) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: Text(
+        name,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 15,
+        ),
+      ),
+    );
   }
 
   Widget _dropDown(String hintText) {
     return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-           alignedDropdown: true,
-          child: new DropdownButton<String>(
-          //isDense: true,
-          isExpanded: true,
-          hint: Row(
-            children: [
-              Icon(
-                Icons.arrow_drop_down_outlined,
-                size: 35.0,
-              ),
-              Text(hintText),
-            ],
-          ),
-          onChanged: (String newValue) {},
-          items: [],
+      child: new DropdownButton<String>(
+        //isDense: true,
+        isExpanded: true,
+        hint: Row(
+          children: [
+            Icon(
+              Icons.arrow_drop_down_outlined,
+              size: 35.0,
+            ),
+            Text(hintText),
+          ],
         ),
+        onChanged: (String newValue) {},
+        items: [],
       ),
     );
   }
@@ -1166,7 +1172,9 @@ class _BottomNav4State extends State<JobWidget> {
     return Row(
       children: [
         Container(
-          decoration: BoxDecoration(color: Color(int.parse("0xff828282")),),
+          decoration: BoxDecoration(
+            color: Color(int.parse("0xff828282")),
+          ),
           height: 42.0,
           width: 10.0,
         ),

@@ -325,11 +325,11 @@ class _BottomNav4DetailState extends State<JobDetailWidget> {
                     //height: 100.0,
                     child: RaisedButton(
                       onPressed: () {
-                        // var route = new MaterialPageRoute(
-                        //   builder: (BuildContext context) =>
-                        //       new JobInsertWidget(value: widget.value),
-                        // );
-                        // Navigator.of(context).push(route);
+                        var route = new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new JobInsertWidget(value: widget.value),
+                        );
+                        Navigator.of(context).push(route);
                       },
                       color: Colors.grey,
                       textColor: Colors.white,

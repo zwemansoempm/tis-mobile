@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
-import 'package:tis/bloc/get_city_bloc.dart';
-import 'package:tis/model/job.dart';
+
 import 'package:tis/model/job_confirm.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tis/views/top.dart';
+import 'package:tis/model/job_detail.dart';
+import 'package:tis/bloc/get_job_detail_bloc.dart';
+import 'package:tis/model/job_detail_response.dart';
 
 class JobCompleteWidget extends StatefulWidget {
-  final JobModel value;
+  final String value;
   final JobConfirmModel jobConfirmModel;
 
   JobCompleteWidget({Key key, this.value, this.jobConfirmModel})
@@ -28,7 +30,7 @@ class _BottomNav4CompleteState extends State<JobCompleteWidget> {
 
   void initState() {
     super.initState();
-    getCityBloc..getCity();
+    getJobDetailBloc..getJobDetetail(widget.value);
   }
 
   @override
@@ -39,132 +41,159 @@ class _BottomNav4CompleteState extends State<JobCompleteWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        margin: EdgeInsets.only(
-          top: 40.0,
-          bottom: 20.0,
-          left: 10,
-          right: 10,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: StreamBuilder<JobDetailResponse>(
+          stream: getJobDetailBloc.subject.stream,
+          builder: (context, AsyncSnapshot<JobDetailResponse> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data.error != null &&
+                  snapshot.data.error.length > 0) {
+                return Container();
+              } else {
+                //print(snapshot.data.job);
+                return _jobCompleteData(snapshot.data.job);
+                //return Container();
+              }
+            } else if (snapshot.hasError) {
+              return Container();
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
-            child: Column(children: [
-              Row(children: []),
-              _header("${widget.value.title}"),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Divider(thickness: 2),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Card(
-                            margin: EdgeInsets.all(10.0),
-                            color: Colors.blue,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                "1.入力",
-                                style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _jobCompleteData(JobDetailModel jobObj) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      margin: EdgeInsets.only(
+        top: 40.0,
+        bottom: 20.0,
+        left: 10,
+        right: 10,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+      ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
+          child: Column(children: [
+            Row(children: []),
+            _header("${jobObj.title}"),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(thickness: 2),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Card(
+                          margin: EdgeInsets.all(10.0),
+                          color: Colors.blue,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "1.入力",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(10.0),
+                          color: Colors.blue,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "2.確認",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(10.0),
+                          color: Colors.blue,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "3.完了",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ]),
+                  Row(
+                    children: <Widget>[
+                      Center(
+                        child: Container(
+                          //height: 120.0,
+                          //width: 120.0,
+                          //color: Colors.blue[50],
+                          child: Align(
+                            alignment: Alignment(0.0, 1.0),
+                            child: Text(
+                              "求人への応募が完了しました",
+                              style: TextStyle(
+                                //fontWeight: FontWeight.bold,
+                                fontSize: 19.0,
                               ),
                             ),
                           ),
-                          Card(
-                            margin: EdgeInsets.all(10.0),
-                            color: Colors.blue,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                "2.確認",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Card(
-                            margin: EdgeInsets.all(10.0),
-                            color: Colors.blue,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                "3.完了",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ]),
-                    Row(
-                      children: <Widget>[
-                        Center(
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Center(
                           child: Container(
                             //height: 120.0,
                             //width: 120.0,
                             //color: Colors.blue[50],
                             child: Align(
                               alignment: Alignment(0.0, 1.0),
-                              child: Text(
-                                "求人への応募が完了しました",
-                                style: TextStyle(
-                                  //fontWeight: FontWeight.bold,
-                                  fontSize: 19.0,
-                                ),
-                              ),
+                              child: Text("担当者より連絡があるまでしばらくおまちください。"),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Center(
-                            child: Container(
-                              //height: 120.0,
-                              //width: 120.0,
-                              //color: Colors.blue[50],
-                              child: Align(
-                                alignment: Alignment(0.0, 1.0),
-                                child: Text("担当者より連絡があるまでしばらくおまちください。"),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 10.0),
-                    Container(
-                      padding: EdgeInsets.only(left: 80.0),
-                      child: SizedBox(
-                        width: 160,
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10.0),
+                  Container(
+                    padding: EdgeInsets.only(left: 80.0),
+                    child: SizedBox(
+                      width: 160,
 
-                        //height: 100.0,
-                        child: RaisedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TopPage()));
-                          },
-                          color: Colors.green[600],
-                          textColor: Colors.white,
-                          child: Center(
-                            child: Text("ホームへ戻る"),
-                          ),
+                      //height: 100.0,
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TopPage()));
+                        },
+                        color: Colors.green[600],
+                        textColor: Colors.white,
+                        child: Center(
+                          child: Text("ホームへ戻る"),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
-            ]),
-          ),
+            ),
+          ]),
         ),
       ),
     );

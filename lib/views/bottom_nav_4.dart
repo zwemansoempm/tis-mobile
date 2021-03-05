@@ -28,6 +28,7 @@ class _BottomNav4State extends State<JobWidget> {
   var stream1;
   String _city;
   String _township;
+  String _move;
   int checkstream = 0;
   Map<String, bool> jobTypeList = {
     '正社員': false,
@@ -44,10 +45,14 @@ class _BottomNav4State extends State<JobWidget> {
   int countOccId = 0;
   int countEmpStatus = 0;
   String tspText = "市から探す";
+  List<String> searchDisplayData;
+  List<CityModel> cityList;
+  List<TownshipModel> allTsp;
 
   @override
   void initState() {
     super.initState();
+    searchDisplayData = List();
     getCityOccBloc..getCityOccList();
   }
 
@@ -82,12 +87,6 @@ class _BottomNav4State extends State<JobWidget> {
                 ),
               )),
             ),
-            // Row(children: [
-            //   SizedBox(width: 5.0),
-            //   Icon(Icons.map, color: Colors.blue),
-            //   SizedBox(width: 5.0),
-            //   Text("求人検索"),//地図検索
-            // ]),
             DottedLine(
               dashColor: Color(int.parse("0xff828282")), //Colors.blue,
             ),
@@ -167,7 +166,6 @@ class _BottomNav4State extends State<JobWidget> {
                 ),
               ],
             ),
-            // _header("現在の検索条件"),
             SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
@@ -211,7 +209,7 @@ class _BottomNav4State extends State<JobWidget> {
                                     snapshot.data.error.length > 0) {
                                   return Container();
                                 }
-                                List<CityModel> cityList = List();
+                                cityList = List();
                                 cityList.add(new CityModel(-1, ""));
                                 snapshot.data.cityList.forEach((e) {
                                   cityList.add(e);
@@ -281,6 +279,17 @@ class _BottomNav4State extends State<JobWidget> {
                             }),
                       )),
 
+                  countTspID != 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 10, top: 10),
+                          child: Text(
+                            "[${countTspID.toString()}]件選択されました.",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold),
+                          ))
+                      : Container(),
                   //township
                   Padding(
                     padding: const EdgeInsets.only(
@@ -319,8 +328,7 @@ class _BottomNav4State extends State<JobWidget> {
                                 return Container();
                               }
                               checkstream = 0;
-                              List<TownshipModel> allTsp =
-                                  snapshot.data.township;
+                              allTsp = snapshot.data.township;
                               List<int> selectedTsp = [];
 
                               return RaisedButton(
@@ -697,6 +705,17 @@ class _BottomNav4State extends State<JobWidget> {
                     thickness: 1,
                   ),
 
+                  countEmpStatus != 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 10, top: 10),
+                          child: Text(
+                            "[${countEmpStatus.toString()}]件選択されました.",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold),
+                          ))
+                      : Container(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: RaisedButton(
@@ -801,14 +820,16 @@ class _BottomNav4State extends State<JobWidget> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 onPressed: () {
+                  _load = true;
+
+                  getJobBloc
+                    ..getJob(_city.toString(), selectedTspID, selectedOccID,
+                        selectedEmpstatus);
                   setState(() {
                     // count = count + 1;
                     // // stream = getJobBloc..getJob();
                     // //print(stream);
-                    _load = true;
-                    getJobBloc
-                      ..getJob(_city.toString(), selectedTspID, selectedOccID,
-                          selectedEmpstatus);
+                    searchDisplayData = _getDisplaySearchData();
                   });
                 },
                 color: Colors.green,
@@ -824,34 +845,19 @@ class _BottomNav4State extends State<JobWidget> {
                         )),
                   ],
                 )),
-
-            // Container(
-            //     child: StreamBuilder<JobResponse>(
-            //         stream: getJobBloc.subject.stream,
-            //         builder: (context, AsyncSnapshot<JobResponse> snapshot) {
-            //           if (snapshot.connectionState == ConnectionState.waiting) {
-            //             return Container(
-            //                 // height: MediaQuery.of(context).size.height / 1.5,
-            //                 // child: Column(
-            //                 //   mainAxisAlignment: MainAxisAlignment.center,
-            //                 // ),
-            //                 ); //
-            //           } else if (snapshot.hasError) {
-            //             return Container();
-            //           } else if (snapshot.hasData) {
-            //             //print(snapshot.data);
-            //             if (snapshot.data.error != null &&
-            //                 snapshot.data.error.length > 0) {
-            //               return Container();
-            //             }
-            //             //return _getSearchResultWidget(snapshot.data);
-            //             return Column(
-            //                 children: _getSearchResultWidget(snapshot.data));
-            //           } else {
-            //             return Container(
-            //                 child: Column()); //return buildLoadingWidget();
-            //           }
-            //         })),
+            searchDisplayData.length > 0
+                ? Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(searchDisplayData.join(", ")),
+                    ),
+                  )
+                : Container(),
             _load
                 ? Container(
                     child: StreamBuilder<JobResponse>(
@@ -920,6 +926,29 @@ class _BottomNav4State extends State<JobWidget> {
     );
   }
 
+  List<String> _getDisplaySearchData() {
+    List<String> st = List();
+    cityList
+        .map((e) => (e.id.toString() == _city && e.id != -1)
+            ? st.add(e.city_name)
+            : null)
+        .toList();
+
+    if (selectedTspID.length > 0) {
+      allTsp
+          .map((e) =>
+              selectedTspID.contains(e.id) ? st.add(e.township_name) : null)
+          .toList();
+    }
+
+    selectedEmpstatus.map((e) => st.add(e.toString())).toList();
+    print(st);
+
+    //print(allTsp);
+
+    return st;
+  }
+
   List<Widget> _getSearchResultWidget(JobResponse data) {
     List<JobModel> jobs = data.job;
     return searchListWidget(jobs);
@@ -949,47 +978,40 @@ class _BottomNav4State extends State<JobWidget> {
                 ),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Text("施設番号:" + jobLst[i].nearest_station.toString()),
+              child: Text("施設番号:" + jobLst[i].jobnum),
             ),
             InkWell(
-              child: Text("ベストライフ三鷹",
+              child: Text(jobLst[i].title,
                   style: TextStyle(
-                      color: Color(int.parse("0xff828282")),
-                      //fontSize: 18.0,
-                      decoration: TextDecoration.underline)),
+                      // color: Color(int.parse("0xff828282")),
+                      // //fontSize: 18.0,
+                      // decoration: TextDecoration.underline,
+                      )),
               onTap: () {
-                //Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingDetail()));
+                var route = new MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      new JobDetailWidget(value: jobLst[i].id.toString()),
+                );
+                Navigator.of(context).push(route);
               },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 0.0),
-              child: Row(children: [
-                Text("開設年月日 :", style: TextStyle(color: Colors.green)),
-                Text("2017-04-01")
-              ]),
-            ),
-            Divider(thickness: 2),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
-              child: Row(children: [
-                Text("東京都"),
-                SizedBox(width: 4.0),
-                Icon(Icons.double_arrow),
-                SizedBox(width: 4.0),
-                Text("三鷹市")
-              ]),
             ),
             Card(
               margin: EdgeInsets.all(10.0),
-              color: Color(int.parse("0xff828282")),
+              color: Colors.blue,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  "64室(全室個室)",
+                  jobLst[i].employment_status,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
+            Divider(thickness: 2),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
+              child: Row(children: []),
+            ),
+
             Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey, width: 1.0),
@@ -1014,7 +1036,6 @@ class _BottomNav4State extends State<JobWidget> {
               child: ListTile(
                 title: Text(
                   jobLst[i].nearest_station.toString(),
-                  style: TextStyle(color: Colors.red),
                 ),
               ),
             ),
@@ -1042,7 +1063,6 @@ class _BottomNav4State extends State<JobWidget> {
               child: ListTile(
                 title: Text(
                   jobLst[i].salary.toString(),
-                  style: TextStyle(color: Colors.red),
                 ),
               ),
             ),
@@ -1217,8 +1237,7 @@ class _BottomNav4State extends State<JobWidget> {
 
       list.add(new Container(
         //margin: EdgeInsets.all(8),
-        padding: EdgeInsets.only(left: 5),
-        // padding: EdgeInsets.symmetric(horizontal: 5.0),
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
         // decoration: BoxDecoration(
         //     borderRadius: BorderRadius.circular(5.0),
         //     color: Colors.white,

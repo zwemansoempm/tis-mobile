@@ -28,7 +28,7 @@ class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
   Gender _gender = Gender.male;
   bool chkAgree = false;
   static String _city;
-  var lastName=null;
+
 
   void initState() {
     super.initState();
@@ -167,15 +167,11 @@ class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
                           //height: 100.0,
                           child: RaisedButton(
                             onPressed: () async {
-                              var splitName=widget.jobConfirmModel.name.split(' ');
-
-                                if(splitName.asMap().containsKey(1)){
-                                  lastName=splitName[1];
-                                }
+                              var splitName=widget.jobConfirmModel.name.split(' ');                             
                                 var params = { 
                                    "job_id" : widget.value, 
                                   "first_name": splitName[0],
-                                  "last_name": lastName,                                  
+                                  "last_name":splitName[1],                                  
                                   "birthday" : widget.jobConfirmModel.birthday,
                                   "gender":widget.jobConfirmModel.gender,
                                   "postal":widget.jobConfirmModel.zip_code,

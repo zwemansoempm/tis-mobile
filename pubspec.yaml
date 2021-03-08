@@ -50,7 +50,9 @@ dependencies:
   datetime_picker_formfield: ^1.0.0
   #datetime_picker_formfield: ^0.1.8
   #intl: ^0.15.0
-  
+  form_validator: ^0.1.7
+  flutter_focus_watcher: ^0.0.1
+  http: ^0.12.2
   intl: ^0.16.1
 
 dev_dependencies:

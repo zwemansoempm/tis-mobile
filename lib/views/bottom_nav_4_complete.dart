@@ -169,26 +169,31 @@ class _BottomNav4CompleteState extends State<JobCompleteWidget> {
                     ],
                   ),
                   SizedBox(height: 10.0),
-                  Container(
-                    padding: EdgeInsets.only(left: 80.0),
-                    child: SizedBox(
-                      width: 160,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        // padding: EdgeInsets.only(left: 80.0),
+                        child: SizedBox(
+                          width: 160,
 
-                      //height: 100.0,
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TopPage()));
-                        },
-                        color: Colors.green[600],
-                        textColor: Colors.white,
-                        child: Center(
-                          child: Text("ホームへ戻る"),
+                          //height: 100.0,
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TopPage()));
+                            },
+                            color: Colors.green[600],
+                            textColor: Colors.white,
+                            child: Center(
+                              child: Text("ホームへ戻る"),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   )
                 ],
               ),

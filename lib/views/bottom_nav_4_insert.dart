@@ -536,8 +536,8 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         padding: EdgeInsets.all(15),
                         child: Theme(
                           child: TextFormField(
-                            //obscureText: true,                          
-                            validator:ValidationBuilder().minLength(1).maxLength(50).build(),
+                            //obscureText: true, 
+                            validator:ValidationBuilder().regExp(RegExp("(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)", unicode: false),"First Name,Last Nameを入力してください。").minLength(1).maxLength(50).build(),
                             controller: nameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),

@@ -401,24 +401,17 @@ class NewsRepository {
         queryParameters: {
           'id': city,
           'townshipID': township,
-          'SpecialFeatureID[]':
-              (specialFeatureID == null || specialFeatureID.isEmpty)
-                  ? ["0"]
-                  : specialFeatureID.toString(),
-          'MedicalAcceptanceID[]':
-              (medicalAcceptanceID == null || medicalAcceptanceID.isEmpty)
-                  ? ["0"]
-                  : medicalAcceptanceID.toString(),
-          'FacTypeID[]': (facTypeID == null || facTypeID.isEmpty)
-              ? ["0"]
-              : facTypeID.toString(),
-          'MoveID[]': (moveID == null || moveID.isEmpty) ? ["0"] : moveID,
+          'SpecialFeatureID[]': specialFeatureID,
+          'MedicalAcceptanceID[]': medicalAcceptanceID ,
+          'FacTypeID[]': facTypeID,
+          'MoveID[]': moveID,
           'Moving_in': movingIn,
           'Per_month': perMonth,
           'local': '0',
         },
       );
       Response response = await _dio.get(uri.toString());
+
       if (response.statusCode == HttpStatus.ok) {
         return NursingResponse.fromJson(response.data);
       } else {

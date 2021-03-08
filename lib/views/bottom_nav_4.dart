@@ -414,37 +414,34 @@ class _BottomNav4State extends State<JobWidget> {
                                                           int index) {
                                                     String _move = allTsp[index]
                                                         .township_name;
+                                                    String _id = allTsp[index]
+                                                        .id
+                                                        .toString();
                                                     return CheckboxListTile(
                                                         value: selectedTspID
-                                                            .contains(
-                                                                allTsp[index]
-                                                                    .id),
+                                                            .contains(_id),
                                                         title: Text(_move),
                                                         onChanged:
                                                             (bool value) {
                                                           if (value) {
                                                             if (!selectedTspID
                                                                 .contains(
-                                                                    allTsp[index]
-                                                                        .id)) {
+                                                                    _id)) {
                                                               setState(() {
                                                                 selectedTspID
-                                                                    .add(allTsp[
-                                                                            index]
-                                                                        .id);
+                                                                    .add(_id);
                                                               });
                                                             }
                                                           } else {
                                                             if (selectedTspID
                                                                 .contains(
-                                                                    allTsp[index]
-                                                                        .id)) {
+                                                                    _id)) {
                                                               setState(() {
                                                                 selectedTspID
-                                                                    .removeWhere((s) =>
-                                                                        s ==
-                                                                        allTsp[index]
-                                                                            .id);
+                                                                    .removeWhere(
+                                                                        (s) =>
+                                                                            s ==
+                                                                            _id);
                                                               });
                                                             }
                                                           }
@@ -503,6 +500,17 @@ class _BottomNav4State extends State<JobWidget> {
                     thickness: 1,
                   ),
 
+                  countEmpStatus != 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 10, top: 10),
+                          child: Text(
+                            "[${countEmpStatus.toString()}]件選択されました.",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold),
+                          ))
+                      : Container(),
                   Container(
                     child: StreamBuilder<CityOccListResponse>(
                         stream: getCityOccBloc.subject.stream,
@@ -626,11 +634,15 @@ class _BottomNav4State extends State<JobWidget> {
                                                           String _move =
                                                               allOcc[index]
                                                                   .name;
+                                                          String _id =
+                                                              allOcc[index]
+                                                                  .id
+                                                                  .toString();
                                                           return CheckboxListTile(
-                                                              value: selectedOccID
-                                                                  .contains(
-                                                                      allOcc[index]
-                                                                          .id),
+                                                              value:
+                                                                  selectedOccID
+                                                                      .contains(
+                                                                          _id),
                                                               title:
                                                                   Text(_move),
                                                               onChanged:
@@ -638,26 +650,24 @@ class _BottomNav4State extends State<JobWidget> {
                                                                 if (value) {
                                                                   if (!selectedOccID
                                                                       .contains(
-                                                                          allOcc[index]
-                                                                              .id)) {
+                                                                          _id)) {
                                                                     setState(
                                                                         () {
-                                                                      selectedOccID.add(
-                                                                          allOcc[index]
-                                                                              .id);
+                                                                      selectedOccID
+                                                                          .add(
+                                                                              _id);
                                                                     });
                                                                   }
                                                                 } else {
                                                                   if (selectedOccID
                                                                       .contains(
-                                                                          allOcc[index]
-                                                                              .id)) {
+                                                                          _id)) {
                                                                     setState(
                                                                         () {
-                                                                      selectedOccID.removeWhere((s) =>
-                                                                          s ==
-                                                                          allOcc[index]
-                                                                              .id);
+                                                                      selectedOccID.removeWhere(
+                                                                          (s) =>
+                                                                              s ==
+                                                                              _id);
                                                                     });
                                                                   }
                                                                 }

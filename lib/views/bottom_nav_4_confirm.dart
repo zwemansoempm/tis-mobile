@@ -1,16 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:tis/model/city.dart';
-import 'package:tis/model/city_response.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
-import 'package:tis/model/job.dart';
 import 'package:tis/model/job_confirm.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tis/views/bottom_nav_4_complete.dart';
 import 'package:tis/model/job_detail.dart';
 import 'package:tis/bloc/get_job_detail_bloc.dart';
 import 'package:tis/model/job_detail_response.dart';
+import 'package:http/http.dart' as http;
 
 class JobConfirmWidget extends StatefulWidget {
   final String value;
@@ -30,6 +28,7 @@ class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
   Gender _gender = Gender.male;
   bool chkAgree = false;
   static String _city;
+  var lastName=null;
 
   void initState() {
     super.initState();
@@ -157,27 +156,88 @@ class _BottomNav4ConfirmState extends State<JobConfirmWidget> {
                   _jobHeader("ご希望等"),
                   _jobObject("${widget.jobConfirmModel.wish}"),
                   SizedBox(height: 10.0),
-                  Container(
-                    padding: EdgeInsets.only(left: 80.0),
-                    child: SizedBox(
-                      width: 160,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        // padding: EdgeInsets.only(left: 80.0),
+                        child: SizedBox(
+                          width: 160,
 
-                      //height: 100.0,
-                      child: RaisedButton(
-                        onPressed: () {
-                          var route = new MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                new JobCompleteWidget(value: widget.value),
-                          );
-                          Navigator.of(context).push(route);
-                        },
-                        color: Colors.green[600],
-                        textColor: Colors.white,
-                        child: Center(
-                          child: Text("対応する"),
+                          //height: 100.0,
+                          child: RaisedButton(
+                            onPressed: () async {
+                              var splitName=widget.jobConfirmModel.name.split(' ');
+
+                                if(splitName.asMap().containsKey(1)){
+                                  lastName=splitName[1];
+                                }
+                                var params = { 
+                                   "job_id" : widget.value, 
+                                  "first_name": splitName[0],
+                                  "last_name": lastName,                                  
+                                  "birthday" : widget.jobConfirmModel.birthday,
+                                  "gender":widget.jobConfirmModel.gender,
+                                  "postal":widget.jobConfirmModel.zip_code,
+                                  "street_address":widget.jobConfirmModel.state,
+                                  "township_id":widget.jobConfirmModel.townshipId,
+                                  "home_address":widget.jobConfirmModel.address,    
+                                  "phone":widget.jobConfirmModel.phoneno,
+                                  "email":widget.jobConfirmModel.mail,
+                                  "remark":widget.jobConfirmModel.wish,
+                                  "skills":[]
+                                };  
+
+                              final http.Response response = await http.post(
+                                   'https://test.t-i-s.jp/api/jobapply',                               
+                                headers: {                              
+                                 "Content-type": "application/json",
+                                },
+                                body:jsonEncode(params),
+                                ); 
+                                if(response.statusCode==200){
+                                  var route = new MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        new JobCompleteWidget(value: widget.value),
+                                  );
+                                  Navigator.of(context).push(route);
+                                }else{ 
+                                      // set up the button
+                                      Widget okButton = FlatButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                           Navigator.pop(context);
+                                         },
+                                      );
+
+                                      // set up the AlertDialog
+                                      AlertDialog alert = AlertDialog(
+                                        title: Text("失敗！！"),
+                                        content: Text("データ登録は失敗しました。"),
+                                        actions: [
+                                          okButton,
+                                        ],
+                                      );
+
+                                      // show the dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return alert;
+                                        },
+                                      );                                 
+                                }
+                               
+                            },
+                            color: Colors.green[600],
+                            textColor: Colors.white,
+                            child: Center(
+                              child: Text("対応する"),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   )
                 ],
               ),

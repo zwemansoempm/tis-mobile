@@ -450,12 +450,10 @@ class NewsRepository {
 
   Future<JobResponse> getJob(String city, var selectedTspID, var selectedOccID,
       var selectedEmpstatus) async {
-    await Future.delayed(Duration(milliseconds: 500));
-    print(city);
+    await Future.delayed(Duration(milliseconds: 500));  
     if (city == 'null' || city.isEmpty) {
       city = "-1";
-    }
-    print(city);
+    }  
     try {
       //print(selectedTspID);
       var uri = Uri(
@@ -482,8 +480,7 @@ class NewsRepository {
       //print(uri.toString());
       Response response = await _dio.getUri(uri);
 
-      if (response.statusCode == HttpStatus.ok) {
-        print(response.data);
+      if (response.statusCode == HttpStatus.ok) {     
         return JobResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');

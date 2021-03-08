@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
@@ -19,6 +20,8 @@ import 'package:tis/elements/loader.dart';
 import 'package:tis/model/job_detail.dart';
 import 'package:tis/bloc/get_job_detail_bloc.dart';
 import 'package:tis/model/job_detail_response.dart';
+import 'package:form_validator/form_validator.dart';
+import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 
 class JobInsertWidget extends StatefulWidget {
   final String value;
@@ -38,16 +41,16 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   TextEditingController zipCodeController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+  TextEditingController townshipId= TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneNoController = TextEditingController();
   TextEditingController mailController = TextEditingController();
   TextEditingController wishController = TextEditingController();
 
-  TextEditingController _textEditingController = TextEditingController();
   DateTime _selectedDate;
   var stream;
   final format = DateFormat("yyyy-MM-dd");
-  Gender _gender = Gender.male;
+  Gender _gender;
   bool chkAgree = false;
   String _city;
 
@@ -69,6 +72,12 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
 
   List<PostalList> postalList;
   List<TownshipModel> tspIdList;
+  GlobalKey<FormState> _form = GlobalKey<FormState>();
+  ScrollController _scrollController = new ScrollController();
+
+  _validate() {
+    return _form.currentState.validate();
+  }
 
   @override
   void initState() {
@@ -76,9 +85,6 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
     // getPostalBloc..getPostalList('1006740');
     stream;
     stream1;
-    // getPostalBloc..getPostalList(zipCodeController.text);
-    // getTspBloc..getTownship(_city);
-
     getJobDetailBloc..getJobDetetail(widget.value);
     super.initState();
   }
@@ -93,29 +99,34 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: StreamBuilder<JobDetailResponse>(
-          stream: getJobDetailBloc.subject.stream,
-          builder: (context, AsyncSnapshot<JobDetailResponse> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
-                return Container();
-              } else {
-                //print(snapshot.data.job);
-                return _postJobData(snapshot.data.job);
-                //return Container();
-              }
-            } else if (snapshot.hasError) {
-              return Container();
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
+    return FocusWatcher(
+        child: Scaffold(
+        body: Form(
+            key: _form,
+            child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: StreamBuilder<JobDetailResponse>(
+              stream: getJobDetailBloc.subject.stream,
+              builder: (context, AsyncSnapshot<JobDetailResponse> snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.error != null &&
+                      snapshot.data.error.length > 0) {
+                    return Container();
+                  } else {
+                    //print(snapshot.data.job);
+                    return _postJobData(snapshot.data.job);
+                    //return Container();
+                  }
+                } else if (snapshot.hasError) {
+                  return Container();
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -144,10 +155,10 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
 
     if (newSelectedDate != null) {
       _selectedDate = newSelectedDate;
-      _textEditingController
+      birthdayController
         ..text = DateFormat("yyyy-MM-dd").format(_selectedDate)
         ..selection = TextSelection.fromPosition(TextPosition(
-            offset: _textEditingController.text.length,
+            offset: birthdayController.text.length,
             affinity: TextAffinity.upstream));
     }
   }
@@ -213,7 +224,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       child: DropdownButtonHideUnderline(
                     child: ButtonTheme(
                       alignedDropdown: true,
-                      child: new DropdownButton<String>(
+                      child: new DropdownButton<String>(                   
                         //isDense: true,
                         isExpanded: true,
                         hint: Row(
@@ -229,16 +240,21 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         onChanged: (String newValue) {
                           _city = '';
                           setState(() {
+                            
+                            stateController.text= cityList[int.parse(newValue)].city_name.toString();
+
                             if (checkSearch == 1) {
                               checkSearch = 0;
                             }
+                            checkstream=1;
+                           
                             //  else{
                             //    checkSearch=1;
                             //  }
                             // township_id='';
                             // _township = newValue;
 
-                            // _township = null;
+                            _township = null;
                             // _township=newValue;
                             getTspBloc.drainStream();
                             stream1 = getTspBloc..getTownship(newValue);
@@ -246,15 +262,11 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                             if (township_id != '') {
                               township_id = '';
                             }
-                            // print('okiu');
-                            // print(_city);
-                            // print(township_id);
-                            // print(_township);
                           });
                         },
 
                         items: cityList
-                            .map((CityModel cityModel) => DropdownMenuItem(
+                            .map((CityModel cityModel) => DropdownMenuItem(                                
                                   value: cityModel.id.toString(),
                                   child: cityModel.id != -1
                                       ? Text(cityModel.city_name)
@@ -331,15 +343,15 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                   );
                 } else if (snapshot.hasError) {
                   return Container();
-                } else if (snapshot.hasData) {
+                } else if (snapshot.hasData && checkstream==1) {
                   if (snapshot.data.error != null &&
                       snapshot.data.error.length > 0) {
                     return Container();
-                  }
-                  checkstream = 0;
+                  }               
+        
                   List<TownshipModel> townships = List();
                   townships.add(new TownshipModel(-1, "", ""));
-                  snapshot.data.township.forEach((e) {
+                  snapshot.data.township.forEach((e) {                
                     townships.add(e);
                   });
                   return Container(
@@ -359,8 +371,14 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           ],
                         ),
                         value: township_id == '' ? _township : township_id,
-                        onChanged: (String newValue) {
+                        onChanged: (String newValue) {                       
                           setState(() {
+                            townships.map((TownshipModel tspModel){  
+                                if(tspModel.id.toString()==newValue){
+                                   cityController.text= tspModel.township_name.toString();
+                                   townshipId.text=tspModel.id.toString();                                 
+                                }
+                            }).toList();
                             if (checkSearch == 1) {
                               checkSearch = 0;
                             }
@@ -424,14 +442,15 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
         Padding(
           padding: EdgeInsets.all(15),
           child: Theme(
-            child: TextField(
+            child: TextFormField(
               //obscureText: true,
+              validator:ValidationBuilder().minLength(1).maxLength(200).build(),
               controller: addressController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 fillColor: Colors.grey,
                 //labelText: 'Password',
-                hintText: '番地を入力してください。',
+                labelText: '番地を入力してください。',
               ),
             ),
             data: Theme.of(context).copyWith(
@@ -457,6 +476,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
         border: Border.all(color: Colors.grey),
       ),
       child: SingleChildScrollView(
+        controller: _scrollController,  //reverse: true,
         child: Padding(
           padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
           child: Column(children: [
@@ -515,15 +535,17 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Theme(
-                          child: TextField(
-                            //obscureText: true,
-
+                          child: TextFormField(
+                            //obscureText: true,                          
+                            validator:ValidationBuilder().minLength(1).maxLength(50).build(),
                             controller: nameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              hintText: 'お名前を入力してください。',
+                              // hintText: '',
+                              labelText: 'お名前を入力してください。',
+                              // helperText: 'Min length: 5, max length: 50',
                             ),
                           ),
                           data: Theme.of(context).copyWith(
@@ -546,14 +568,15 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Theme(
-                          child: TextField(
-                            //obscureText: true,
+                          child: TextFormField(                                                
+                            validator:new ValidationBuilder().regExp(RegExp("/[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+/u",unicode: false),"フリガナを入力してください。")
+                            .minLength(1).maxLength(50).build(),                          
                             controller: furiganaController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              hintText: 'フリガナを入力してください。',
+                              labelText: 'フリガナを入力してください。',
                               hintStyle: TextStyle(fontSize: 15),
                             ),
                           ),
@@ -575,17 +598,29 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       ),
                       child: Container(
                         child: Column(children: <Widget>[
-                          TextField(
-                            focusNode: AlwaysDisabledFocusNode(),
-                            decoration: const InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.fromLTRB(30.0, 10.0, 100.0, 10.0),
-                              labelText: '年 - 月 - 日',
+                          Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Theme(
+                                 data: Theme.of(context).copyWith(
+                                  primaryColor: Colors.blue,
+                                ),
+                                child: TextFormField(
+                                validator:new ValidationBuilder().regExp(RegExp("^([0-9]{4}|[0-9]{2})[-]([0]?[1-9]|[1][0-2])[-]([0]?[1-9]|[1|2][0-9]|[3][0|1])",unicode: false),"生年月日を入力してください。")
+                                .minLength(10).maxLength(10).build(), 
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  fillColor: Colors.grey,
+                                  contentPadding:
+                                      EdgeInsets.fromLTRB(30.0, 10.0, 100.0, 10.0),
+                                  labelText: '年 - 月 - 日',
+                                  hintStyle: TextStyle(fontSize: 15),
+                                ),
+                                controller: birthdayController,
+                                onTap: () {
+                                  _selectDate(context);
+                                },
+                              ),
                             ),
-                            controller: _textEditingController,
-                            onTap: () {
-                              _selectDate(context);
-                            },
                           ),
 
                           // Text('${format.pattern}'),
@@ -606,7 +641,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       )),
                   _jobHeader("性別", ""),
                   Container(
-                      margin: EdgeInsets.only(bottom: 10.0),
+                      // margin: EdgeInsets.only(bottom: 10.0),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 1.0),
                       ),
@@ -651,14 +686,17 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Theme(
-                          child: TextField(
-                            //obscureText: true,
+                          child: TextFormField(                              
+                            //obscureText: true,                        
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            validator:new ValidationBuilder()
+                            .minLength(1).maxLength(10).build(),    
                             controller: zipCodeController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              hintText: '郵便番号を入力してください。',
+                              labelText: '郵便番号',
                               hintStyle: TextStyle(fontSize: 15),
                             ),
                           ),
@@ -667,54 +705,64 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           ),
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment :CrossAxisAlignment .start,
                         children: <Widget>[
-                          RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              onPressed: () {
-                                if (zipCodeController.text != "") {
-                                  stream = getPostalBloc
-                                    ..getPostalList(zipCodeController.text);
-                                }
-                                setState(() {
-                                  _city = null;
-                                  _township = null;
-                                  township_id = null;
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(15, 0, 0,0),
+                            child: RaisedButton(                            
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                onPressed: () {
                                   if (zipCodeController.text != "") {
-                                    checkSearch = 1;
-                                  } else {
-                                    checkSearch = 0;
+                                    stream = getPostalBloc
+                                      ..getPostalList(zipCodeController.text);
                                   }
-                                  FocusScope.of(context).unfocus();
-                                });
-                              },
-                              color: Colors.green,
-                              textColor: Colors.white,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.search),
-                                  SizedBox(width: 6),
-                                  Text('検索',
+                                  setState(() {
+                                    _city = null;
+                                    _township = null;
+                                    township_id = null;
+                                    if (zipCodeController.text != "") {
+                                      checkSearch = 1;
+                                    } else {
+                                      checkSearch = 0;
+                                    }
+                                    FocusScope.of(context).unfocus();
+                                  });
+                                },
+                                color: Colors.green,
+                                textColor: Colors.white,
+                                child: Container(
+                                  width: 100,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.search),
+                                      SizedBox(width: 6),
+                                      Text('検索',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                    ],
+                                  ),
+                                )),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(15, 0, 0,0),
+                            child: Row(children: [
+                              Text("例）1006740（"),
+                              GestureDetector(
+                                  child: Text("郵便番号検索",
                                       style: TextStyle(
-                                        fontSize: 12,
-                                      )),
-                                ],
-                              )),
-                          Row(children: [
-                            Text("例）1006740（"),
-                            GestureDetector(
-                                child: Text("郵便番号検索",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: Colors.blue)),
-                                onTap: () {
-                                  _launchURL();
-                                }),
-                            Text(")"),
-                          ]),
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.blue)),
+                                  onTap: () {
+                                    _launchURL();
+                                  }),
+                              Text(")"),
+                            ]),
+                          ),
                         ],
                       ),
                       checkSearch == 0
@@ -758,9 +806,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                           ? tspIdList[0].id.toString()
                                           : '';
                                       _street = postalList[0].street;
-                                      addressController.text = _street;
-                                      //  print(township_id);
-                                      // return Container();
+                                      addressController.text = _street;                                    
                                       return columnData();
                                     } else {
                                       return Center(
@@ -799,14 +845,15 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Theme(
-                          child: TextField(
+                          child: TextFormField(
                             //obscureText: true,
+                            validator:ValidationBuilder().phone('電話番号を入力してください。').minLength(1).maxLength(50).build(),
                             controller: phoneNoController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              hintText: '電話番号を入力してください。',
+                              labelText: '電話番号を入力してください。',
                             ),
                           ),
                           data: Theme.of(context).copyWith(
@@ -835,14 +882,15 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Theme(
-                          child: TextField(
+                          child: TextFormField(
+                            validator:ValidationBuilder().email('メールアドレスを入力してください。').minLength(1).maxLength(50).build(),
                             controller: mailController,
                             //obscureText: true,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              hintText: 'メールアドレスを入力してください。',
+                              labelText: 'メールアドレス',
                             ),
                           ),
                           data: Theme.of(context).copyWith(
@@ -869,12 +917,14 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         padding: EdgeInsets.all(15),
                         child: Theme(
                           child: TextFormField(
-                            //obscureText: true,
+                            //obscureText: true,      
+                            validator:ValidationBuilder().minLength(1).build(),               
                             controller: wishController,
                             maxLines: 3,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
+                              labelText: 'ご希望等',
                             ),
                           ),
                           data: Theme.of(context).copyWith(
@@ -951,25 +1001,36 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           //height: 100.0,
                           child: RaisedButton(
                             onPressed: () {
-                              JobConfirmModel user = new JobConfirmModel(
+                              var validate =_validate();
+                              if(validate==true && this.chkAgree==true){
+                                  JobConfirmModel user = new JobConfirmModel(
                                   nameController.text,
                                   furiganaController.text,
                                   birthdayController.text,
                                   genderController.text,
-                                  "zipCode",
-                                  "state",
-                                  "city",
+                                  zipCodeController.text,
+                                  stateController.text,
+                                  cityController.text,
+                                  townshipId.text,
                                   addressController.text,
                                   phoneNoController.text,
                                   mailController.text,
                                   wishController.text);
-                              var route = new MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    new JobConfirmWidget(
-                                        value: widget.value,
-                                        jobConfirmModel: user),
-                              );
-                              Navigator.of(context).push(route);
+                                  var route = new MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        new JobConfirmWidget(
+                                            value: widget.value,
+                                            jobConfirmModel: user),
+                                  );
+                                  Navigator.of(context).push(route);
+                              }else{
+                                   _scrollController.animateTo(
+                                    0.0,
+                                    curve: Curves.easeOut,
+                                    duration: const Duration(milliseconds: 300),
+                                  );
+                              }
+                               FocusScope.of(context).unfocus();
                             },
                             color: Colors.green[600],
                             textColor: Colors.white,
@@ -1078,9 +1139,4 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
       throw 'Could not launch $url';
     }
   }
-}
-
-class AlwaysDisabledFocusNode extends FocusNode {
-  @override
-  bool get hasFocus => false;
 }

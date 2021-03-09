@@ -500,12 +500,12 @@ class _BottomNav4State extends State<JobWidget> {
                     thickness: 1,
                   ),
 
-                  countEmpStatus != 0
+                  countOccId != 0
                       ? Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, bottom: 10, top: 10),
                           child: Text(
-                            "[${countEmpStatus.toString()}]件選択されました.",
+                            "[${countOccId.toString()}]件選択されました.",
                             style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold),
@@ -946,8 +946,9 @@ class _BottomNav4State extends State<JobWidget> {
 
     if (selectedTspID.length > 0) {
       allTsp
-          .map((e) =>
-              selectedTspID.contains(e.id) ? st.add(e.township_name) : null)
+          .map((e) => selectedTspID.contains(e.id.toString())
+              ? st.add(e.township_name)
+              : null)
           .toList();
     }
 

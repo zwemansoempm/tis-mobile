@@ -13,7 +13,9 @@ class _SettingScreen extends State<SettingScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffffffff),
-        leading: BackButton(color: Colors.black),
+        leading: BackButton(color: Colors.black,onPressed: (){
+          Navigator.pop(context);
+        }),
         title: Text('Settings', style: TextStyle(color: Colors.black)),
       ),
       body: ListView(

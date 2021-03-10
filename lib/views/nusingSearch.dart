@@ -172,14 +172,14 @@ class _NusingSearchState extends State<NusingSearch> {
                                             builder: (context, setState) {
                                               return AlertDialog(
                                                 title: Text(
-                                                  "Notifications",
+                                                  "通知",
                                                 ),
                                                 content: SingleChildScrollView(
                                                   child: ShowNoti().showNotification(),                                                    
                                               ),
                                                 actions: [
                                                   FlatButton(
-                                                    child: Text("Close"),
+                                                    child: Text("閉じ"),
                                                     onPressed: () {
                                                       Navigator.of(context).pop(); // dismiss dialog
                                                     },

@@ -188,14 +188,14 @@ class _SearchHospitalState extends State<SearchHospital> {
                                             builder: (context, setState) {
                                               return AlertDialog(
                                                 title: Text(
-                                                  "Notifications",
+                                                  "通知",
                                                 ),
                                                 content: SingleChildScrollView(
                                                   child: ShowNoti().showNotification(),                                                         
                                               ),
                                                 actions: [
                                                   FlatButton(
-                                                    child: Text("Close"),
+                                                    child: Text("閉"),
                                                     onPressed: () {
                                                       Navigator.of(context).pop(); // dismiss dialog
                                                     },

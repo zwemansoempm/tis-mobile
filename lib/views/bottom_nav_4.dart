@@ -938,6 +938,7 @@ class _BottomNav4State extends State<JobWidget> {
 
   List<String> _getDisplaySearchData() {
     List<String> st = List();
+
     cityList
         .map((e) => (e.id.toString() == _city && e.id != -1)
             ? st.add(e.city_name)

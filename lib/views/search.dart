@@ -11,8 +11,9 @@ class SearchScreen extends  SearchDelegate {
       return <Widget>[
         IconButton(
           icon: Icon(Icons.cancel),
-          onPressed: (){
+          onPressed: (){ 
             query="";
+            showSuggestions(context);
           },
         )
       ];
@@ -33,7 +34,13 @@ class SearchScreen extends  SearchDelegate {
     @override
     Widget buildResults(BuildContext context) {       
           getLatestPostAllCatBloc.subject.stream;  
-         return Container();
+          return  Center(
+                      child: Text(
+                        "お探しのニュースは見つかりませんでした。。",
+                        // "No Results Found...",
+                      ),
+                );
+                 
     }
 
   @override
@@ -46,7 +53,8 @@ class SearchScreen extends  SearchDelegate {
                 StreamBuilder<PostsResponse>(
                   stream: getLatestPostAllCatBloc.subject.stream,
                   builder:(context, AsyncSnapshot<PostsResponse> snapshot) {
-                    if (!snapshot.hasData) {
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -54,15 +62,39 @@ class SearchScreen extends  SearchDelegate {
                           Center(child: CircularProgressIndicator()),
                         ],
                       );
-                    } else if (snapshot.hasError) {
-                      return Column(
-                        children: <Widget>[
-                          Text(
-                            "No Results Found.",
-                          ),
-                        ],
+                    }
+
+
+                    // if (!snapshot.hasData) {
+                    //   return Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: <Widget>[
+                    //       Center(child: CircularProgressIndicator()),
+                    //     ],
+                    //   );
+                    // } 
+                    else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          "お探しのニュースは見つかりませんでした。。",
+                          // "No Results Found...",
+                        ),
                       );
-                    } else {
+                    } 
+                    else if (snapshot.hasData) { 
+
+                      if (snapshot.data.error != null &&
+                          snapshot.data.error.length > 0) {
+                            getLatestPostAllCatBloc.subject.stream;  
+                            return Center(
+                              child: Text(
+                                "お探しのニュースは見つかりませんでした。。",
+                                // "No Results Found...",
+                              ),
+                            );
+                      }  
+
                       var results = snapshot.data;
                       
                       List<PostsModel> allPosts = results.posts;
@@ -71,8 +103,7 @@ class SearchScreen extends  SearchDelegate {
                         result.add(allPosts[j]);
                       }      
                       final myList=query.isEmpty?result:result.where((p) => p.mainPoint.startsWith(query)).toList();                       
-                     return                    
-                      Container(
+                     return  Container(
                         width:MediaQuery.of(context).size.width,
                           height: 30.0* result.length,
                           child:ListView.builder(
@@ -163,43 +194,19 @@ class SearchScreen extends  SearchDelegate {
                         ),
                       );
                     }
+                    else{
+                      return Center(
+                            child: Text(
+                              "お探しのニュースは見つかりませんでした。。",
+                              // "No Results Found...",
+                            ),
+                      );
+                    }
                   },
                 ),
               ],
          ),
           );
   }
-    // final List<String> listExample;
-    // SearchScreen(this.listExample);
-  // InheritedBlocs.of(context).searchBloc;
-
-  //  getLatestPostAllCatBloc.subject.stream;  
-
-
-  //   List<String> recentList=[];//"Text 4","Text 3"
-  //   @override
-  //   Widget buildSuggestions(BuildContext context) {
-  //      List<String> suggestionList=[];
-  //      query.isEmpty
-  //      ?suggestionList=recentList
-  //      :suggestionList.addAll(listExample.where((element) => element.contains(query),
-  //      ));
-
-  //   return ListView.builder(
-  //     // itemCount: suggestionList.length,
-  //     itemBuilder: (context,index){
-  //       return ListTile(
-  //         title: Text(
-  //           'abcd'
-  //           // suggestionList[index],
-  //         ),
-  //         onTap:(){
-  //           // selectedResult=suggestionList[index];
-  //           showResults(context);
-  //         } ,
-  //       );
-  //     }
-  //   );   
-  // }  
 
 }

@@ -45,15 +45,16 @@ class _NusingSearchState extends State<NusingSearch> {
   int countFeature = 0;
   int countAcceptance = 0;
   int countFacType = 0;
-  var selectedMoveId =[];
-  var selectedSpeFeature = [];
-  var selectedMedAcceptance = [];
-  var selectedFacType = [];
+  
+  var selectedMoveId =["0"];
+  var selectedSpeFeature = ["0"];
+  var selectedMedAcceptance = ["0"];
+  var selectedFacType = ["0"];
 
   String moveText = "入居時の条件から探す";
   String specFeatureText = "特長から探す";
-  String medAcceptanceText = "施設の種類から探す";
-  String facTypeText = "医療面・診療科目から探す";
+  String facTypeText = "施設の種類から探す";
+  String medAcceptanceText = "医療面・診療科目から探す";
 
   Map<String, String> movingInList = {
     '入居一時金' : '-1',
@@ -172,14 +173,14 @@ class _NusingSearchState extends State<NusingSearch> {
                                             builder: (context, setState) {
                                               return AlertDialog(
                                                 title: Text(
-                                                  "Notifications",
+                                                  "通知",
                                                 ),
                                                 content: SingleChildScrollView(
                                                   child: ShowNoti().showNotification(),                                                    
                                               ),
                                                 actions: [
                                                   FlatButton(
-                                                    child: Text("Close"),
+                                                    child: Text("閉じ"),
                                                     onPressed: () {
                                                       Navigator.of(context).pop(); // dismiss dialog
                                                     },
@@ -241,12 +242,34 @@ class _NusingSearchState extends State<NusingSearch> {
                                 );
                             }
                             else if (snapshot.hasError) {
-                                  return Container();
+                              //return Container();
+                              return Stack(
+                                children: <Widget>[
+                                  _dropDown("市区町村"),                            
+                                  Center(
+                                    child: Opacity(
+                                      opacity:1.0, 
+                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ],
+                              );
                             } 
                             else if (snapshot.hasData) {
                               if (snapshot.data.error != null &&
                                   snapshot.data.error.length > 0) {
-                                return Container();
+                                //return Container();
+                                return Stack(
+                                children: <Widget>[
+                                  _dropDown("市区町村"),                            
+                                  Center(
+                                    child: Opacity(
+                                      opacity:1.0, 
+                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ],
+                              );
                             }
                             cityList = List();
                             cityList.add(new CityModel(-1,""));
@@ -323,9 +346,9 @@ class _NusingSearchState extends State<NusingSearch> {
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.white,
                         border: Border.all(color: Colors.grey[400])),
-                      child: StreamBuilder<TownshipResponse>(
-                        stream: getTspBloc.subject.stream,
-                        builder: (context,AsyncSnapshot<TownshipResponse> snapshot) {
+                        child: StreamBuilder<TownshipResponse>(
+                          stream: getTspBloc.subject.stream,
+                          builder: (context,AsyncSnapshot<TownshipResponse> snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting && checkstream==1) {
                                 return Stack(
                                   children: <Widget>[
@@ -515,459 +538,418 @@ class _NusingSearchState extends State<NusingSearch> {
               SizedBox(height: 2.0),
               //MoveId
               Container(
+                margin: EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
+                  border: Border.all(color: Colors.grey[400], width: 1.0),
                 ), 
                 child:Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  //padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.zero,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (selectedMoveId != null && selectedMoveId.length != 0) ?Text("[${selectedMoveId.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
-                        //(countMove != null && countMove != 0) ?Text("[${countMove.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
-                        RaisedButton(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                          child: ListTile(
-                            dense: true,
-                            contentPadding: EdgeInsets.only(left: 7),
-                            leading: Text(moveText),
-                            trailing: Icon(Icons.arrow_drop_down_outlined),
-                          ),
-                          color: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey[400], width: 1),
-                            borderRadius: BorderRadius.circular(5.0)
-                          ),
-                          onPressed: () async {
-                            var result = await showDialog(
-                              barrierDismissible: true,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return AlertDialog(
-                                      title: Text(moveText),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          onPressed: () {
-                                            Navigator.pop(context, selectedMoveId.length);
-                                          },
-                                          child: Text('Done'),
-                                        ),
-                                      ],
-                                      content: Container(
-                                        width: double.minPositive,
-                                        height: 300,
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: moveList.length,
-                                          itemBuilder: (BuildContext context, int index) {
-                                            String _move = moveList[index];
-                                            return CheckboxListTile(
-                                              value: selectedMoveId.contains(_move),
-                                              title: Text(_move),
-                                              onChanged: (bool value) {
-                                                if (value) {
-                                                  if (!selectedMoveId.contains(_move)) {
-                                                    setState(() {
-                                                      selectedMoveId.add(_move);
-                                                    });
-                                                  }
-                                                } else {
-                                                  if (selectedMoveId.contains(_move)) {
-                                                    setState(() {
-                                                      selectedMoveId.removeWhere(
-                                                          (s) => s == _move);
-                                                    });
+                        (selectedMoveId.length > 1) ? 
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8,top: 8),
+                            child: Text("[${selectedMoveId.length-1}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+                          )
+                          : Container(padding: EdgeInsets.only(top: 8),),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8,right: 8),
+                          child: RaisedButton(
+                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                            child: ListTile(
+                              dense: true,
+                              contentPadding: EdgeInsets.only(left: 7),
+                              leading: Text(moveText),
+                              trailing: Icon(Icons.arrow_drop_down_outlined),
+                            ),
+                            color: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.grey[400], width: 1),
+                              borderRadius: BorderRadius.circular(5.0)
+                            ),
+                            onPressed: () async {
+                              var result = await showDialog(
+                                barrierDismissible: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return AlertDialog(
+                                        title: Text(moveText),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            onPressed: () {
+                                              Navigator.pop(context, selectedMoveId.length);
+                                            },
+                                            child: Text('Done'),
+                                          ),
+                                        ],
+                                        content: Container(
+                                          width: double.minPositive,
+                                          height: 300,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: moveList.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              String _move = moveList[index];
+                                              return CheckboxListTile(
+                                                value: selectedMoveId.contains(_move),
+                                                title: Text(_move),
+                                                onChanged: (bool value) {
+                                                  if (value) {
+                                                    if (!selectedMoveId.contains(_move)) {
+                                                      setState(() {
+                                                        selectedMoveId.add(_move);
+                                                      });
+                                                    }
+                                                  } else {
+                                                    if (selectedMoveId.contains(_move)) {
+                                                      setState(() {
+                                                        selectedMoveId.removeWhere(
+                                                            (s) => s == _move);
+                                                      });
+                                                    }
                                                   }
                                                 }
-                                              }
-                                            );
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                });
+                                setState(() {
+                                  countMove = result;
+                                });
+                            },
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey[400],
+                          thickness: 1,
+                        ),
+
+                        StreamBuilder<NursingSearchDataResponse>(
+                          stream:getNursingSearchDataBloc.subject.stream,
+                          builder: (context,
+                            AsyncSnapshot<NursingSearchDataResponse> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                             return _otherNoDataWidget();
+                            }
+                            else if (snapshot.hasError) {
+                              stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
+                              return _otherNoDataWidget();
+                            }
+                            else if (snapshot.hasData) {
+                              if (snapshot.data.error != null &&
+                                snapshot.data.error.length > 0) {
+                                stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
+                                return _otherNoDataWidget();
+
+                              }else {
+                                specialFeatList = snapshot.data.specialFeatures;
+                                medicalAptList = snapshot.data.medicalAcceptances;
+                                facTypeList = snapshot.data.facTypes;
+                                return Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      (selectedSpeFeature.length > 1) ?
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:  8),
+                                          child: Text("[${selectedSpeFeature.length-1}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+                                        )
+                                        : Container(),
+                                      //countFeature != 0 ? Text("[${countFeature.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : Container(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8,right: 8),
+                                        child: RaisedButton(
+                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                        child: ListTile(
+                                          dense: true,
+                                          contentPadding: EdgeInsets.only(left: 7),
+                                          leading: Text(specFeatureText),
+                                          trailing: Icon(Icons.arrow_drop_down_outlined),
+                                        ),
+                                        color: Colors.white,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(color: Colors.grey[400], width: 1),
+                                          borderRadius: BorderRadius.circular(5.0)
+                                        ),
+                                        onPressed: () async  {
+                                          var result = await showDialog(
+                                            barrierDismissible: true,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return StatefulBuilder(
+                                                builder: (context, setState) {
+                                                  return AlertDialog(
+                                                    title: Text(specFeatureText),
+                                                    actions: <Widget>[
+                                                      FlatButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context, selectedSpeFeature.length);
+                                                        },
+                                                        child: Text('Done'),
+                                                      ),
+                                                    ],
+                                                    content: Container(
+                                                      width: double.minPositive,
+                                                      height: 300,
+                                                      child: ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: snapshot.data.specialFeatures.length,
+                                                        itemBuilder: (BuildContext context, int index) {
+                                                          final special = snapshot.data.specialFeatures[index];
+                                                          return CheckboxListTile(
+                                                            value: selectedSpeFeature.contains(special.id.toString()),
+                                                            title: Text(special.name),
+                                                            onChanged: (bool value) {
+                                                              if (value) {
+                                                                if (!selectedSpeFeature.contains(special.id.toString())) {
+                                                                  setState(() {
+                                                                    selectedSpeFeature.add(special.id.toString());
+                                                                  });
+                                                                }
+                                                              } else {
+                                                                if (selectedSpeFeature.contains(special.id.toString())) {
+                                                                  setState(() {
+                                                                    selectedSpeFeature.removeWhere(
+                                                                        (s) => s == special.id.toString());
+                                                                  });
+                                                                }
+                                                              }
+                                                            }
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            });
+                                            setState(() {
+                                              countFeature = result;
+                                            });
                                           },
                                         ),
                                       ),
-                                    );
-                                  },
-                                );
-                              });
-                              setState(() {
-                                countMove = result;
-                              });
-                          },
-                        ),
-                        ]
-                      ),
-                    ),
-              ),
-              
-              StreamBuilder<NursingSearchDataResponse>(
-                stream:getNursingSearchDataBloc.subject.stream,
-                builder: (context,
-                    AsyncSnapshot<NursingSearchDataResponse> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Stack(
-                            children: <Widget>[
-                              // _dropDown("市区町村"),     
-                               Opacity(
-                                  opacity:0.3, 
-                                  child: Column(
-                                  children: [
-                                    _checkBoxLoadBuildWidget(specFeatureText),
-                                    _checkBoxLoadBuildWidget(medAcceptanceText),
-                                    _checkBoxLoadBuildWidget(facTypeText),
-                                  ],
-                                 ),
-                               ), //buil                       
-                                Positioned(
-                                    top:75,
-                                    left:  MediaQuery.of(context).size.width/2.2,   
-                                    child: Center(                                
-                                    child: Opacity(
-                                      opacity:1.0, 
-                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                ),                             
-                            ],
-                          );
-                      }
-                      else if (snapshot.hasError) {
-                         stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
-                         return Container();
-                      } 
-                     else if (snapshot.hasData) {
-                      if (snapshot.data.error != null &&
-                          snapshot.data.error.length > 0) {
-                         stream2=getNursingSearchDataBloc..getNursingSearchData("-1");
-                        return Container();
-                      }else {
-                        specialFeatList = snapshot.data.specialFeatures;
-                        medicalAptList = snapshot.data.medicalAcceptances;
-                        facTypeList = snapshot.data.facTypes;
-                        return Container(
-                          child: Column(
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey, width: 1.0),
-                                  ), 
-                                  child:Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            (selectedSpeFeature != null && selectedSpeFeature.length != 0) ?Text("[${selectedSpeFeature.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
-                                            //countFeature != 0 ? Text("[${countFeature.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : Container(),
-                                            RaisedButton(
-                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                                            child: ListTile(
-                                              dense: true,
-                                              contentPadding: EdgeInsets.only(left: 7),
-                                              leading: Text(specFeatureText),
-                                              trailing: Icon(Icons.arrow_drop_down_outlined),
-                                            ),
-                                            color: Colors.white,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(color: Colors.grey[400], width: 1),
-                                              borderRadius: BorderRadius.circular(5.0)
-                                            ),
-                                            onPressed: () async  {
-                                              var result = await showDialog(
-                                                barrierDismissible: true,
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return StatefulBuilder(
-                                                    builder: (context, setState) {
-                                                      return AlertDialog(
-                                                        title: Text(specFeatureText),
-                                                        actions: <Widget>[
-                                                          FlatButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(context, selectedSpeFeature.length);
-                                                            },
-                                                            child: Text('Done'),
-                                                          ),
-                                                        ],
-                                                        content: Container(
-                                                          width: double.minPositive,
-                                                          height: 300,
-                                                          child: ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemCount: snapshot.data.specialFeatures.length,
-                                                            itemBuilder: (BuildContext context, int index) {
-                                                              final special = snapshot.data.specialFeatures[index];
-                                                              return CheckboxListTile(
-                                                                value: selectedSpeFeature.contains(special.id),
-                                                                title: Text(special.name),
-                                                                onChanged: (bool value) {
-                                                                  if (value) {
-                                                                    if (!selectedSpeFeature.contains(special.id)) {
-                                                                      setState(() {
-                                                                        selectedSpeFeature.add(special.id);
-                                                                      });
-                                                                    }
-                                                                  } else {
-                                                                    if (selectedSpeFeature.contains(special.id)) {
-                                                                      setState(() {
-                                                                        selectedSpeFeature.removeWhere(
-                                                                            (s) => s == special.id);
-                                                                      });
-                                                                    }
-                                                                  }
-                                                                }
-                                                              );
-                                                            },
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                });
-                                                setState(() {
-                                                  countFeature = result;
-                                                });
-                                            },
-                                          ),
-                                          ]
-                                        ),
+                                      Divider(
+                                        color: Colors.grey[300],
+                                        thickness: 1,
                                       ),
-                                ),
-                              Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey, width: 1.0),
-                                  ), 
-                                  child:Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            (selectedMedAcceptance != null && selectedMedAcceptance.length != 0) ?Text("[${selectedMedAcceptance.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
-                                            //countAcceptance != 0 ? Text("[${countAcceptance.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : Container(),
-                                            RaisedButton(
-                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                                            child: ListTile(
-                                              dense: true,
-                                              contentPadding: EdgeInsets.only(left: 7),
-                                              leading: Text(medAcceptanceText),
-                                              trailing: Icon(Icons.arrow_drop_down_outlined),
-                                            ),
-                                            color: Colors.white,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(color: Colors.grey[400], width: 1),
-                                              borderRadius: BorderRadius.circular(5.0)
-                                            ),
-                                            onPressed: () async {
-                                              var result = await showDialog(
-                                                context: context,
-                                                barrierDismissible: true,
-                                                builder: (BuildContext context) {
-                                                  return StatefulBuilder(
-                                                    builder: (context, setState) {
-                                                      return AlertDialog(
-                                                        title: Text(medAcceptanceText),
-                                                        actions: <Widget>[
-                                                          FlatButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(context, selectedMedAcceptance.length);
-                                                            },
-                                                            child: Text('Done'),
-                                                          ),
-                                                        ],
-                                                        content: Container(
-                                                          width: double.minPositive,
-                                                          height: 300,
-                                                          child: ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemCount: snapshot.data.medicalAcceptances.length,
-                                                            itemBuilder: (BuildContext context, int index) {
-                                                              final medAcceptance = snapshot.data.medicalAcceptances[index];
-                                                              return CheckboxListTile(
-                                                                value: selectedMedAcceptance.contains(medAcceptance.id),
-                                                                title: Text(medAcceptance.name),
-                                                                onChanged: (bool value) {
-                                                                  if (value) {
-                                                                    if (!selectedMedAcceptance.contains(medAcceptance.id)) {
-                                                                      setState(() {
-                                                                        selectedMedAcceptance.add(medAcceptance.id);
-                                                                      });
-                                                                    }
-                                                                  } else {
-                                                                    if (selectedMedAcceptance.contains(medAcceptance.id)) {
-                                                                      setState(() {
-                                                                        selectedMedAcceptance.removeWhere(
-                                                                            (m) => m == medAcceptance.id);
-                                                                      });
-                                                                    }
+                                      (selectedFacType.length > 1) ?
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 8),
+                                          child: Text("[${selectedFacType.length-1}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+                                        )
+                                        : Container(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:8, right: 8),
+                                        child: RaisedButton(
+                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                          child: ListTile(
+                                            dense: true,
+                                            contentPadding: EdgeInsets.only(left: 7),
+                                            leading: Text(facTypeText),
+                                            trailing: Icon(Icons.arrow_drop_down_outlined),
+                                          ),
+                                          color: Colors.white,
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(color: Colors.grey[400], width: 1),
+                                            borderRadius: BorderRadius.circular(5.0)
+                                          ),
+                                          onPressed: () async {
+                                            var result = await showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return StatefulBuilder(
+                                                  builder: (context, setState) {
+                                                    return AlertDialog(
+                                                      title: Text(facTypeText),
+                                                      actions: <Widget>[
+                                                        FlatButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(context, selectedFacType.length);
+                                                          },
+                                                          child: Text('Done'),
+                                                        ),
+                                                      ],
+                                                      content: Container(
+                                                        width: double.minPositive,
+                                                        height: 300,
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: snapshot.data.facTypes.length,
+                                                          itemBuilder: (BuildContext context, int index) {
+                                                            final facType = snapshot.data.facTypes[index];
+                                                            return CheckboxListTile(
+                                                              value: selectedFacType.contains(facType.id.toString()),
+                                                              title: Text(facType.description),
+                                                              onChanged: (bool value) {
+                                                                if (value) {
+                                                                  if (!selectedFacType.contains(facType.id.toString())) {
+                                                                    setState(() {
+                                                                      selectedFacType.add(facType.id.toString());
+                                                                    });
+                                                                  }
+                                                                } else {
+                                                                  if (selectedFacType.contains(facType.id.toString())) {
+                                                                    setState(() {
+                                                                      selectedFacType.removeWhere(
+                                                                          (m) => m == facType.id.toString());
+                                                                    });
                                                                   }
                                                                 }
-                                                              );
-                                                            },
-                                                          ),
+                                                              }
+                                                            );
+                                                          },
                                                         ),
-                                                      );
-                                                    },
-                                                  );
-                                                });
-                                              setState(() {
-                                                countAcceptance = result;
+                                                      ),
+                                                    );
+                                                  },
+                                                );
                                               });
-                                            },
-                                          ),
-                                          ]
-                                        ),
-                                      ),
-                                ),
-                            Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey, width: 1.0),
-                                  ), 
-                                  child:Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          (selectedFacType != null && selectedFacType.length != 0) ?Text("[${selectedFacType.length}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
-                                          //countFacType != 0 ? Text("[${countFacType.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : Container(),
-                                          RaisedButton(
-                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                                            child: ListTile(
-                                              dense: true,
-                                              contentPadding: EdgeInsets.only(left: 7),
-                                              leading: Text(facTypeText),
-                                              trailing: Icon(Icons.arrow_drop_down_outlined),
-                                            ),
-                                            color: Colors.white,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(color: Colors.grey[400], width: 1),
-                                              borderRadius: BorderRadius.circular(5.0)
-                                            ),
-                                            onPressed: () async {
-                                              var result = await showDialog(
-                                                context: context,
-                                                barrierDismissible: true,
-                                                builder: (BuildContext context) {
-                                                  return StatefulBuilder(
-                                                    builder: (context, setState) {
-                                                      return AlertDialog(
-                                                        title: Text(facTypeText),
-                                                        actions: <Widget>[
-                                                          FlatButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(context, selectedFacType.length);
-                                                            },
-                                                            child: Text('Done'),
-                                                          ),
-                                                        ],
-                                                        content: Container(
-                                                          width: double.minPositive,
-                                                          height: 300,
-                                                          child: ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemCount: snapshot.data.facTypes.length,
-                                                            itemBuilder: (BuildContext context, int index) {
-                                                              final facType = snapshot.data.facTypes[index];
-                                                              return CheckboxListTile(
-                                                                value: selectedFacType.contains(facType.id),
-                                                                title: Text(facType.description),
-                                                                onChanged: (bool value) {
-                                                                  if (value) {
-                                                                    if (!selectedFacType.contains(facType.id)) {
-                                                                      setState(() {
-                                                                        selectedFacType.add(facType.id);
-                                                                      });
-                                                                    }
-                                                                  } else {
-                                                                    if (selectedFacType.contains(facType.id)) {
-                                                                      setState(() {
-                                                                        selectedFacType.removeWhere(
-                                                                            (m) => m == facType.id);
-                                                                      });
-                                                                    }
-                                                                  }
-                                                                }
-                                                              );
-                                                            },
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                });
                                               setState(() {
                                                 countFacType = result;
                                               });
                                             },
                                           ),
-                                          ]
+                                        ),
+                                      Divider(
+                                        color: Colors.grey[300],
+                                        thickness: 1,
+                                      ), 
+                                      (selectedMedAcceptance.length > 1) ?
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 8),
+                                          child: Text("[${selectedMedAcceptance.length-1}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+                                        )
+                                        : Container(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8 , right: 8),
+                                        child: RaisedButton(
+                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                          child: ListTile(
+                                            dense: true,
+                                            contentPadding: EdgeInsets.only(left: 7),
+                                            leading: Text(medAcceptanceText),
+                                            trailing: Icon(Icons.arrow_drop_down_outlined),
+                                          ),
+                                          color: Colors.white,
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(color: Colors.grey[400], width: 1),
+                                            borderRadius: BorderRadius.circular(5.0)
+                                          ),
+                                          onPressed: () async {
+                                            var result = await showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return StatefulBuilder(
+                                                  builder: (context, setState) {
+                                                    return AlertDialog(
+                                                      title: Text(medAcceptanceText),
+                                                      actions: <Widget>[
+                                                        FlatButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(context, selectedMedAcceptance.length);
+                                                          },
+                                                          child: Text('Done'),
+                                                        ),
+                                                      ],
+                                                      content: Container(
+                                                        width: double.minPositive,
+                                                        height: 300,
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: snapshot.data.medicalAcceptances.length,
+                                                          itemBuilder: (BuildContext context, int index) {
+                                                            final medAcceptance = snapshot.data.medicalAcceptances[index];
+                                                            return CheckboxListTile(
+                                                              value: selectedMedAcceptance.contains(medAcceptance.id.toString()),
+                                                              title: Text(medAcceptance.name),
+                                                              onChanged: (bool value) {
+                                                                if (value) {
+                                                                  if (!selectedMedAcceptance.contains(medAcceptance.id.toString())) {
+                                                                    setState(() {
+                                                                      selectedMedAcceptance.add(medAcceptance.id.toString());
+                                                                    });
+                                                                  }
+                                                                } else {
+                                                                  if (selectedMedAcceptance.contains(medAcceptance.id.toString())) {
+                                                                    setState(() {
+                                                                      selectedMedAcceptance.removeWhere(
+                                                                          (m) => m == medAcceptance.id.toString());
+                                                                    });
+                                                                  }
+                                                                }
+                                                              }
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                            });
+                                            setState(() {
+                                              countAcceptance = result;
+                                            });
+                                          },
                                         ),
                                       ),
-                                ),
-
-                            ]
-                          ),
-                        );
-                      }
-                    }else {
-
-                      return Stack(
-                              children: <Widget>[
-                              Opacity(
-                                  opacity:0.3, 
-                                  child: Column(
-                                  children: [
-                                    _checkBoxLoadBuildWidget(specFeatureText),
-                                    _checkBoxLoadBuildWidget(medAcceptanceText),
-                                    _checkBoxLoadBuildWidget(facTypeText),
-                                  ],
-                                 ),
-                               ), //buil                       
-                                Positioned(
-                                    top:75,
-                                    left:  MediaQuery.of(context).size.width/2.2,   
-                                    child: Center(                                
-                                    child: Opacity(
-                                      opacity:1.0, 
-                                      child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                      
+                                      
+                                      ]
                                     ),
-                                  ),
-                                ), 
-                              ],
-                      );
-                    }
-              }),
+                                  );
+                                }
+                              }else {
+                               
+                                return _otherNoDataWidget();
+                              }
+                        }),
+                        Divider(
+                          color: Colors.grey[300],
+                          thickness: 1,
+                        ),
 
-              //search button
-              Container(
-                margin: EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
-                ), 
-                padding: EdgeInsets.symmetric(vertical: 4,horizontal: 8),
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  onPressed: () {
-                    getNursingResultBloc.drainStream();
-                    resultStream = getNursingResultBloc..getNursingResult(_city,_township,_movingIn,_perMonth,selectedMoveId,selectedSpeFeature,selectedMedAcceptance,selectedFacType);
-                    setState((){
-                      _load=true;
-                      searchDisplayData = List();
-                      searchDisplayData = _getDisplaySearchData();
-                    });
-                  },
-                  color: Colors.green,
-                  textColor: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.search),
-                      Text('検索', style: TextStyle(fontSize: 16,)),
-                  ],)
-
-                ),
+                        //search button
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right:8,bottom: 8,),
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            onPressed: () {
+                              getNursingResultBloc.drainStream();
+                              resultStream = getNursingResultBloc..getNursingResult(_city,_township,_movingIn,_perMonth,selectedMoveId,selectedSpeFeature,selectedMedAcceptance,selectedFacType);
+                              setState((){
+                                _load=true;
+                                searchDisplayData = List();
+                                searchDisplayData = _getDisplaySearchData();
+                              });
+                            },
+                            color: Colors.green,
+                            textColor: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.search),
+                                Text('検索', style: TextStyle(fontSize: 16,)),
+                            ],)
+                          ),
+                        ),
+                      ]
+                    ),
+                  ),
               ),
 
               //ResultData
@@ -1084,10 +1066,10 @@ class _NusingSearchState extends State<NusingSearch> {
     townshipList.map((e) => (e.id.toString() == _township && e.id != -1 ) ? st.add(e.township_name): null).toList();
     movingInList.entries.map((e) => (e.value == _movingIn && e.value != "-1" ) ? st.add(e.key): null).toList();
     perMonthList.entries.map((e) => (e.value == _perMonth && e.value != "-1" ) ? st.add(e.key):null).toList();
-    selectedMoveId.map((e) =>  st.add(e.toString())).toList();
-    specialFeatList.map((e) => selectedSpeFeature.contains(e.id)? st.add(e.name) : null).toList();
-    medicalAptList.map((e) => selectedMedAcceptance.contains(e.id)? st.add(e.name) : null).toList();
-    facTypeList.map((e) => selectedFacType.contains(e.id) ? st.add(e.description) : null).toList();
+    selectedMoveId.map((e) => e != "0" ? st.add(e.toString()) : null).toList();
+    specialFeatList.map((e) => selectedSpeFeature.contains(e.id.toString())? st.add(e.name) : null).toList();
+    medicalAptList.map((e) => selectedMedAcceptance.contains(e.id.toString())? st.add(e.name) : null).toList();
+    facTypeList.map((e) => selectedFacType.contains(e.id.toString()) ? st.add(e.description) : null).toList();
     
     return st;
   }
@@ -1308,29 +1290,59 @@ class _NusingSearchState extends State<NusingSearch> {
       :  Container()).toList());
   }
 
+  Widget _otherNoDataWidget(){
+    return Stack(
+      children: <Widget>[
+        Opacity(
+          opacity:0.3, 
+          child: Column(
+            children: [
+              _checkBoxLoadBuildWidget(specFeatureText),
+              Divider(
+                color: Colors.grey[300],
+                thickness: 1,
+              ),
+              _checkBoxLoadBuildWidget(facTypeText),
+              Divider(
+                color: Colors.grey[300],
+                thickness: 1,
+              ),
+              _checkBoxLoadBuildWidget(medAcceptanceText),
+            ],
+          ),
+        ),                       
+        Positioned(
+            top:75,
+            left:  MediaQuery.of(context).size.width/2.2,   
+            child: Center(                                
+            child: Opacity(
+              opacity:1.0, 
+              child:buildLoadingWidget(),//CircularProgressIndicator(),
+            ),
+          ),
+        ), 
+      ],
+    );
+  }
+
   Widget _checkBoxLoadBuildWidget(String name){
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 1.0),
-      ), 
-      child:Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: RaisedButton(
-          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-          child: ListTile(
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-            leading: Text(name, style: TextStyle(color: Colors.grey[600]),),
-            trailing: Icon(Icons.arrow_drop_down_outlined),
-          ),
-          color: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.grey[400], width: 1),
-            borderRadius: BorderRadius.circular(5.0)
-          ),
-          onPressed: ()  {}
-        )
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: RaisedButton(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+        child: ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.zero,
+          leading: Text(name, style: TextStyle(color: Colors.grey[600]),),
+          trailing: Icon(Icons.arrow_drop_down_outlined),
+        ),
+        color: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.grey[400], width: 1),
+          borderRadius: BorderRadius.circular(5.0)
+        ),
+        onPressed: ()  {}
       )
     );
   }

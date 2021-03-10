@@ -257,11 +257,13 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
             ),
         ); 
         
-        }     
-        return Container(
-          height: 150,
-          child:buildLoadingWidget()
-        );   
+        } else{
+            return Container(
+            height: 150,
+            child:buildLoadingWidget()
+          );   
+        }    
+       
       },
     );
   }  

@@ -443,37 +443,69 @@ class NewsRepository {
 
   Future<JobResponse> getJob(String city, var selectedTspID, var selectedOccID,
       var selectedEmpstatus) async {
-    await Future.delayed(Duration(milliseconds: 500));  
+    await Future.delayed(Duration(milliseconds: 500));
+    var cityID;
+
     if (city == 'null' || city.isEmpty) {
-      city = "-1";
-    }  
+      cityID = "-1";
+    } else {
+      cityID = city;
+    }
+
+    var townshipID = "";
+    if (selectedTspID == null || selectedTspID.isEmpty) {
+      townshipID = "townshipID[]=0";
+    } else {
+      List<dynamic> tsp = selectedTspID;
+      for (int i = 0; i < tsp.length; i++) {
+        if (i == tsp.length - 1) {
+          townshipID = townshipID + "townshipID[]=" + tsp[i];
+        } else {
+          townshipID = townshipID + "townshipID[]=" + tsp[i] + "&";
+        }
+      }
+    }
+    var occupationID = "";
+
+    if (selectedOccID == null || selectedOccID.isEmpty) {
+      occupationID = "occupationID[]=0";
+    } else {
+      List<dynamic> occ = selectedOccID;
+      for (int i = 0; i < occ.length; i++) {
+        if (i == occ.length - 1) {
+          occupationID = occupationID + "occupationID[]=" + occ[i];
+        } else {
+          occupationID = occupationID + "occupationID[]=" + occ[i] + "&";
+        }
+      }
+    }
+
+    var empstatus = "";
+    if (selectedEmpstatus == null || selectedEmpstatus.isEmpty) {
+      empstatus = "empstatus[]=0";
+    } else {
+      List<dynamic> status = selectedEmpstatus;
+      for (int i = 0; i < status.length; i++) {
+        if (i == status.length - 1) {
+          empstatus = empstatus + "empstatus[]=" + status[i];
+        } else {
+          empstatus = empstatus + "empstatus[]=" + status[i] + "&";
+        }
+      }
+    }
+    var url = "https://test.t-i-s.jp/api/getjobsearch/null?id=" +
+        cityID +
+        "&" +
+        townshipID +
+        "&" +
+        occupationID +
+        "&" +
+        empstatus;
+
     try {
-      //print(selectedTspID);
-      var uri = Uri(
-        scheme: 'https',
-        host: url,
-        path: '/api/getjobsearch/null',
-        queryParameters: {
-          'id': city,
-          'townshipID[]': (selectedTspID == null || selectedTspID.isEmpty)
-              ? ["0"]
-              : selectedTspID.toString(),
-          'occupationID[]': (selectedOccID == null || selectedOccID.isEmpty)
-              ? ["0"]
-              : selectedOccID.toString(),
-          'empstatus[]':
-              (selectedEmpstatus == null || selectedEmpstatus.isEmpty)
-                  ? ["0"]
-                  : selectedEmpstatus,
-        },
-      );
-      // var getJobUrl =
-      //     "$mainUrl/getjobsearch/null?id=-1&townshipID[]=0&occupationID[]=0&empstatus[]=0";
+      Response response = await _dio.get(url.toString());
 
-      //print(uri.toString());
-      Response response = await _dio.getUri(uri);
-
-      if (response.statusCode == HttpStatus.ok) {     
+      if (response.statusCode == HttpStatus.ok) {
         return JobResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');

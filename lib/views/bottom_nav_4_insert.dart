@@ -354,6 +354,9 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                   snapshot.data.township.forEach((e) {                
                     townships.add(e);
                   });
+                  // print('t1');
+                  // print(township_id);
+                  // print(_township);
                   return Container(
                       child: DropdownButtonHideUnderline(
                     child: ButtonTheme(
@@ -407,6 +410,9 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                     ),
                   ));
                 } else {
+                  // print('t12');
+                  // print(township_id);
+                  // print(checkstream);
                   return Stack(
                     children: <Widget>[
                       _dropDown("選択してください。"),
@@ -805,8 +811,11 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                       township_id = checkSearch == 1
                                           ? tspIdList[0].id.toString()
                                           : '';
+                                          // print('txp');
+                                          // print(township_id);
                                       _street = postalList[0].street;
-                                      addressController.text = _street;                                    
+                                      addressController.text = _street;     
+                                      checkstream=1;                               
                                       return columnData();
                                     } else {
                                       return Center(

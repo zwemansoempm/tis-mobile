@@ -12,7 +12,7 @@ class JobConfirmModel {
   final String mail;
   final String wish;
 
-  JobConfirmModel(
+  const JobConfirmModel(
       this.name,
       this.furigana,
       this.birthday,

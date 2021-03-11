@@ -6,7 +6,7 @@ class PostalListResponse {
   final List<TownshipModel> tspList;
   final String error;
 
-  PostalListResponse(this.postalList, this.tspList, this.error);
+  const PostalListResponse(this.postalList, this.tspList, this.error);
   PostalListResponse.fromJson(Map<String, dynamic> json)
       : postalList = (json["postal_list"] as List)
             .map((i) => new PostalList.fromJson(i))

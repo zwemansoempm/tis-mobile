@@ -85,7 +85,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     height: MediaQuery.of(context).size.height / 3.0,
-                    child: ListView.builder(
+                    child: ListView.builder(                    
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data.bigNews.length,
                       itemBuilder: (context, index){
@@ -563,7 +563,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                     child: Stack(
                       children: [
                         Center(
-                          child: FadeInImage(
+                          child:(post.photo!=null && post.photo!='' ) ? FadeInImage(
                             //fadeInDuration: const Duration(seconds: 2),
                             placeholder: AssetImage('assets/img/placeholder.jpg'),
                             image: NetworkImage(
@@ -574,6 +574,8 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                                 "assets/img/placeholder.jpg",
                               );
                             },                                                                           
+                          ): Image.asset(
+                          "assets/img/placeholder.jpg",
                           ),
                         ),
                         dateToStringFormat(DateTime.now()) == post.createdAt.split(" ")[0] ? _newLogo(color) : Container(),

@@ -31,6 +31,7 @@ import 'package:tis/model/city_occ_response.dart';
 import 'package:tis/model/job_detail_response.dart';
 
 class NewsRepository {
+  
   static String url = "test.t-i-s.jp";
   static String mainUrl = "https://test.t-i-s.jp/api";
 

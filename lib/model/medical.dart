@@ -11,7 +11,7 @@ class MedicalModel{
   final int pid;
 
 
-  MedicalModel(this.id,this.title,this.photo,this.mainPoint,this.blockId,this.createdAt,this.name,this.pattern,this.colorCode,this.pid);
+  const MedicalModel(this.id,this.title,this.photo,this.mainPoint,this.blockId,this.createdAt,this.name,this.pattern,this.colorCode,this.pid);
 
   MedicalModel.fromJson(Map<String,dynamic> json) //Map<String,dynamic> List<dynamic>
   : id =json["id"],

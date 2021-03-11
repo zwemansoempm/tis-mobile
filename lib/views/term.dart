@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Term extends StatelessWidget {
+  const Term();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

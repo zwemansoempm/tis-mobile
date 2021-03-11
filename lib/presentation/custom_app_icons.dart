@@ -24,6 +24,7 @@
 import 'package:flutter/widgets.dart';
 
 class CustomApp {
+  const CustomApp();
   CustomApp._();
 
   static const _kFontFam = 'CustomApp'; 

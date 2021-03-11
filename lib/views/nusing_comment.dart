@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tis/views/comment_completely.dart';
 
 class NusingComment extends StatefulWidget {
+  const NusingComment();
   @override
   _NusingCommentState createState() => _NusingCommentState();
 }
@@ -246,7 +247,7 @@ class _NusingCommentState extends State<NusingComment> {
                           RaisedButton(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=> CommentCompletely()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> const CommentCompletely()));
                             },
                             color: Colors.green,
                             textColor: Colors.white,

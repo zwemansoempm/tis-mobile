@@ -15,10 +15,10 @@ import 'package:tis/views/nusing_favourite_mail.dart';
 
 
 class NusingDetail extends StatefulWidget {
-
+   
   final String nursingId;
 
-  NusingDetail({Key key,@required this.nursingId}) : super(key: key);
+  const NusingDetail({Key key,@required this.nursingId}) : super(key: key);
 
   @override
   _NusingDetailState createState() => _NusingDetailState();
@@ -77,7 +77,7 @@ class _NusingDetailState extends State<NusingDetail> {
     NursingModel nursingData = detail.nursingList[0];
     Address address = detail.addressList[0];
     
-    return ListView(
+    return ListView(    
        children: [
           Row(
             children:[ 
@@ -428,7 +428,7 @@ class _NusingDetailState extends State<NusingDetail> {
               RaisedButton(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingComment()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const NusingComment()));
                 },
                 color: Colors.green,
                 textColor: Colors.white,
@@ -953,7 +953,7 @@ class _NusingDetailState extends State<NusingDetail> {
         RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingMail()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const NusingMail()));
           },
           color: Colors.green,
           textColor: Colors.white,

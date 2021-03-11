@@ -4,7 +4,7 @@ class HospitalResponse {
   final List<HospitalModel> hospital;
   final String error;
 
-  HospitalResponse(this.hospital, this.error);
+  const HospitalResponse(this.hospital, this.error);
 
   HospitalResponse.fromJson(Map<String, dynamic> json)
     : hospital =

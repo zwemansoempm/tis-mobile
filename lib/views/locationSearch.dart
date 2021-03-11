@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LocationSearch extends StatefulWidget {
-  LocationSearch({Key key}) : super(key: key);
+  const LocationSearch({Key key}) : super(key: key);
 
   @override
   _LocationSearchState createState() => _LocationSearchState();

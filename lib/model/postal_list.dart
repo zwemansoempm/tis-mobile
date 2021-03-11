@@ -18,7 +18,7 @@ class PostalList {
   final int flag4;
   final int flag5;
   final int flag6;
-  PostalList(
+  const PostalList(
     this.id,
     this.jis_code,
     this.zip5_code,

@@ -4,7 +4,7 @@ class NurseResponse{
   final List<MedicalModel> medical;
   final String error;
 
-  NurseResponse(this.medical,this.error);
+  const NurseResponse(this.medical,this.error);
   NurseResponse.fromJson(Map<String, dynamic> json)// Map<String, dynamic>  List<dynamic> 
   : medical=(json["2,特養・介護,#9579ef"] as List).map((i) => new MedicalModel.fromJson(i)).toList(), 
   error="";

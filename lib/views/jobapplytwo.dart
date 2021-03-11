@@ -3,6 +3,7 @@ import 'package:tis/views/jobapply.dart';
 import 'package:tis/views/jobapplythree.dart';
 
 class JobApplyTwo extends StatefulWidget {
+  const JobApplyTwo();
   @override
   _JobApplyTwoState createState() => _JobApplyTwoState();
 }
@@ -15,7 +16,7 @@ class _JobApplyTwoState extends State<JobApplyTwo> {
         title: Text('Step Two'),
       ),
       body: Container(
-        child: ListView(
+        child: ListView(       
           children: [
             Container(
               //padding: EdgeInsets.all(10.0),

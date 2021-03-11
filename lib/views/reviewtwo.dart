@@ -3,7 +3,7 @@ import 'package:tis/views/reviewone.dart';
 import 'package:tis/views/reviewthree.dart';
 
 class ReviewTwo extends StatelessWidget {
-
+ 
   String name, email, review, content, zipcode='', year='';
   ReviewTwo({this.name, this.email, this.review, this.content, this.zipcode, this.year});
 
@@ -15,7 +15,7 @@ class ReviewTwo extends StatelessWidget {
       ),
       body: Container(
     color: Colors.lightBlue[50],
-    child: ListView(
+    child: ListView(   
       children: [
         Padding(
           padding: const EdgeInsets.only(top:10.0),
@@ -165,7 +165,7 @@ class ReviewTwo extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0)),
                       onPressed: (){
                         Navigator.pop(context);
-                        // Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewPost()));
+                        // Navigator.push(context, MaterialPageRoute(builder: (context)=> const ReviewPost()));
                       },
                       color: Colors.red,
                       child: Text(
@@ -181,7 +181,7 @@ class ReviewTwo extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                     onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewThree()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ReviewThree()));
                     },
                     color: Colors.green,
                     child: Text(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tis/views/send_completely.dart';
 
 class NusingMail extends StatefulWidget {
-
+  const NusingMail();
   @override
   _NusingMailState createState() => _NusingMailState();
 }
@@ -650,7 +650,7 @@ class _NusingMailState extends State<NusingMail> {
                     RaisedButton(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> SendCompletely()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const SendCompletely()));
                       },
                       color: Colors.green,
                       textColor: Colors.white,

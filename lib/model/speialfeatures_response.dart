@@ -4,7 +4,7 @@ class SpecialFeaturesResponse {
   final List<SpecialFeaturesModel> special_feature;
   final String error;
 
-  SpecialFeaturesResponse(this.special_feature, this.error);
+  const SpecialFeaturesResponse(this.special_feature, this.error);
 
   SpecialFeaturesResponse.fromJson(Map<String, dynamic> json)
       : special_feature = (json["special_features"] as List)

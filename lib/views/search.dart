@@ -106,7 +106,7 @@ class SearchScreen extends  SearchDelegate {
                      return  Container(
                         width:MediaQuery.of(context).size.width,
                           height: 30.0* result.length,
-                          child:ListView.builder(
+                          child:ListView.builder(                        
                           itemCount:myList.length,// result.length,
                           itemBuilder: (context, index) {
                             // var result = result[index];
@@ -137,7 +137,9 @@ class SearchScreen extends  SearchDelegate {
                                                   children: [
                                                     Center(
                                                       child: 
-                                                      myList[index].id!=410?FadeInImage(
+                                                      // myList[index].id!=410?
+                                                      (myList[index].photo!=null && myList[index].photo!='' )? 
+                                                      FadeInImage(
                                                         // fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
                                                         image: NetworkImage(
@@ -148,7 +150,7 @@ class SearchScreen extends  SearchDelegate {
                                                             "assets/img/placeholder.jpg",
                                                           );
                                                         },                                                                           
-                                                      ):Container(),
+                                                      ): Image.asset("assets/img/placeholder.jpg"),
                                                     ),
                                                     // dateToStringFormat(DateTime.now()) == medical[0].createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                                                 ]),

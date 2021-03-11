@@ -5,7 +5,7 @@ class TownshipResponse {
 
   final String error;
 
-  TownshipResponse(this.township, this.error);
+  const TownshipResponse(this.township, this.error);
   TownshipResponse.fromJson(Map<String, dynamic> json)
       : township = (json["getTownships"] as List)
             .map((i) => new TownshipModel.fromJson(i))

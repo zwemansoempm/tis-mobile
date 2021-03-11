@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CommentCompletely extends StatefulWidget {
+  const CommentCompletely();
   @override
   _CommentCompletelyState createState() => _CommentCompletelyState();
 }

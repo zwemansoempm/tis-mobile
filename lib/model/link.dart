@@ -6,7 +6,7 @@ class LinkModel{
   final String description;
   final String createdAt;
 
-  LinkModel(this.id,this.postDate,this.type,this.status,this.description,this.createdAt);
+  const LinkModel(this.id,this.postDate,this.type,this.status,this.description,this.createdAt);
 
   LinkModel.fromJson(Map<String,dynamic> json) //Map<String,dynamic> List<dynamic>
   : id =json["id"],

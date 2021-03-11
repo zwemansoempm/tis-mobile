@@ -22,6 +22,7 @@ import 'package:tis/presentation/custom_app_icons.dart';
 import 'package:tis/views/shownoti.dart';
 
 class SearchHospital extends StatefulWidget {
+  const SearchHospital();
   @override
   _SearchHospitalState createState() => _SearchHospitalState();
 }
@@ -92,7 +93,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                 content: Container(
                   width: double.minPositive,
                   height: 300,
-                  child: ListView.builder(
+                  child: ListView.builder(               
                     shrinkWrap: true,
                     itemCount: cityList.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -191,11 +192,11 @@ class _SearchHospitalState extends State<SearchHospital> {
                                                   "通知",
                                                 ),
                                                 content: SingleChildScrollView(
-                                                  child: ShowNoti().showNotification(),                                                         
+                                                  child: const ShowNoti().showNotification(),                                                         
                                               ),
                                                 actions: [
                                                   FlatButton(
-                                                    child: Text("閉"),
+                                                    child: Text("閉じ"),
                                                     onPressed: () {
                                                       Navigator.of(context).pop(); // dismiss dialog
                                                     },
@@ -1266,7 +1267,7 @@ class _TspDialogState extends State<_TspDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.builder(            
                 itemCount: widget.tsp.length,
                 itemBuilder: (BuildContext context, int index) {
                   final tspObject = widget.tsp[index];
@@ -1353,7 +1354,7 @@ class _SpecFeaturesDialogState extends State<_SpecFeaturesDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.builder(              
                 itemCount: widget.spec.length,
                 itemBuilder: (BuildContext context, int index) {
                   final specObject = widget.spec[index];
@@ -1439,7 +1440,7 @@ class _OccupationDialogState extends State<_OccupationDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.builder(              
                 itemCount: widget.dep.length,
                 itemBuilder: (BuildContext context, int index) {
                   final tspObject = widget.dep[index];

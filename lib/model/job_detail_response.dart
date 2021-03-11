@@ -6,7 +6,7 @@ class JobDetailResponse {
   final JobDetailModel job;
   final String error;
 
-  JobDetailResponse(this.job, this.error);
+  const JobDetailResponse(this.job, this.error);
   JobDetailResponse.fromJson(Map<String, dynamic> json)
       : job = JobDetailModel(
             json['title'],

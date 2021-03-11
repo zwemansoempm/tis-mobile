@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SendCompletely extends StatefulWidget {
+  const SendCompletely();
   @override
   _SendCompletelyState createState() => _SendCompletelyState();
 }
@@ -100,9 +101,6 @@ class _SendCompletelyState extends State<SendCompletely> {
                 child: Text('確認ページに進む', style: TextStyle(fontSize: 16,)),
               ),
             ),
-
-
-
           ]
         ),
       ),

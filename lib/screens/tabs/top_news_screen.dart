@@ -92,7 +92,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
         return  MediaQuery.removePadding(   
                 context: context,
                 removeTop: true,
-                child: ListView.builder(                              
+                child: ListView.builder( 
                 itemCount: 1,
                 itemBuilder: (context, index) {
                 // children:[
@@ -477,7 +477,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
     return  Container( 
               height: 150.0,
               color:Color(0xfff7f7f7),
-              child: ListView.builder(
+              child: ListView.builder(                  
                       physics: NeverScrollableScrollPhysics(),
                       // padding:EdgeInsets.only(top: 0),
                         itemCount: 1,
@@ -753,7 +753,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
    return  Container(
        height:300 ,
       //  width: 300,
-     child: ListView(
+     child: ListView(       
          shrinkWrap: true,
               //  physics: NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.horizontal,              
@@ -761,7 +761,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                    Container(
                       width:MediaQuery.of(context).size.width,
                       // color: Colors.blue[500],
-                      child:   ListView.builder(
+                      child:   ListView.builder(                    
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical, 
                       itemCount:medical.length>=3?3:medical.length,
@@ -790,7 +790,9 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                                   children: [
                                                     Center(
                                                       child: 
-                                                      medical[index].pid!=410?FadeInImage(
+                                                      // medical[index].pid!=410?
+                                                      (medical[index].photo!=null && medical[index].photo!='' )? 
+                                                      FadeInImage(
                                                         // fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
                                                         image: NetworkImage(
@@ -801,7 +803,9 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                                             "assets/img/placeholder.jpg",
                                                           );
                                                         },                                                                           
-                                                      ):Container(),
+                                                      ): Image.asset(
+                                                      "assets/img/placeholder.jpg",
+                                                      ),
                                                     ),
                                                     // dateToStringFormat(DateTime.now()) == medical[0].createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                                                 ]),
@@ -851,7 +855,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                   height: 300,
                   // color: Colors.purple[500],
                   
-                  child: ListView.builder(               
+                  child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical, 
                       itemCount: medical.length>=9?6:(medical.length-3<0?0:medical.length-3),

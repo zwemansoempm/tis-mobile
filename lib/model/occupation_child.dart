@@ -5,7 +5,7 @@ class OccupationChildModel {
   final int parent;
   final int recordstatus;
 
-  OccupationChildModel(
+  const OccupationChildModel(
     this.id,
     this.name,
     this.user_id,

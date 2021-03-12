@@ -694,9 +694,8 @@ class _SearchHospitalState extends State<SearchHospital> {
                   },
                   color: Colors.green,
                   textColor: Colors.white,
-                  child: Row(
-                    
-                    AxisAlignment: MainAxisAlignment.center,
+                  child: Row(                    
+                    mainAxisAlignment : MainAxisAlignment.center,
                     children: [
                       Icon(Icons.search),
                       SizedBox(width: 6),

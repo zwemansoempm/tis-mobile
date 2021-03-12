@@ -130,15 +130,16 @@ class SearchScreen extends  SearchDelegate {
                                   child: Row(
                                         children: [
                                           Expanded(
-                                            child: (myList[index].photo!=null && myList[index].photo!='') ? 
+                                            child:
+                                            //  (myList[index].photo!=null && myList[index].photo!='') ? 
+                                              (myList[index].photo!=null && myList[index].photo!='' && myList[index].id!=410 && myList[index].id!=454 && myList[index].id!=401 && myList[index].id!=307 && myList[index].id!=443 && myList[index].id!=417 && myList[index].id!=392  ) ?       
                                               Padding(
                                                 padding: const EdgeInsets.all(8),
                                                 child: Stack(
                                                   children: [
                                                     Center(
                                                       child: 
-                                                      // myList[index].id!=410?
-                                                      (myList[index].photo!=null && myList[index].photo!='' )? 
+                                                      // myList[index].id!=410?                                                       
                                                       FadeInImage(
                                                         // fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
@@ -150,7 +151,7 @@ class SearchScreen extends  SearchDelegate {
                                                             "assets/img/placeholder.jpg",
                                                           );
                                                         },                                                                           
-                                                      ): Image.asset("assets/img/placeholder.jpg"),
+                                                      ),
                                                     ),
                                                     // dateToStringFormat(DateTime.now()) == medical[0].createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                                                 ]),

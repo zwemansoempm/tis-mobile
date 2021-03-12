@@ -509,7 +509,8 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                             child:Stack(
                                                 fit:StackFit.expand,
                                                 children: <Widget>[
-                                                   (i.photo!=null && i.photo!='' ) ?                 
+                                                  //  (i.photo!=null && i.photo!='' )
+                                                   (i.photo!=null && i.photo!='' && i.id!=410 && i.id!=454 && i.id!=401 && i.id!=307 && i.id!=443 && i.id!=417 && i.id!=392  ) ?                 
                                                    FadeInImage.assetNetwork(                                                          
                                                                 // fadeInDuration: const Duration(seconds: 2),
                                                                 // alignment: Alignment.topLeft,
@@ -783,15 +784,17 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                   child: Row(
                                         children: [
                                           Expanded(
-                                            child: (medical[index].photo!=null && medical[index].photo!='') ? 
+                                            child:
+                                            //  (medical[index].photo!=null && medical[index].photo!='') 
+                                            (medical[index].photo!=null && medical[index].photo!='' && medical[index].id!=410 && medical[index].id!=454 && medical[index].id!=401 && medical[index].id!=307 && medical[index].id!=443 && medical[index].id!=417 && medical[index].id!=392  ) ?       
+                                            
                                               Padding(
                                                 padding: const EdgeInsets.all(8),
                                                 child: Stack(
                                                   children: [
                                                     Center(
                                                       child: 
-                                                      // medical[index].pid!=410?
-                                                      (medical[index].photo!=null && medical[index].photo!='' )? 
+                                                      // medical[index].pid!=410?                                                      
                                                       FadeInImage(
                                                         // fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
@@ -803,9 +806,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                                             "assets/img/placeholder.jpg",
                                                           );
                                                         },                                                                           
-                                                      ): Image.asset(
-                                                      "assets/img/placeholder.jpg",
-                                                      ),
+                                                      )
                                                     ),
                                                     // dateToStringFormat(DateTime.now()) == medical[0].createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                                                 ]),

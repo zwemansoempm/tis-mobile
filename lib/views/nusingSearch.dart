@@ -591,7 +591,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                         content: Container(
                                           width: double.minPositive,
                                           height: 300,
+
                                           child: ListView.builder(                                        
+
                                             shrinkWrap: true,
                                             itemCount: moveList.length,
                                             itemBuilder: (BuildContext context, int index) {
@@ -702,7 +704,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                                     content: Container(
                                                       width: double.minPositive,
                                                       height: 300,
+
                                                       child: ListView.builder(                                                    
+
                                                         shrinkWrap: true,
                                                         itemCount: snapshot.data.specialFeatures.length,
                                                         itemBuilder: (BuildContext context, int index) {
@@ -786,7 +790,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                                       content: Container(
                                                         width: double.minPositive,
                                                         height: 300,
+
                                                         child: ListView.builder(                                                      
+
                                                           shrinkWrap: true,
                                                           itemCount: snapshot.data.facTypes.length,
                                                           itemBuilder: (BuildContext context, int index) {
@@ -870,7 +876,9 @@ class _NusingSearchState extends State<NusingSearch> {
                                                       content: Container(
                                                         width: double.minPositive,
                                                         height: 300,
+
                                                         child: ListView.builder(                                                        
+
                                                           shrinkWrap: true,
                                                           itemCount: snapshot.data.medicalAcceptances.length,
                                                           itemBuilder: (BuildContext context, int index) {

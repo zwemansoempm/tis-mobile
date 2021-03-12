@@ -41,7 +41,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   TextEditingController zipCodeController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  TextEditingController townshipId= TextEditingController();
+  TextEditingController townshipId = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneNoController = TextEditingController();
   TextEditingController mailController = TextEditingController();
@@ -100,10 +100,10 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   @override
   Widget build(BuildContext context) {
     return FocusWatcher(
-        child: Scaffold(
+      child: Scaffold(
         body: Form(
-            key: _form,
-            child: Padding(
+          key: _form,
+          child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: StreamBuilder<JobDetailResponse>(
               stream: getJobDetailBloc.subject.stream,
@@ -224,7 +224,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       child: DropdownButtonHideUnderline(
                     child: ButtonTheme(
                       alignedDropdown: true,
-                      child: new DropdownButton<String>(                   
+                      child: new DropdownButton<String>(
                         //isDense: true,
                         isExpanded: true,
                         hint: Row(
@@ -240,14 +240,15 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         onChanged: (String newValue) {
                           _city = '';
                           setState(() {
-                            
-                            stateController.text= cityList[int.parse(newValue)].city_name.toString();
+                            stateController.text = cityList[int.parse(newValue)]
+                                .city_name
+                                .toString();
 
                             if (checkSearch == 1) {
                               checkSearch = 0;
                             }
-                            checkstream=1;
-                           
+                            checkstream = 1;
+
                             //  else{
                             //    checkSearch=1;
                             //  }
@@ -266,7 +267,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         },
 
                         items: cityList
-                            .map((CityModel cityModel) => DropdownMenuItem(                                
+                            .map((CityModel cityModel) => DropdownMenuItem(
                                   value: cityModel.id.toString(),
                                   child: cityModel.id != -1
                                       ? Text(cityModel.city_name)
@@ -343,15 +344,15 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                   );
                 } else if (snapshot.hasError) {
                   return Container();
-                } else if (snapshot.hasData && checkstream==1) {
+                } else if (snapshot.hasData && checkstream == 1) {
                   if (snapshot.data.error != null &&
                       snapshot.data.error.length > 0) {
                     return Container();
-                  }               
-        
+                  }
+
                   List<TownshipModel> townships = List();
                   townships.add(new TownshipModel(-1, "", ""));
-                  snapshot.data.township.forEach((e) {                
+                  snapshot.data.township.forEach((e) {
                     townships.add(e);
                   });
                   // print('t1');
@@ -374,13 +375,14 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           ],
                         ),
                         value: township_id == '' ? _township : township_id,
-                        onChanged: (String newValue) {                       
+                        onChanged: (String newValue) {
                           setState(() {
-                            townships.map((TownshipModel tspModel){  
-                                if(tspModel.id.toString()==newValue){
-                                   cityController.text= tspModel.township_name.toString();
-                                   townshipId.text=tspModel.id.toString();                                 
-                                }
+                            townships.map((TownshipModel tspModel) {
+                              if (tspModel.id.toString() == newValue) {
+                                cityController.text =
+                                    tspModel.township_name.toString();
+                                townshipId.text = tspModel.id.toString();
+                              }
                             }).toList();
                             if (checkSearch == 1) {
                               checkSearch = 0;
@@ -450,7 +452,8 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
           child: Theme(
             child: TextFormField(
               //obscureText: true,
-              validator:ValidationBuilder().minLength(1).maxLength(200).build(),
+              // validator:
+              //     ValidationBuilder().minLength(1).maxLength(200).build(),
               controller: addressController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -470,6 +473,9 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
   }
 
   Widget _postJobData(JobDetailModel jobObj) {
+    String pattern =
+        '^([0-9]{4}|[0-9]{2})[-]([0]?[1-9]|[1][0-2])[-]([0]?[1-9]|[1|2][0-9]|[3][0|1])';
+    RegExp regExp = new RegExp(pattern);
     return Container(
       padding: EdgeInsets.all(10.0),
       margin: EdgeInsets.only(
@@ -482,7 +488,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
         border: Border.all(color: Colors.grey),
       ),
       child: SingleChildScrollView(
-        controller: _scrollController,  //reverse: true,
+        controller: _scrollController, //reverse: true,
         child: Padding(
           padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
           child: Column(children: [
@@ -542,15 +548,23 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         padding: EdgeInsets.all(15),
                         child: Theme(
                           child: TextFormField(
-                            //obscureText: true, 
-                            validator:ValidationBuilder().regExp(RegExp("(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)", unicode: false),"First Name,Last Nameを入力してください。").minLength(1).maxLength(50).build(),
+                            //obscureText: true,
+                            validator: ValidationBuilder()
+                                .regExp(
+                                    RegExp(
+                                        "(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)",
+                                        unicode: false),
+                                    "お名前を入力してください。")
+                                .minLength(1)
+                                .maxLength(50)
+                                .build(),
                             controller: nameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
                               // hintText: '',
-                              labelText: 'お名前を入力してください。',
+                              //labelText: 'お名前を入力してください。',
                               // helperText: 'Min length: 5, max length: 50',
                             ),
                           ),
@@ -574,15 +588,21 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Theme(
-                          child: TextFormField(                                                
-                            validator:new ValidationBuilder().regExp(RegExp("/[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+/u",unicode: false),"フリガナを入力してください。")
-                            .minLength(1).maxLength(50).build(),                          
+                          child: TextFormField(
+                            validator: new ValidationBuilder()
+                                .regExp(
+                                    RegExp("/[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+/u",
+                                        unicode: false),
+                                    "フリガナを入力してください。")
+                                .minLength(1)
+                                .maxLength(50)
+                                .build(),
                             controller: furiganaController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              labelText: 'フリガナを入力してください。',
+                              //labelText: 'フリガナを入力してください。',
                               hintStyle: TextStyle(fontSize: 15),
                             ),
                           ),
@@ -605,19 +625,25 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       child: Container(
                         child: Column(children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.all(15),
+                            padding: EdgeInsets.all(0),
                             child: Theme(
-                                 data: Theme.of(context).copyWith(
-                                  primaryColor: Colors.blue,
-                                ),
-                                child: TextFormField(
-                                validator:new ValidationBuilder().regExp(RegExp("^([0-9]{4}|[0-9]{2})[-]([0]?[1-9]|[1][0-2])[-]([0]?[1-9]|[1|2][0-9]|[3][0|1])",unicode: false),"生年月日を入力してください。")
-                                .minLength(10).maxLength(10).build(), 
+                              data: Theme.of(context).copyWith(
+                                primaryColor: Colors.blue,
+                              ),
+                              child: TextFormField(
+                                validator: (value) => value.isNotEmpty
+                                    ? regExp
+                                            .hasMatch(value)
+                                            .toString()
+                                            .endsWith("false")
+                                        ? "生年月日の書式を確認して\nください。"
+                                        : null
+                                    : null,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   fillColor: Colors.grey,
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(30.0, 10.0, 100.0, 10.0),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      30.0, 10.0, 100.0, 10.0),
                                   labelText: '年 - 月 - 日',
                                   hintStyle: TextStyle(fontSize: 15),
                                 ),
@@ -692,11 +718,14 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Theme(
-                          child: TextFormField(                              
-                            //obscureText: true,                        
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            validator:new ValidationBuilder()
-                            .minLength(1).maxLength(10).build(),    
+                          child: TextFormField(
+                            //obscureText: true,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            // validator:new ValidationBuilder()
+                            // .minLength(1).maxLength(10).build(),
+                            maxLength: 7,
                             controller: zipCodeController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -713,11 +742,11 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                       ),
                       Column(
                         // mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment :CrossAxisAlignment .start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.fromLTRB(15, 0, 0,0),
-                            child: RaisedButton(                            
+                            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: RaisedButton(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5)),
                                 onPressed: () {
@@ -755,7 +784,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                 )),
                           ),
                           Padding(
-                            padding: EdgeInsets.fromLTRB(15, 0, 0,0),
+                            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                             child: Row(children: [
                               Text("例）1006740（"),
                               GestureDetector(
@@ -797,7 +826,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                     } else if (snapshot.hasData) {
                                       if (snapshot.data.error != null &&
                                           snapshot.data.error.length > 0) {
-                                        return Container();
+                                        return columnErrorData();
                                       }
 
                                       postalList = snapshot.data.postalList;
@@ -811,11 +840,20 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                       township_id = checkSearch == 1
                                           ? tspIdList[0].id.toString()
                                           : '';
-                                          // print('txp');
-                                          // print(township_id);
+
+                                      // print('txp');
+                                      // print(township_id);
                                       _street = postalList[0].street;
-                                      addressController.text = _street;     
-                                      checkstream=1;                               
+                                      stateController.text = postalList[0].pref;
+                                      cityController.text = postalList[0].city;
+
+                                      addressController.text = _street;
+
+                                      print(stateController.text);
+                                      print(cityController.text);
+                                      print(addressController.text);
+                                      checkstream = 1;
+
                                       return columnData();
                                     } else {
                                       return Center(
@@ -856,13 +894,17 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         child: Theme(
                           child: TextFormField(
                             //obscureText: true,
-                            validator:ValidationBuilder().phone('電話番号を入力してください。').minLength(1).maxLength(50).build(),
+                            validator: ValidationBuilder()
+                                .phone('電話番号を入力してください。')
+                                .minLength(1)
+                                .maxLength(50)
+                                .build(),
                             controller: phoneNoController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              labelText: '電話番号を入力してください。',
+                              //labelText: '電話番号を入力してください。',
                             ),
                           ),
                           data: Theme.of(context).copyWith(
@@ -892,14 +934,18 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         padding: EdgeInsets.all(15),
                         child: Theme(
                           child: TextFormField(
-                            validator:ValidationBuilder().email('メールアドレスを入力してください。').minLength(1).maxLength(50).build(),
+                            // validator: ValidationBuilder()
+                            //     .email('メールアドレスを入力してください。')
+                            //     .minLength(1)
+                            //     .maxLength(50)
+                            //     .build(),
                             controller: mailController,
                             //obscureText: true,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
                               //labelText: 'Password',
-                              labelText: 'メールアドレス',
+                              //labelText: 'メールアドレス',
                             ),
                           ),
                           data: Theme.of(context).copyWith(
@@ -926,14 +972,14 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                         padding: EdgeInsets.all(15),
                         child: Theme(
                           child: TextFormField(
-                            //obscureText: true,      
-                            validator:ValidationBuilder().minLength(1).build(),               
+                            //obscureText: true,
+                            //validator: ValidationBuilder().minLength(1).build(),
                             controller: wishController,
                             maxLines: 3,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               fillColor: Colors.grey,
-                              labelText: 'ご希望等',
+                              //labelText: 'ご希望等',
                             ),
                           ),
                           data: Theme.of(context).copyWith(
@@ -1010,36 +1056,36 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                           //height: 100.0,
                           child: RaisedButton(
                             onPressed: () {
-                              var validate =_validate();
-                              if(validate==true && this.chkAgree==true){
-                                  JobConfirmModel user = new JobConfirmModel(
-                                  nameController.text,
-                                  furiganaController.text,
-                                  birthdayController.text,
-                                  genderController.text,
-                                  zipCodeController.text,
-                                  stateController.text,
-                                  cityController.text,
-                                  townshipId.text,
-                                  addressController.text,
-                                  phoneNoController.text,
-                                  mailController.text,
-                                  wishController.text);
-                                  var route = new MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        new JobConfirmWidget(
-                                            value: widget.value,
-                                            jobConfirmModel: user),
-                                  );
-                                  Navigator.of(context).push(route);
-                              }else{
-                                   _scrollController.animateTo(
-                                    0.0,
-                                    curve: Curves.easeOut,
-                                    duration: const Duration(milliseconds: 300),
-                                  );
+                              var validate = _validate();
+                              if (validate == true && this.chkAgree == true) {
+                                JobConfirmModel user = new JobConfirmModel(
+                                    nameController.text,
+                                    furiganaController.text,
+                                    birthdayController.text,
+                                    genderController.text,
+                                    zipCodeController.text,
+                                    stateController.text,
+                                    cityController.text,
+                                    townshipId.text,
+                                    addressController.text,
+                                    phoneNoController.text,
+                                    mailController.text,
+                                    wishController.text);
+                                var route = new MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      new JobConfirmWidget(
+                                          value: widget.value,
+                                          jobConfirmModel: user),
+                                );
+                                Navigator.of(context).push(route);
+                              } else {
+                                _scrollController.animateTo(
+                                  0.0,
+                                  curve: Curves.easeOut,
+                                  duration: const Duration(milliseconds: 300),
+                                );
                               }
-                               FocusScope.of(context).unfocus();
+                              FocusScope.of(context).unfocus();
                             },
                             color: Colors.green[600],
                             textColor: Colors.white,
@@ -1147,5 +1193,341 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Widget columnErrorData() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        // Container(
+        //   width: 100,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Icon(Icons.search),
+        //       SizedBox(width: 6),
+        //       Text('Error',
+        //           style: TextStyle(
+        //             fontSize: 12,
+        //           )),
+        //     ],
+        //   ),
+        // ),
+        // Container(
+        //   width: 100,
+        //   child:
+        Row(
+          //mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //Icon(Icons.search),
+            //SizedBox(width: 6),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text('郵便番号の書式を確認してください。',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.red,
+                  )),
+            )
+          ],
+        ),
+        //),
+        Container(
+          child: ListTile(
+            title: Text("都道府県"),
+            trailing: Card(
+              margin: EdgeInsets.all(10.0),
+              color: Colors.red,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "必須",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          //padding: EdgeInsets.all(5.0),
+          padding: EdgeInsets.only(left: 5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              color: Colors.white,
+              border: Border.all(color: Colors.grey[400])),
+          child: StreamBuilder<CityResponse>(
+              stream: getCityBloc.subject.stream,
+              builder: (context, AsyncSnapshot<CityResponse> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Stack(
+                    children: <Widget>[
+                      _dropDown("選択してください。"),
+                      Center(
+                        child: Opacity(
+                          opacity: 1.0,
+                          child:
+                              buildLoadingWidget(), //CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Container();
+                } else if (snapshot.hasData) {
+                  if (snapshot.data.error != null &&
+                      snapshot.data.error.length > 0) {
+                    return Container();
+                  }
+                  List<CityModel> cityList = List();
+                  cityList.add(new CityModel(-1, ""));
+                  snapshot.data.city.forEach((e) {
+                    cityList.add(e);
+                  });
+
+                  return Container(
+                      //width: 320.0,
+                      child: DropdownButtonHideUnderline(
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: new DropdownButton<String>(
+                        //isDense: true,
+                        isExpanded: true,
+                        hint: Row(
+                          children: [
+                            Icon(
+                              Icons.arrow_drop_down_outlined,
+                              size: 35.0,
+                            ),
+                            Text("選択してください。"),
+                          ],
+                        ),
+                        value: _city,
+                        onChanged: (String newValue) {
+                          _city = '';
+                          setState(() {
+                            stateController.text = cityList[int.parse(newValue)]
+                                .city_name
+                                .toString();
+
+                            if (checkSearch == 1) {
+                              checkSearch = 0;
+                            }
+                            checkstream = 1;
+
+                            //  else{
+                            //    checkSearch=1;
+                            //  }
+                            // township_id='';
+                            // _township = newValue;
+
+                            _township = null;
+                            // _township=newValue;
+                            getTspBloc.drainStream();
+                            stream1 = getTspBloc..getTownship(newValue);
+                            _city = newValue;
+                            if (township_id != '') {
+                              township_id = '';
+                            }
+                          });
+                        },
+
+                        items: cityList
+                            .map((CityModel cityModel) => DropdownMenuItem(
+                                  value: cityModel.id.toString(),
+                                  child: cityModel.id != -1
+                                      ? Text(cityModel.city_name)
+                                      : Row(
+                                          children: [
+                                            Icon(
+                                              Icons.arrow_drop_down_outlined,
+                                              size: 35.0,
+                                            ),
+                                            Text("選択してください。"),
+                                          ],
+                                        ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ));
+                } else {
+                  return Stack(
+                    children: <Widget>[
+                      _dropDown("選択してください。"),
+                      Center(
+                        child: Opacity(
+                          opacity: 1.0,
+                          child:
+                              buildLoadingWidget(), //CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
+                  );
+                  // );//_dropDown("市区町村"); //buildLoadingWidget();
+                }
+              }),
+        ),
+        Container(
+          child: ListTile(
+            title: Text("市区町村"),
+            trailing: Card(
+              margin: EdgeInsets.all(10.0),
+              color: Colors.red,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "必須",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              color: Colors.white,
+              border: Border.all(color: Colors.grey[400])),
+          child: StreamBuilder<TownshipResponse>(
+              stream: getTspBloc.subject.stream,
+              builder: (context, AsyncSnapshot<TownshipResponse> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    checkstream == 1) {
+                  //
+                  return Stack(
+                    children: <Widget>[
+                      _dropDown("選択してください。"),
+                      Center(
+                        child: Opacity(
+                          opacity: 1.0,
+                          child:
+                              buildLoadingWidget(), //CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Container();
+                } else if (snapshot.hasData && checkstream == 1) {
+                  if (snapshot.data.error != null &&
+                      snapshot.data.error.length > 0) {
+                    return Container();
+                  }
+
+                  List<TownshipModel> townships = List();
+                  townships.add(new TownshipModel(-1, "", ""));
+                  snapshot.data.township.forEach((e) {
+                    townships.add(e);
+                  });
+                  return Container(
+                      child: DropdownButtonHideUnderline(
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: new DropdownButton<String>(
+                        //isDense: true,
+                        isExpanded: true,
+                        hint: Row(
+                          children: [
+                            Icon(
+                              Icons.arrow_drop_down_outlined,
+                              size: 35.0,
+                            ),
+                            Text("選択してください。"),
+                          ],
+                        ),
+                        value: township_id == '' ? _township : township_id,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            townships.map((TownshipModel tspModel) {
+                              if (tspModel.id.toString() == newValue) {
+                                cityController.text =
+                                    tspModel.township_name.toString();
+                                townshipId.text = tspModel.id.toString();
+                              }
+                            }).toList();
+                            if (checkSearch == 1) {
+                              checkSearch = 0;
+                            }
+                            township_id = '';
+                            _township = newValue;
+                          });
+                        },
+                        items: townships
+                            .map((TownshipModel tspModel) => DropdownMenuItem(
+                                  value: tspModel.id.toString(),
+                                  //child: Text(tspModel.township_name)
+                                  child: tspModel.id != -1
+                                      ? Text(tspModel.township_name)
+                                      : Row(
+                                          children: [
+                                            Icon(
+                                              Icons.arrow_drop_down_outlined,
+                                              size: 35.0,
+                                            ),
+                                            Text("選択してください。"),
+                                          ],
+                                        ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ));
+                } else {
+                  return Stack(
+                    children: <Widget>[
+                      _dropDown("選択してください。"),
+                      Center(
+                        child: Opacity(
+                          opacity: 1.0,
+                          child: checkstream == 1
+                              ? buildLoadingWidget()
+                              : Container(), //CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              }),
+        ),
+        Container(
+          child: ListTile(
+            title: Text("番地（建物名）"),
+            trailing: Card(
+              margin: EdgeInsets.all(10.0),
+              color: Colors.red,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "必須",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(15),
+          child: Theme(
+            child: TextFormField(
+              //obscureText: true,
+              // validator:
+              //     ValidationBuilder().minLength(1).maxLength(200).build(),
+              controller: addressController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                fillColor: Colors.grey,
+                //labelText: 'Password',
+                labelText: '番地を入力してください。',
+              ),
+            ),
+            data: Theme.of(context).copyWith(
+              primaryColor: Colors.blue,
+            ),
+          ),
+        ),
+        Text("例）区丸の内1-9-1 グラントウキョウサウスタワー40階")
+      ],
+    );
   }
 }

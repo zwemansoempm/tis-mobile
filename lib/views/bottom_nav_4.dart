@@ -49,6 +49,7 @@ class _BottomNav4State extends State<JobWidget> {
   List<String> searchDisplayData;
   List<CityModel> cityList;
   List<TownshipModel> allTsp;
+  var selectedOccName = [];
 
   @override
   void initState() {
@@ -659,6 +660,9 @@ class _BottomNav4State extends State<JobWidget> {
                                                                       selectedOccID
                                                                           .add(
                                                                               _id);
+                                                                      selectedOccName.add(
+                                                                          allOcc[index]
+                                                                              .name);
                                                                     });
                                                                   }
                                                                 } else {
@@ -671,6 +675,10 @@ class _BottomNav4State extends State<JobWidget> {
                                                                           (s) =>
                                                                               s ==
                                                                               _id);
+                                                                      selectedOccName.removeWhere((s) =>
+                                                                          s ==
+                                                                          allOcc[index]
+                                                                              .name);
                                                                     });
                                                                   }
                                                                 }
@@ -954,6 +962,10 @@ class _BottomNav4State extends State<JobWidget> {
               ? st.add(e.township_name)
               : null)
           .toList();
+    }
+
+    for (var i = 0; i < selectedOccID.length; i++) {
+      st.add(selectedOccName[0].toString());
     }
 
     selectedEmpstatus.map((e) => st.add(e.toString())).toList();

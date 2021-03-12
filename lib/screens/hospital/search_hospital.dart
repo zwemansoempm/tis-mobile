@@ -197,7 +197,9 @@ class _SearchHospitalState extends State<SearchHospital> {
                                               ),
                                                 actions: [
                                                   FlatButton(
+
                                                     child: Text("閉じ"),
+
                                                     onPressed: () {
                                                       Navigator.of(context).pop(); // dismiss dialog
                                                     },
@@ -693,7 +695,8 @@ class _SearchHospitalState extends State<SearchHospital> {
                   color: Colors.green,
                   textColor: Colors.white,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    
+                    AxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.search),
                       SizedBox(width: 6),

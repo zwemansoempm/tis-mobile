@@ -59,6 +59,7 @@ class _BottomNav4State extends State<JobWidget> {
 
   @override
   void dispose() {
+    getLinkNewsBloc.drainStream();
     super.dispose();
   }
 
@@ -125,7 +126,8 @@ class _BottomNav4State extends State<JobWidget> {
                       alignment: Alignment.bottomRight,
                       child: RawMaterialButton(
                         onPressed: () {
-                          setState(() {
+                          getLinkNewsBloc.drainStream();
+                          setState(() {                        
                             stream = getLinkNewsBloc..getLinkedNews('3');
                           });
                           return showDialog(

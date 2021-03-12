@@ -179,7 +179,8 @@ class _SearchHospitalState extends State<SearchHospital> {
                           alignment: Alignment.bottomRight,
                           child:RawMaterialButton(
                             onPressed: () {
-                                setState(() {
+                                getLinkNewsBloc.drainStream();
+                                setState(() {                              
                                 stream =getLinkNewsBloc..getLinkedNews('2');                               
                               });
                                return  showDialog(                                 
@@ -192,7 +193,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                                   "通知",
                                                 ),
                                                 content: SingleChildScrollView(
-                                                  child: const ShowNoti().showNotification(),                                                         
+                                                  child:  const ShowNoti().showNotification(),                                                         
                                               ),
                                                 actions: [
                                                   FlatButton(

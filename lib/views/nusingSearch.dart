@@ -163,7 +163,8 @@ class _NusingSearchState extends State<NusingSearch> {
                           alignment: Alignment.bottomRight,
                           child:RawMaterialButton(
                             onPressed: () {
-                                setState(() {
+                                getLinkNewsBloc.drainStream();
+                                setState(() {                              
                                 stream =getLinkNewsBloc..getLinkedNews('1');                               
                               });
                                return  showDialog(                                 
@@ -176,7 +177,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                   "通知",
                                                 ),
                                                 content: SingleChildScrollView(
-                                                  child: const ShowNoti().showNotification(),                                                    
+                                                  child:  const ShowNoti().showNotification(),                                                    
                                               ),
                                                 actions: [
                                                   FlatButton(

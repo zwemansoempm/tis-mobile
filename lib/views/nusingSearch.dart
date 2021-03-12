@@ -22,7 +22,7 @@ import 'package:tis/views/nusing_detail.dart';
 import 'package:tis/views/shownoti.dart';
 
 class NusingSearch extends StatefulWidget {
-  NusingSearch({Key key}) : super(key: key);
+  const NusingSearch({Key key}) : super(key: key);
 
   @override
   _NusingSearchState createState() => _NusingSearchState();
@@ -163,7 +163,8 @@ class _NusingSearchState extends State<NusingSearch> {
                           alignment: Alignment.bottomRight,
                           child:RawMaterialButton(
                             onPressed: () {
-                                setState(() {
+                                getLinkNewsBloc.drainStream();
+                                setState(() {                              
                                 stream =getLinkNewsBloc..getLinkedNews('1');                               
                               });
                                return  showDialog(                                 
@@ -176,7 +177,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                   "通知",
                                                 ),
                                                 content: SingleChildScrollView(
-                                                  child: ShowNoti().showNotification(),                                                    
+                                                  child:  const ShowNoti().showNotification(),                                                    
                                               ),
                                                 actions: [
                                                   FlatButton(
@@ -590,7 +591,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                         content: Container(
                                           width: double.minPositive,
                                           height: 300,
-                                          child: ListView.builder(
+                                          child: ListView.builder(                                        
                                             shrinkWrap: true,
                                             itemCount: moveList.length,
                                             itemBuilder: (BuildContext context, int index) {
@@ -701,7 +702,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                     content: Container(
                                                       width: double.minPositive,
                                                       height: 300,
-                                                      child: ListView.builder(
+                                                      child: ListView.builder(                                                    
                                                         shrinkWrap: true,
                                                         itemCount: snapshot.data.specialFeatures.length,
                                                         itemBuilder: (BuildContext context, int index) {
@@ -785,7 +786,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                       content: Container(
                                                         width: double.minPositive,
                                                         height: 300,
-                                                        child: ListView.builder(
+                                                        child: ListView.builder(                                                      
                                                           shrinkWrap: true,
                                                           itemCount: snapshot.data.facTypes.length,
                                                           itemBuilder: (BuildContext context, int index) {
@@ -869,7 +870,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                                       content: Container(
                                                         width: double.minPositive,
                                                         height: 300,
-                                                        child: ListView.builder(
+                                                        child: ListView.builder(                                                        
                                                           shrinkWrap: true,
                                                           itemCount: snapshot.data.medicalAcceptances.length,
                                                           itemBuilder: (BuildContext context, int index) {
@@ -1369,8 +1370,8 @@ class _NusingSearchState extends State<NusingSearch> {
 }
 
 
-class _MyDialog extends StatefulWidget {
-  _MyDialog({
+class _MyDialog extends StatefulWidget { 
+  const _MyDialog({
     this.cities,
     this.selectedCities,
     this.onSelectedCitiesListChanged,
@@ -1419,7 +1420,7 @@ class _MyDialogState extends State<_MyDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.builder(               
                 itemCount: widget.cities.length,
                 itemBuilder: (BuildContext context, int index) {
                   final cityName = widget.cities[index];

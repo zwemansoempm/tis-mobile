@@ -26,7 +26,7 @@ class HospitalModel {
   final String township_name;
   final String profilenumber;
 
-  HospitalModel(
+  const HospitalModel(
     this.hos_id, this.id, this.customer_id, this.pro_num, this.name, this.email, this.phone, this.address,
     this.logo, this.townships_id, this.access, this.medical_department, this.specialist, this.gallery,
     this.details_info, this.subject, this.closed_day, this.facilities, this.website, this.special_features,

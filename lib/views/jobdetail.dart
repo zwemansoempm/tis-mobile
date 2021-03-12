@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tis/views/jobapply.dart';
 
 class JobDetail extends StatelessWidget {
+  const JobDetail();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,7 +10,7 @@ class JobDetail extends StatelessWidget {
         title: Text('Job Detail'),
       ),
       body: Container(
-      child: ListView(
+      child: ListView(     
         children: [
           Container(
             //padding: EdgeInsets.all(10.0),

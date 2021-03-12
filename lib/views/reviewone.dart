@@ -3,15 +3,17 @@ import 'package:tis/views/reviewtwo.dart';
 
 class ReviewPost extends StatefulWidget {
   // SELECT BOX variable
-
+  const ReviewPost();
   @override
   _ReviewPostState createState() => _ReviewPostState();
 }
 
 class _ReviewPostState extends State<ReviewPost> {
-  String dropdownValue = '1970';
+  final dropdownValue = ValueNotifier<String>('1970');
+  // String dropdownValue = '1970';
 
-  String holder = '';
+  final holder = ValueNotifier<String>('');
+  // String holder = '';
 
   List<String> items = [
     '1970',
@@ -229,7 +231,7 @@ class _ReviewPostState extends State<ReviewPost> {
   Widget build(BuildContext context) {
     return Container(
         color: Colors.lightBlue[50],
-        child: ListView(
+        child: ListView(       
           children: [
             Row(
               children: [
@@ -417,7 +419,7 @@ class _ReviewPostState extends State<ReviewPost> {
                                             content: _content,
                                             review: _review,
                                             zipcode: _zipcode,
-                                            year: holder,
+                                            year: holder.value,
                                           )));
                             }
 
@@ -527,71 +529,75 @@ class _ReviewPostState extends State<ReviewPost> {
 
   Widget _buildSelectbox() {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Container(
-        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            color: Colors.white,
-            border: Border.all(color: Colors.blue[100], width: 2)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Icon(Icons.arrow_drop_down, size: 30,),
+      ValueListenableBuilder(
+          valueListenable: dropdownValue,
+          builder: (BuildContext context, value, Widget child) => Container(
+          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              color: Colors.white,
+              border: Border.all(color: Colors.blue[100], width: 2)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Icon(Icons.arrow_drop_down, size: 30,),
 
-              Expanded(
-                child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton<String>(
-                    itemHeight: 50,
-                    dropdownColor: Colors.grey[100],
-                    value: dropdownValue,
-                    icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 0,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                    underline: Container(
-                      height: 0,
+                Expanded(
+                  child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<String>(
+                      itemHeight: 50,
+                      dropdownColor: Colors.grey[100],
+                      value: value,
+                      icon: Icon(Icons.arrow_drop_down),
+                      iconSize: 0,
+                      elevation: 16,
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      underline: Container(
+                        height: 0,
+                      ),
+                      onChanged: (String data) {
+                        // setState(() {
+                          holder.value = data;
+                          dropdownValue.value = data;
+                        // });
+                      },
+                      items: items.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(value),
+                          ),
+                        );
+                      }).toList(),
                     ),
-                    onChanged: (String data) {
-                      setState(() {
-                        holder = data;
-                        dropdownValue = data;
-                      });
-                    },
-                    items: items.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(value),
-                        ),
-                      );
-                    }).toList(),
                   ),
                 ),
-              ),
 
-              Column(
-                children: [
-                  Icon(
-                    Icons.arrow_drop_down,
-                    size: 30,
-                  ),
-                ],
-              ),
-            ],
+                Column(
+                  children: [
+                    Icon(
+                      Icons.arrow_drop_down,
+                      size: 30,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
+        ),         
+         
       ),
       SizedBox(
         height: 20,
       ),
 
       //Printing Item on Text Widget
-      Text('Selected Item = ' + '$holder',
+      Text('Selected Item = ' + '${holder.value}',
           style: TextStyle(fontSize: 12, color: Colors.black)),
     ]);
   }

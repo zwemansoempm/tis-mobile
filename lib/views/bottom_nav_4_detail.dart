@@ -10,7 +10,7 @@ class JobDetailWidget extends StatefulWidget {
   //final JobModel value;
   final String value;
 
-  JobDetailWidget({Key key, this.value}) : super(key: key);
+  const JobDetailWidget({Key key, this.value}) : super(key: key);
   @override
   _BottomNav4DetailState createState() => _BottomNav4DetailState();
 }
@@ -93,7 +93,7 @@ class _BottomNav4DetailState extends State<JobDetailWidget> {
                 ),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TopPage()));
+                      MaterialPageRoute(builder: (context) => const TopPage()));
                 },
               ),
               Icon(

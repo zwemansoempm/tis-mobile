@@ -3,6 +3,7 @@ import 'package:tis/views/term.dart';
 import 'package:tis/views/privacy.dart';
 
 class SettingScreen extends StatefulWidget {
+  const SettingScreen();
   @override
   _SettingScreen createState() => _SettingScreen();
 }
@@ -18,7 +19,7 @@ class _SettingScreen extends State<SettingScreen> {
         }),
         title: Text('Settings', style: TextStyle(color: Colors.black)),
       ),
-      body: ListView(
+      body: ListView(      
         children: ListTile.divideTiles(
           context: context,
           tiles: [
@@ -26,14 +27,14 @@ class _SettingScreen extends State<SettingScreen> {
               title: Text('利用規約'),
               onTap: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Term()));
+                    context, MaterialPageRoute(builder: (context) =>const Term()));
               },
             ),
             ListTile(
               title: Text('プライバシーポリシー'),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Privacy()));
+                    MaterialPageRoute(builder: (context) => const Privacy()));
               },
             ),
           ],

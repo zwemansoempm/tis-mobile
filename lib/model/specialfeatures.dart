@@ -6,7 +6,7 @@ class SpecialFeaturesModel {
   final int user_id;
   final int recordstatus;
 
-  SpecialFeaturesModel(this.id, this.name, this.short_name, this.user_id, this.type, this.recordstatus);
+  const SpecialFeaturesModel(this.id, this.name, this.short_name, this.user_id, this.type, this.recordstatus);
 
   SpecialFeaturesModel.fromJson(Map<String, dynamic> json)
   : id = json["id"],

@@ -6,7 +6,7 @@ class CityOccListResponse {
   final List<OccupationModel> occList;
   final String error;
 
-  CityOccListResponse(this.cityList, this.occList, this.error);
+  const CityOccListResponse(this.cityList, this.occList, this.error);
   CityOccListResponse.fromJson(Map<String, dynamic> json)
       : cityList = (json["city"] as List)
             .map((i) => new CityModel.fromJson(i))

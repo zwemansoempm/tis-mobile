@@ -4,7 +4,7 @@ class ColumnResponse{
   final List<MedicalModel> medical;
   final String error;
 
-  ColumnResponse(this.medical,this.error);
+  const ColumnResponse(this.medical,this.error);
   ColumnResponse.fromJson(Map<String, dynamic> json)// Map<String, dynamic>  List<dynamic> 
   : medical=(json["40,コラム,#0000ff"]as List).map((i) => new MedicalModel.fromJson(i)).toList(), 
   error="";

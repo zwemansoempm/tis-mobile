@@ -13,7 +13,7 @@ class TopDetailScreen extends StatefulWidget {
   final String top;  
   final String news;
   
-  TopDetailScreen({Key key,@required this.top,this.news}) : super(key: key); 
+  const TopDetailScreen({Key key,@required this.top,this.news}) : super(key: key); 
   
  @override
   _TopDetailState createState() => _TopDetailState();
@@ -59,7 +59,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                   //  ),
                  ),
                  SliverFillRemaining(                  
-                   child:ListView(
+                   child:ListView(                   
                        children:[
                           Container(
                               margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),                                 
@@ -177,7 +177,9 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                             child: Stack(
                                 fit:StackFit.expand,
                                 children: <Widget>[                                 
-                                  (allPosts[0].photo!=null && allPosts[0].photo!=''  && allPosts[0].id!=311 && allPosts[0].id!=410 && allPosts[0].id!=236 && allPosts[0].id!=272 && allPosts[0].id!=482 && allPosts[0].id!=312 && allPosts[0].id!=329 && allPosts[0].id!=359 && allPosts[0].id!=402 && allPosts[0].id!=403 && allPosts[0].id!=438 && allPosts[0].id!=418 && allPosts[0].id!=437 && allPosts[0].id!=453 && allPosts[0].id!=451 && allPosts[0].id!=445 && allPosts[0].id!=413 && allPosts[0].id!=214 )? 
+                                  //&& allPosts[0].id!=311 && allPosts[0].id!=410 && allPosts[0].id!=236 && allPosts[0].id!=272 && allPosts[0].id!=482 && allPosts[0].id!=312 && allPosts[0].id!=329 && allPosts[0].id!=359 && allPosts[0].id!=402 && allPosts[0].id!=403 && allPosts[0].id!=438 && allPosts[0].id!=418 && allPosts[0].id!=437 && allPosts[0].id!=453 && allPosts[0].id!=451 && allPosts[0].id!=445 && allPosts[0].id!=413 && allPosts[0].id!=214
+                                  // (allPosts[0].photo!=null && allPosts[0].photo!='')? 
+                                  (allPosts[0].photo!=null && allPosts[0].photo!='' && allPosts[0].id!=410 && allPosts[0].id!=454 && allPosts[0].id!=401 && allPosts[0].id!=307 && allPosts[0].id!=443 && allPosts[0].id!=417 && allPosts[0].id!=392  ) ?       
                                   FadeInImage.assetNetwork(
                                                           // fadeInDuration: const Duration(seconds: 2),
                                                           // alignment: Alignment.topLeft,
@@ -298,7 +300,7 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
       height: 170.0*allPosts.length,
       child: SizedBox(
         child:
-         ListView.builder(
+         ListView.builder(         
             physics: NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical, 
             itemCount:allPosts.length,
@@ -310,7 +312,8 @@ class _TopDetailState  extends State<TopDetailScreen> with SingleTickerProviderS
                      child:Stack(
                             fit:StackFit.expand,
                             children: <Widget>[
-                               (allPosts[index].photo!=null && allPosts[index].photo!=''  && allPosts[index].id!=311 && allPosts[index].id!=410 && allPosts[index].id!=236 && allPosts[index].id!=272 && allPosts[index].id!=482 && allPosts[index].id!=312 && allPosts[index].id!=329 && allPosts[index].id!=359 && allPosts[index].id!=402 && allPosts[index].id!=403 && allPosts[index].id!=438 && allPosts[index].id!=418 && allPosts[index].id!=437 && allPosts[index].id!=453 && allPosts[index].id!=451 && allPosts[index].id!=445 && allPosts[index].id!=413 && allPosts[index].id!=214 )? 
+                              //&& allPosts[index].id!=311 && allPosts[index].id!=410 && allPosts[index].id!=236 && allPosts[index].id!=272 && allPosts[index].id!=482 && allPosts[index].id!=312 && allPosts[index].id!=329 && allPosts[index].id!=359 && allPosts[index].id!=402 && allPosts[index].id!=403 && allPosts[index].id!=438 && allPosts[index].id!=418 && allPosts[index].id!=437 && allPosts[index].id!=453 && allPosts[index].id!=451 && allPosts[index].id!=445 && allPosts[index].id!=413 && allPosts[index].id!=214 
+                               (allPosts[0].photo!=null && allPosts[0].photo!='' && allPosts[0].id!=410 && allPosts[0].id!=454 && allPosts[0].id!=401 && allPosts[0].id!=307 && allPosts[0].id!=443 && allPosts[0].id!=417 && allPosts[0].id!=392  ) ?       
                                  FadeInImage.assetNetwork(
                                             // fadeInDuration: const Duration(seconds: 2),
                                             // alignment: Alignment.topLeft,

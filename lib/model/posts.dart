@@ -16,7 +16,7 @@ class PostsModel{
   final String catName;
   final String colorCode;
 
-  PostsModel(this.id,this.title,this.photo,this.mainPoint,this.body,this.categoryId,this.relatedNews,this.userId,this.recordStatus,this.createdBy,this.createdByCompany,this.blockId,this.createdAt,this.cName,this.catName,this.colorCode);//this.cName,
+  const PostsModel(this.id,this.title,this.photo,this.mainPoint,this.body,this.categoryId,this.relatedNews,this.userId,this.recordStatus,this.createdBy,this.createdByCompany,this.blockId,this.createdAt,this.cName,this.catName,this.colorCode);//this.cName,
 
   PostsModel.fromJson(Map<String,dynamic> json)
   : id =json["id"],

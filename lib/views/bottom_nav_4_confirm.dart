@@ -14,7 +14,7 @@ class JobConfirmWidget extends StatefulWidget {
   final String value;
   final JobConfirmModel jobConfirmModel;
 
-  JobConfirmWidget({Key key, this.value, this.jobConfirmModel})
+  const JobConfirmWidget({Key key, this.value, this.jobConfirmModel})
       : super(key: key);
   @override
   _BottomNav4ConfirmState createState() => _BottomNav4ConfirmState();

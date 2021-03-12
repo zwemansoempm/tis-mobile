@@ -26,7 +26,7 @@ import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 class JobInsertWidget extends StatefulWidget {
   final String value;
 
-  JobInsertWidget({Key key, this.value}) : super(key: key);
+  const JobInsertWidget({Key key, this.value}) : super(key: key);
   @override
   _BottomNav4InsertState createState() => _BottomNav4InsertState();
 }

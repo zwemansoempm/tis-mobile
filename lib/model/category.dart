@@ -2,7 +2,7 @@ class Categories {
   final List<CategoryModel> categories;
   final String error;
 
-  Categories(this.categories, this.error);
+  const Categories(this.categories, this.error);
 
   Categories.fromJson(List<dynamic> json)
   : categories=(json as List).map((i) => new CategoryModel.fromJson(i)).toList(),

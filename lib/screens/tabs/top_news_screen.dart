@@ -92,7 +92,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
         return  MediaQuery.removePadding(   
                 context: context,
                 removeTop: true,
-                child: ListView.builder(                              
+                child: ListView.builder( 
                 itemCount: 1,
                 itemBuilder: (context, index) {
                 // children:[
@@ -477,7 +477,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
     return  Container( 
               height: 150.0,
               color:Color(0xfff7f7f7),
-              child: ListView.builder(
+              child: ListView.builder(                  
                       physics: NeverScrollableScrollPhysics(),
                       // padding:EdgeInsets.only(top: 0),
                         itemCount: 1,
@@ -509,7 +509,8 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                             child:Stack(
                                                 fit:StackFit.expand,
                                                 children: <Widget>[
-                                                   (i.photo!=null && i.photo!='' ) ?                 
+                                                  //  (i.photo!=null && i.photo!='' )
+                                                   (i.photo!=null && i.photo!='' && i.id!=410 && i.id!=454 && i.id!=401 && i.id!=307 && i.id!=443 && i.id!=417 && i.id!=392  ) ?                 
                                                    FadeInImage.assetNetwork(                                                          
                                                                 // fadeInDuration: const Duration(seconds: 2),
                                                                 // alignment: Alignment.topLeft,
@@ -753,7 +754,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
    return  Container(
        height:300 ,
       //  width: 300,
-     child: ListView(
+     child: ListView(       
          shrinkWrap: true,
               //  physics: NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.horizontal,              
@@ -761,7 +762,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                    Container(
                       width:MediaQuery.of(context).size.width,
                       // color: Colors.blue[500],
-                      child:   ListView.builder(
+                      child:   ListView.builder(                    
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical, 
                       itemCount:medical.length>=3?3:medical.length,
@@ -783,14 +784,18 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                   child: Row(
                                         children: [
                                           Expanded(
-                                            child: (medical[index].photo!=null && medical[index].photo!='') ? 
+                                            child:
+                                            //  (medical[index].photo!=null && medical[index].photo!='') 
+                                            (medical[index].photo!=null && medical[index].photo!='' && medical[index].id!=410 && medical[index].id!=454 && medical[index].id!=401 && medical[index].id!=307 && medical[index].id!=443 && medical[index].id!=417 && medical[index].id!=392  ) ?       
+                                            
                                               Padding(
                                                 padding: const EdgeInsets.all(8),
                                                 child: Stack(
                                                   children: [
                                                     Center(
                                                       child: 
-                                                      medical[index].pid!=410?FadeInImage(
+                                                      // medical[index].pid!=410?                                                      
+                                                      FadeInImage(
                                                         // fadeInDuration: const Duration(seconds: 2),
                                                         placeholder: AssetImage('assets/img/placeholder.jpg'),
                                                         image: NetworkImage(
@@ -801,7 +806,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                                                             "assets/img/placeholder.jpg",
                                                           );
                                                         },                                                                           
-                                                      ):Container(),
+                                                      )
                                                     ),
                                                     // dateToStringFormat(DateTime.now()) == medical[0].createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                                                 ]),
@@ -851,7 +856,7 @@ class _TopNewsScreenState extends State<TopNewsScreen> with SingleTickerProvider
                   height: 300,
                   // color: Colors.purple[500],
                   
-                  child: ListView.builder(               
+                  child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical, 
                       itemCount: medical.length>=9?6:(medical.length-3<0?0:medical.length-3),

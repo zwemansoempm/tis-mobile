@@ -225,7 +225,7 @@ class _JobSearchState extends State<JobSearch> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
+      child: ListView(     
         children: [
           Row(
             children: [
@@ -580,7 +580,7 @@ class _JobSearchState extends State<JobSearch> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => JobDetail()),
+                          MaterialPageRoute(builder: (context) =>const JobDetail()),
                         );
                       },
                       color: Colors.blue,
@@ -752,7 +752,7 @@ class _JobSearchState extends State<JobSearch> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => JobDetail()),
+                          MaterialPageRoute(builder: (context) => const JobDetail()),
                         );
                       },
                       color: Colors.blue,
@@ -909,7 +909,7 @@ class _JobSearchState extends State<JobSearch> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => JobDetail()),
+                          MaterialPageRoute(builder: (context) => const JobDetail()),
                         );
                       },
                       color: Colors.blue,

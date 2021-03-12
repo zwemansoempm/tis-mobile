@@ -9,7 +9,7 @@ class DepartmentModel {
 
   final List<DepartmentChildModel> child;
 
-  DepartmentModel(this.id, this.name, this.user_id, this.parent, this.recordstatus, this.child);
+  const DepartmentModel(this.id, this.name, this.user_id, this.parent, this.recordstatus, this.child);
 
   factory DepartmentModel.fromJson(dynamic json) {
     var tagObjsJson = json['child'] as List;

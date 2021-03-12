@@ -3,7 +3,7 @@ class TownshipModel {
   final String township_name;
   final String city_id;
 
-  TownshipModel(this.id, this.township_name, this.city_id);
+  const TownshipModel(this.id, this.township_name, this.city_id);
 
   TownshipModel.fromJson(Map<String, dynamic> json)
       : id = json["id"],

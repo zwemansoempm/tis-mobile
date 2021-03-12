@@ -14,7 +14,7 @@ class CustomerModel {
   final int pro_num;
   final int recordstatus;
 
-  CustomerModel(
+  const CustomerModel(
       this.id,
       this.name,
       this.email,

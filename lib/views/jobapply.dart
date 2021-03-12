@@ -882,7 +882,7 @@ class _JobScreenState extends State<JobScreen> {
                                     borderRadius: BorderRadius.circular(5.0),
                                     side: BorderSide(color: Colors.black)),
                                 onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> JobApplyTwo()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const JobApplyTwo()));
                                 },
                                 color: Colors.green[300],
                                 child: Center(

@@ -7,7 +7,7 @@ import 'package:tis/model/link_response.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShowNoti {
-  
+      const ShowNoti();
       showNotification(){
         return  Container(
             height:350,
@@ -68,7 +68,7 @@ class ShowNoti {
           width: 300.0, 
           child: ListView.builder(
           // physics: NeverScrollableScrollPhysics(),
-          itemCount:allPosts.length,
+          itemCount:allPosts.length,        
           itemBuilder: (context, index) {
             return Column(
               children: [

@@ -4,7 +4,7 @@ class DayServiceResponse{
   final List<MedicalModel> medical;
   final String error;
 
-  DayServiceResponse(this.medical,this.error);
+  const DayServiceResponse(this.medical,this.error);
   DayServiceResponse.fromJson(Map<String, dynamic> json)// Map<String, dynamic>  List<dynamic> 
   : medical=(json["5,デイサービス,#FDCE00"]as List).map((i) => new MedicalModel.fromJson(i)).toList(), 
   error="";

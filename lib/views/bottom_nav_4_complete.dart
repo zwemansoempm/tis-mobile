@@ -13,7 +13,7 @@ class JobCompleteWidget extends StatefulWidget {
   final String value;
   final JobConfirmModel jobConfirmModel;
 
-  JobCompleteWidget({Key key, this.value, this.jobConfirmModel})
+  const JobCompleteWidget({Key key, this.value, this.jobConfirmModel})
       : super(key: key);
   @override
   _BottomNav4CompleteState createState() => _BottomNav4CompleteState();
@@ -183,7 +183,7 @@ class _BottomNav4CompleteState extends State<JobCompleteWidget> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => TopPage()));
+                                      builder: (context) => const TopPage()));
                             },
                             color: Colors.green[600],
                             textColor: Colors.white,

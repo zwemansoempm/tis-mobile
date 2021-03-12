@@ -6,7 +6,7 @@ class DepartmentResponse {
 
   final String error;
 
-  DepartmentResponse(this.department, this.error);
+  const DepartmentResponse(this.department, this.error);
   DepartmentResponse.fromJson(Map json)
       : department = (json["subjects"] as List)
             .map((i) => new DepartmentModel.fromJson(i))

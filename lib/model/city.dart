@@ -7,7 +7,7 @@ class CityModel {
 
   // CityModel(
   //     this.id, this.cityName, this.cityEng, this.latitude, this.longitude);
-  CityModel(this.id, this.city_name);
+  const CityModel(this.id, this.city_name);
 
   // CityModel.fromJson(Map<String, dynamic> json)
   //     : id = json["id"],

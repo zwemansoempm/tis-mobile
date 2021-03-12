@@ -9,7 +9,7 @@ class OccupationModel {
   //final OccupationChildModel child;
   final List<OccupationChildModel> child;
 
-  OccupationModel(this.id, this.name, this.user_id, this.parent,
+  const OccupationModel(this.id, this.name, this.user_id, this.parent,
       this.recordstatus, this.child);
 
 //   OccupationModel.fromJson(Map json)

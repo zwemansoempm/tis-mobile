@@ -6,7 +6,7 @@ class OccupationResponse {
 
   final String error;
 
-  OccupationResponse(this.occupation, this.error);
+  const OccupationResponse(this.occupation, this.error);
   OccupationResponse.fromJson(Map json)
       : occupation = (json["occupations"] as List)
             .map((i) => new OccupationModel.fromJson(i))

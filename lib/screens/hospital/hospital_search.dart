@@ -4,6 +4,7 @@ import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 import 'package:tis/screens/hospital/hospital_detail.dart';
 
 class HospitalSearch extends StatefulWidget {
+  const HospitalSearch();
   @override
   _HospitalSearchState createState() => _HospitalSearchState();
 }
@@ -33,7 +34,7 @@ class _HospitalSearchState extends State<HospitalSearch> {
                 content: Container(
                   width: double.minPositive,
                   height: 300,
-                  child: ListView.builder(
+                  child: ListView.builder(                 
                     shrinkWrap: true,
                     itemCount: cityList.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -438,7 +439,7 @@ class _HospitalSearchState extends State<HospitalSearch> {
                             decoration: TextDecoration.underline)
                         ),
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDetail()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HospitalDetail()));
                         },
                       ),
                       Row(
@@ -678,7 +679,7 @@ class _HospitalSearchState extends State<HospitalSearch> {
                       SizedBox(height: 10.0),
                       RaisedButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDetail()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HospitalDetail()));
                         },
                         color: Colors.blue,
                         textColor: Colors.white,

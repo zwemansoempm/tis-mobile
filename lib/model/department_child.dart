@@ -5,7 +5,7 @@ class DepartmentChildModel {
   final int parent;
   final int recordstatus;
 
-  DepartmentChildModel(
+  const DepartmentChildModel(
     this.id,
     this.name,
     this.user_id,

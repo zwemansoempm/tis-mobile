@@ -24,7 +24,7 @@ class JobDetailModel {
   final String township_name;
   final String jobid;
 
-  JobDetailModel(
+  const JobDetailModel(
     this.title,
     this.customer_id,
     this.profile_id,

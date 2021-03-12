@@ -19,6 +19,7 @@ import 'package:tis/bloc/get_city_occ_bloc.dart';
 import 'package:tis/elements/loader.dart';
 
 class JobWidget extends StatefulWidget {
+  const JobWidget();
   @override
   _BottomNav4State createState() => _BottomNav4State();
 }
@@ -59,6 +60,7 @@ class _BottomNav4State extends State<JobWidget> {
 
   @override
   void dispose() {
+    getLinkNewsBloc.drainStream();
     super.dispose();
   }
 
@@ -125,7 +127,8 @@ class _BottomNav4State extends State<JobWidget> {
                       alignment: Alignment.bottomRight,
                       child: RawMaterialButton(
                         onPressed: () {
-                          setState(() {
+                          getLinkNewsBloc.drainStream();
+                          setState(() {                        
                             stream = getLinkNewsBloc..getLinkedNews('3');
                           });
                           return showDialog(
@@ -135,14 +138,14 @@ class _BottomNav4State extends State<JobWidget> {
                                   builder: (context, setState) {
                                     return AlertDialog(
                                       title: Text(
-                                        "Notifications",
+                                        "通知",
                                       ),
                                       content: SingleChildScrollView(
-                                        child: ShowNoti().showNotification(),
+                                        child: const ShowNoti().showNotification(),
                                       ),
                                       actions: [
                                         FlatButton(
-                                          child: Text("Close"),
+                                          child: Text("閉じ"),
                                           onPressed: () {
                                             Navigator.of(context)
                                                 .pop(); // dismiss dialog
@@ -407,7 +410,7 @@ class _BottomNav4State extends State<JobWidget> {
                                               content: Container(
                                                 width: double.minPositive,
                                                 height: 400,
-                                                child: ListView.builder(
+                                                child: ListView.builder(                                               
                                                   shrinkWrap: true,
                                                   itemCount: allTsp.length,
                                                   itemBuilder:
@@ -624,7 +627,7 @@ class _BottomNav4State extends State<JobWidget> {
                                                     content: Container(
                                                       width: double.minPositive,
                                                       height: 400,
-                                                      child: ListView.builder(
+                                                      child: ListView.builder(                                                      
                                                         shrinkWrap: true,
                                                         itemCount:
                                                             allOcc.length,
@@ -784,7 +787,7 @@ class _BottomNav4State extends State<JobWidget> {
                                     content: Container(
                                       width: double.minPositive,
                                       height: 400,
-                                      child: ListView.builder(
+                                      child: ListView.builder(                                    
                                         shrinkWrap: true,
                                         itemCount: allEmpType.length,
                                         itemBuilder:
@@ -1352,7 +1355,7 @@ class _EmpTypeDialogState extends State<_EmpTypeDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.builder(             
                 itemCount: widget.empType.length,
                 itemBuilder: (BuildContext context, int index) {
                   final empTypeObj = widget.empType[index];
@@ -1525,7 +1528,7 @@ class _OccupationDialogState extends State<_OccupationDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.builder(            
                 itemCount: widget.occ.length,
                 itemBuilder: (BuildContext context, int index) {
                   final tspObject = widget.occ[index];

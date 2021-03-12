@@ -24,7 +24,7 @@ class JobModel {
   final String cusname;
   final String township_name;
 
-  JobModel(
+  const JobModel(
     this.id,
     this.title,
     this.customer_id,

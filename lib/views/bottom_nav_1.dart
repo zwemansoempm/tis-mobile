@@ -20,7 +20,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class HomeWidget extends StatefulWidget {
 
- HomeWidget({Key key}) : super(key: key);
+ const HomeWidget({Key key}) : super(key: key);
 
   @override
   _BottomNav1State createState() => _BottomNav1State();//source
@@ -236,7 +236,7 @@ class _BottomNav1State  extends State<HomeWidget> with TickerProviderStateMixin 
                         IconButton(
                           icon:new Icon(Icons.settings),
                           onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingScreen()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SettingScreen()));
                           },
                         )
                       ],                     

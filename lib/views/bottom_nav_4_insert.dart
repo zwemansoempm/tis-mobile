@@ -26,7 +26,7 @@ import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 class JobInsertWidget extends StatefulWidget {
   final String value;
 
-  JobInsertWidget({Key key, this.value}) : super(key: key);
+  const JobInsertWidget({Key key, this.value}) : super(key: key);
   @override
   _BottomNav4InsertState createState() => _BottomNav4InsertState();
 }
@@ -840,6 +840,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                       township_id = checkSearch == 1
                                           ? tspIdList[0].id.toString()
                                           : '';
+
                                       // print('txp');
                                       // print(township_id);
                                       _street = postalList[0].street;
@@ -852,6 +853,7 @@ class _BottomNav4InsertState extends State<JobInsertWidget> {
                                       print(cityController.text);
                                       print(addressController.text);
                                       checkstream = 1;
+
                                       return columnData();
                                     } else {
                                       return Center(

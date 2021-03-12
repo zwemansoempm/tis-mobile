@@ -18,7 +18,7 @@ void main() {
    _enablePlatformOverrideForDesktop();
    
   runApp(
-    MyApp(),
+   const MyApp(),
   //   DevicePreview(     
   //   builder: (context)=>MyApp(),
   //   enabled:!kReleaseMode,
@@ -27,6 +27,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget { 
+  const MyApp();
   // MyApp({Key key}) : super(key: key);
   // This widget is the root of your application.
   @override
@@ -42,19 +43,20 @@ class MyApp extends StatelessWidget {
         // primarySwatch: Colors.blue,        
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:SplashPage(),//TopPage(), MainScreen
+      home:const SplashPage(),//TopPage(), MainScreen
       // HomePage(),      
     );
   }
 
 }
-class SplashPage extends StatelessWidget {  
+class SplashPage extends StatelessWidget { 
+  const  SplashPage();
 
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
       seconds: 6,
-      navigateAfterSeconds: new TopPage(),
+      navigateAfterSeconds: const TopPage(),
       title: new Text('TIS NEWS',style: new TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20.0,

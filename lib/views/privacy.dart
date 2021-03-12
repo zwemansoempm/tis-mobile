@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Privacy extends StatelessWidget {
+  const Privacy();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

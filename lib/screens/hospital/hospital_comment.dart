@@ -3,6 +3,7 @@ import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 import 'package:tis/views/comment_completely.dart';
 
 class HospitalComment extends StatefulWidget {
+  const HospitalComment();
   @override
   _HospitalCommentState createState() => _HospitalCommentState();
 }
@@ -247,7 +248,7 @@ class _HospitalCommentState extends State<HospitalComment> {
                             RaisedButton(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> CommentCompletely()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const CommentCompletely()));
                               },
                               color: Colors.green,
                               textColor: Colors.white,

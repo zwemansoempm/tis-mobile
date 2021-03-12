@@ -5,7 +5,7 @@ import 'package:tis/screens/hospital/hospital_comment.dart';
 
 
 class HospitalDetail extends StatefulWidget {
-  HospitalDetail({Key key}) : super(key: key);
+  const HospitalDetail({Key key}) : super(key: key);
 
   @override
   _HospitalDetailState createState() => _HospitalDetailState();
@@ -21,7 +21,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: ListView(
+          child: ListView(        
             children: [
                 Container(
                   padding: EdgeInsets.all(5.0),
@@ -362,7 +362,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
                     RaisedButton(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> HospitalComment()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const  HospitalComment()));
                       },
                       color: Colors.green,
                       textColor: Colors.white,

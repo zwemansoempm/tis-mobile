@@ -85,7 +85,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     height: MediaQuery.of(context).size.height / 3.0,
-                    child: ListView.builder(
+                    child: ListView.builder(                    
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data.bigNews.length,
                       itemBuilder: (context, index){
@@ -257,7 +257,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
               child: Stack(
                 children: [
                   Center(
-                    child:(post.photo!=null && post.photo!='' ) ? FadeInImage(
+                    child:(post.photo!=null && post.photo!='' && post.id!=410 && post.id!=454 && post.id!=401 && post.id!=307 && post.id!=443 && post.id!=417 && post.id!=392  ) ? FadeInImage(
                       //fadeInDuration: const Duration(seconds: 2),
                       placeholder: AssetImage('assets/img/placeholder.jpg'),
                       image: NetworkImage(
@@ -341,7 +341,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
               child: Stack(
                 children: [
                   Center(
-                    child: (post.photo!=null && post.photo!='' ) ? FadeInImage(
+                    child: (post.photo!=null && post.photo!='' && post.id!=410 && post.id!=454 && post.id!=401 && post.id!=307 && post.id!=443 && post.id!=417 && post.id!=392  ) ? FadeInImage(
                       //fadeInDuration: const Duration(seconds: 2),
                       placeholder: AssetImage('assets/img/placeholder.jpg'),
                       image: NetworkImage(
@@ -414,7 +414,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
             Container(
               width: double.maxFinite,
               height: MediaQuery.of(context).size.height/4.5,
-              child: (post.photo!=null && post.photo!='' ) ? FadeInImage(
+              child: (post.photo!=null && post.photo!='' && post.id!=410 && post.id!=454 && post.id!=401 && post.id!=307 && post.id!=443 && post.id!=417 && post.id!=392  )? FadeInImage(
                 //fadeInDuration: const Duration(seconds: 2),
                 placeholder: AssetImage('assets/img/placeholder.jpg'),
                 image: NetworkImage(
@@ -557,7 +557,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
         child: Row(
             children: [
               Expanded(
-                child: (post.photo!=null && post.photo!='' && post.id!=236 && post.id!=272 && post.id!=482 && post.id!=312 && post.id!=329 && post.id!=359 && post.id!=402 && post.id!=403 && post.id!=438 && post.id!=418 && post.id!=437 && post.id!=453 && post.id!=451 && post.id!=445 && post.id!=413 && post.id!=214 ) ? 
+                child: (post.photo!=null && post.photo!='' && post.id!=410 && post.id!=454 && post.id!=401 && post.id!=307 && post.id!=443 && post.id!=417 && post.id!=392  ) ? 
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Stack(
@@ -574,7 +574,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                                 "assets/img/placeholder.jpg",
                               );
                             },                                                                           
-                          ),
+                          )
                         ),
                         dateToStringFormat(DateTime.now()) == post.createdAt.split(" ")[0] ? _newLogo(color) : Container(),
                     ]),

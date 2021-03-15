@@ -953,7 +953,7 @@ class _NusingDetailState extends State<NusingDetail> {
         RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const NusingMail()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingMail(nursingId: widget.nursingId,)));
           },
           color: Colors.green,
           textColor: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:tis/model/cooperateMedical.dart';
+import 'package:tis/model/image.dart';
 import 'package:tis/model/method_payment.dart';
 import 'package:tis/model/nursing.dart';
 import 'package:tis/model/staff.dart';
@@ -12,6 +13,7 @@ class NursingDetailResponse {
   List<MedicalAcceptance> medicalAcceptances;
   List<MedicalAcceptance> medicals;
   List<StaffModel> staffs;
+  List<ImageModel> images;
   String error;
 
   NursingDetailResponse(this.nursingList,this.profilenumbers, this.addressList, this.error);
@@ -24,6 +26,7 @@ class NursingDetailResponse {
     medicalAcceptances = (json['medicalacceptance'] as List).map((accept) => new MedicalAcceptance.fromJson(accept)).toList(),
     medicals = (json['medical'] as List).map((medical) => new MedicalAcceptance.fromJson(medical)).toList(),
     staffs = (json['staff'] as List).map((staff) => new StaffModel.fromJson(staff)).toList(),
+    images = (json['images'] as List).map((image) => new ImageModel.fromJson(image)).toList(),
     error = '';
 
   NursingDetailResponse.withError(String errorValue) : 
@@ -34,6 +37,8 @@ class NursingDetailResponse {
     cooperateMedicals = List(),
     medicalAcceptances = List(),
     medicals = List(),
+    staffs = List(),
+    images = List(),
     error = errorValue;
 }
 

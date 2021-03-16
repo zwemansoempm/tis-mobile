@@ -6,7 +6,11 @@ import 'package:tis/model/corona_response.dart';
 import 'package:tis/model/day_service_response.dart';
 import 'package:tis/model/department_response.dart';
 import 'package:tis/model/group_response.dart';
+import 'package:tis/model/hos_comments_response.dart';
+import 'package:tis/model/hosdetail_specfeat_response.dart';
+import 'package:tis/model/hospital_detail_response.dart';
 import 'package:tis/model/hospital_response.dart';
+import 'package:tis/model/hospital_timetable_responese.dart';
 import 'package:tis/model/link_response.dart';
 import 'package:tis/model/medical_response.dart';
 import 'package:tis/model/nurse_response.dart';
@@ -51,6 +55,7 @@ class NewsRepository {
   var getLinkedNewsUrl = "$mainUrl/getLinkedNews/";
   var getHostListUrl = "$mainUrl/hospital/postList/";
   var getProfileFeatureUrl = "$mainUrl/profile/specialfeature/";
+  var getHospitalCommentUrl = "$mainUrl/profile/comment/";
 
   Future<Categories> getHome() async {
     await Future.delayed(Duration(milliseconds: 500));
@@ -631,22 +636,49 @@ class NewsRepository {
     }
   }
 
-  Future<HospitalResponse> getHospital() async {
+  Future<HospitalResponse> getHospital(
+      String city,
+      var selectedTspID,
+      var selectedSepID,
+      var selectedDepID) async {
+
     await Future.delayed(Duration(milliseconds: 500));
+    print(city);
+    if (city == 'null' || city.isEmpty) {
+      city = "-1";
+    }
+    // https://test.t-i-s.jp/api/gethospitalsearch/null?id=-1&townshipID[]=0&specialfeatureID[]=0&subjectID[]=0&local=7
+    print(city);
     try {
-      var getHospitalUrl =
-          "$mainUrl/gethospitalsearch/null?id=-1&townshipID[]=0&specialfeatureID[]=0&subjectID[]=0&local=0";
-
-      Response response = await _dio.get(getHospitalUrl);
-
+      var uri = Uri(
+        scheme: 'https',
+        host: url,
+        path: '/api/gethospitalsearch/null',
+        queryParameters: {
+          'id': city,
+          
+          'townshipID[]':
+              (selectedTspID == null || selectedTspID.isEmpty)
+                  ? ["0"]
+                  : selectedTspID.toString(),
+          'specialfeatureID[]':
+              (selectedSepID == null || selectedSepID.isEmpty)
+                  ? ["0"]
+                  : selectedSepID.toString(),
+          'subjectID[]': (selectedDepID == null || selectedDepID.isEmpty)
+              ? ["0"]
+              : selectedDepID.toString(),
+          'local': '7',
+        },
+      );
+      Response response = await _dio.get(uri.toString());
       if (response.statusCode == HttpStatus.ok) {
-        // print(response.statusCode);
         return HospitalResponse.fromJson(response.data);
       } else {
         throw SocketException('No Internet');
       }
     } catch (error, stacktrace) {
-      // throw SocketException('No Internet');
+      //throw SocketException('No Internet');
       print("Exception occured: $error stackTrace: $stacktrace");
       return HospitalResponse.withError("$error");
     }
@@ -669,6 +701,80 @@ class NewsRepository {
       // throw SocketException('No Internet');
       print("Exception occured: $error stackTrace: $stacktrace");
       return JobDetailResponse.withError("$error");
+    }
+  }
+
+  Future<HospitalDetailResponse> getHospitalDetail(String hospitalID) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var getUrl = "$mainUrl/profile/hospital/" + hospitalID;
+      Response response = await _dio.get(getUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return HospitalDetailResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return HospitalDetailResponse.withError("$error");
+    }
+  }
+
+  Future<HospitalTimetableResponse> getHosDetailTimeTable(String hospitalID) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      var getUrl = "$mainUrl/profile/schedule/" + hospitalID;
+      Response response = await _dio.get(getUrl);
+      if (response.statusCode == HttpStatus.ok) {
+        return HospitalTimetableResponse.fromJson(response.data);
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return HospitalTimetableResponse.withError("$error");
+    }
+  }
+
+  Future<HosDetailSpecFeatResponse> getHosDetailSpecFeat(String type, String id) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response =
+        await _dio.get(getProfileFeatureUrl + type + "/" + id);
+      if (response.statusCode == HttpStatus.ok) {
+        if (response.data != "") {
+          return HosDetailSpecFeatResponse.fromJson(response.data);
+        }
+        return HosDetailSpecFeatResponse.withError("データがありません。");
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return HosDetailSpecFeatResponse.withError("$error");
+    }
+  }
+
+  Future<HosCommentsResponse> getHosComments(String type, String id) async {
+    await Future.delayed(Duration(milliseconds: 500));
+    try {
+      Response response =
+        await _dio.get(getHospitalCommentUrl + id + '/' + type);
+      if (response.statusCode == HttpStatus.ok) {
+        if (response.data != "") {
+          return HosCommentsResponse.fromJson(response.data);
+        }
+        return HosCommentsResponse.withError("データがありません。");
+      } else {
+        throw SocketException('No Internet');
+      }
+    } catch (error, stacktrace) {
+      // throw SocketException('No Internet');
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return HosCommentsResponse.withError("$error");
     }
   }
 }

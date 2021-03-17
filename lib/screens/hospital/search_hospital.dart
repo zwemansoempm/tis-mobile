@@ -11,6 +11,8 @@ import 'package:tis/model/department_child.dart';
 import 'package:tis/model/department_response.dart';
 import 'package:tis/model/hospital.dart';
 import 'package:tis/model/hospital_response.dart';
+import 'package:tis/model/hospital_specfeat.dart';
+import 'package:tis/model/hospital_timetable.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
 import 'package:tis/bloc/get_features_bloc.dart';
@@ -19,22 +21,53 @@ import 'package:tis/model/speialfeatures_response.dart';
 import 'package:tis/model/department.dart';
 import 'package:tis/bloc/get_department_bloc.dart';
 import 'package:tis/presentation/custom_app_icons.dart';
+import 'package:tis/screens/hospital/search_hospital_detail.dart';
 import 'package:tis/views/shownoti.dart';
 
 class SearchHospital extends StatefulWidget {
-  const SearchHospital();
+  const SearchHospital({Key key}) : super(key: key);
   @override
   _SearchHospitalState createState() => _SearchHospitalState();
 }
 
 class _SearchHospitalState extends State<SearchHospital> {
-  var stream;var stream1;var stream2;var stream3;int checkstream=0;
-  Map<String, bool> cityList = {
-    'item1': false,
-    'item2': false,
-    'item3': false,
-    'item4': false,
-  };
+  var stream;var stream1;var stream2;int checkstream=0;
+  // Map<String, bool> cityList = {
+  //   'item1': false,
+  //   'item2': false,
+  //   'item3': false,
+  //   'item4': false,
+  // };
+
+  // int countMove = 0;
+  bool _load = false;
+  List<int> selectedTsp = [];
+  List<int> selectedSpec = [];
+  List<int> selectedDep = [];
+  List<String> searchDisplayData;
+  List<CityModel> cityList;
+  List<TownshipModel> allTsp;
+
+  
+  
+
+  String tspText = "市から探す";
+  String speText = "市から探す";
+
+  var selectedTspID = [];
+  var selectedSepID = [];
+  var selectedDepID = [];
+
+  var selectedODepartmentName = [];
+
+  var selectedTspName = [];
+  var selectedSepName = [];
+  var selectedDepName = [];
+  int countTspID = 0;
+  int countSpeID = 0;
+  int countDepId = 0;
+
+
 
   CityResponse data;
 
@@ -48,19 +81,23 @@ class _SearchHospitalState extends State<SearchHospital> {
 
   List _selectetsp = List();
   List _selectedfea = List();
- 
+
 
   @override
   void initState() {
     super.initState();
+    cityList = List();
+    allTsp = List();
     getCityBloc..getCity();
     getFeaturesBloc..getFeatures();
     getDepBloc..getDepartment('1');
+    // getHospitalTimeTableBloc..getHospitalTimetable();
+    // getHospitalSpecFeatBloc..getHospitalSpecFeature();
+    searchDisplayData = List();
 
     stream;//=getLinkNewsBloc..getLinkedNews('2');
     stream1;
     stream2;
-    stream3;
   }
 
   @override
@@ -71,50 +108,12 @@ class _SearchHospitalState extends State<SearchHospital> {
     getCityBloc..drainStream();
     getFeaturesBloc..drainStream();
     getLinkNewsBloc.drainStream();
-    getHospitalBloc..drainStream();    
+    getHospitalBloc..drainStream();
+    // getHospitalSpecFeatBloc..drainStream();
+    
   }
 
-  Future<Map<String, bool>> _checkBoxList() async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                //title: Text('Preferred Location'),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context, cityList);
-                    },
-                    child: Text('Done'),
-                  ),
-                ],
-                content: Container(
-                  width: double.minPositive,
-                  height: 300,
-                  child: ListView.builder(               
-                    shrinkWrap: true,
-                    itemCount: cityList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String _key = cityList.keys.elementAt(index);
-                      return CheckboxListTile(
-                        value: cityList[_key],
-                        title: Text(_key),
-                        onChanged: (val) {
-                          setState(() {
-                            cityList[_key] = val;
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
-          );
-        });
-  }
+
 
   Widget build(BuildContext context) {
     return SafeArea(
@@ -123,24 +122,14 @@ class _SearchHospitalState extends State<SearchHospital> {
           padding: const EdgeInsets.only(top: 10,left: 10,right: 10),//const EdgeInsets.all(10.0),
           child: Column(
             children: [
-               Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text("病院検索",
-                      style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),)),
-                 ),
-              // Row(
-              //   children: [
-               
-              //     // SizedBox(width: 5.0),
-              //     // Icon(Icons.map, color: Colors.blue),
-              //     // SizedBox(width: 5.0),
-              //     // Text("地図検索"),
-              //   ],
-              // ),
+              Row(
+                children: [
+                  SizedBox(width: 5.0),
+                  Icon(Icons.map, color: Colors.blue),
+                  SizedBox(width: 5.0),
+                  Text("地図検索"),
+                ],
+              ),
               DottedLine(
                 dashColor: Colors.blue,
               ),
@@ -179,8 +168,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                           alignment: Alignment.bottomRight,
                           child:RawMaterialButton(
                             onPressed: () {
-                                getLinkNewsBloc.drainStream();
-                                setState(() {                              
+                                setState(() {
                                 stream =getLinkNewsBloc..getLinkedNews('2');                               
                               });
                                return  showDialog(                                 
@@ -190,16 +178,14 @@ class _SearchHospitalState extends State<SearchHospital> {
                                             builder: (context, setState) {
                                               return AlertDialog(
                                                 title: Text(
-                                                  "通知",
+                                                  "Notifications",
                                                 ),
                                                 content: SingleChildScrollView(
-                                                  child:  const ShowNoti().showNotification(),                                                         
+                                                  child: ShowNoti().showNotification(),                                                         
                                               ),
                                                 actions: [
                                                   FlatButton(
-
-                                                    child: Text("閉じ"),
-
+                                                    child: Text("Close"),
                                                     onPressed: () {
                                                       Navigator.of(context).pop(); // dismiss dialog
                                                     },
@@ -231,30 +217,108 @@ class _SearchHospitalState extends State<SearchHospital> {
                   border: Border.all(color: Colors.grey[300]),
                 ),
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.only(left: 5),
-                      // padding: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey[400])),
-                      child: StreamBuilder<CityResponse>(
-                          stream: getCityBloc.subject.stream,
-                          builder:
-                            (context, AsyncSnapshot<CityResponse> snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return Stack(
+                    //City
+
+                        Container(
+                          margin: EdgeInsets.all(8),
+                          padding: EdgeInsets.symmetric(horizontal: 0.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey[400])),
+                          child: StreamBuilder<CityResponse>(
+                              stream: getCityBloc.subject.stream,
+                              builder:
+                                (context, AsyncSnapshot<CityResponse> snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Stack(
+                                      children: <Widget>[
+                                        // Row(
+                                        //   children: [
+                                        //     Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                        //     Text("  市区町村"),
+                                        //   ],
+                                        // ),
+                                        _dropDown("市区町村"),                            
+                                        Center(
+                                          child: Opacity(
+                                            opacity:1.0, 
+                                            child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                }
+                                else if (snapshot.hasError) {
+                                      return Container();
+                                } 
+                                else if (snapshot.hasData) {
+                                  if (snapshot.data.error != null &&
+                                      snapshot.data.error.length > 0) {
+                                    return Container();
+                                  }
+                                  List<CityModel> cityList = List();
+                                    cityList.add(new CityModel(-1,""));
+                                    snapshot.data.city.forEach((e) {
+                                      cityList.add(e);
+                                  });
+                                  return Container(                               
+                                      child: DropdownButtonHideUnderline(
+                                    child: ButtonTheme(                               
+                                        alignedDropdown: true,
+                                        child: new DropdownButton<String>(
+                                        //isDense: true,
+                                        isExpanded: true,
+                                        hint:  Row(
+                                          children: [
+                                            Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                            Text("市区町村"),
+                                          ],
+                                        ),
+                                        value: _city,
+                                        onChanged: (String newValue) {
+                                          setState(() {
+                                            checkstream=1;
+                                            getTspBloc.drainStream();
+                                            // getDepBloc.drainStream();
+                                            _township = null;
+                                            _city = newValue;     
+                                            stream1=getTspBloc..getTownship(_city);
+                                            // stream2=getDepBloc..getDepartment(_city);
+                                     
+                                     
+                                          });
+                                        },
+                                        items: 
+                                         cityList.map((CityModel cityModel) =>
+                                            DropdownMenuItem(
+                                              value: cityModel.id.toString(),
+                                              child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
+                                                : Row(
+                                                  children: [
+                                                    Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                                                    Text("市区町村"),
+                                                  ],
+                                                ),
+                                            )
+                                            )
+                                          .toList(),
+                                        // snapshot.data.city
+                                        //     .toList()
+                                        //     .map((CityModel cityModel) =>
+                                        //         DropdownMenuItem(
+                                        //             value: cityModel.id.toString(),
+                                        //             child: Text(cityModel.city_name)))
+                                        //     .toList(),
+                                      ),
+                                    ),
+                                  ));
+                                } else {
+                                  return Stack(
                                   children: <Widget>[
-                                    // Row(
-                                    //   children: [
-                                    //     Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                    //     Text("  市区町村"),
-                                    //   ],
-                                    // ),
-                                    _dropDown("市区町村"),                            
+                                    _dropDown("市区町村"),                         
                                     Center(
                                       child: Opacity(
                                         opacity:1.0, 
@@ -263,92 +327,16 @@ class _SearchHospitalState extends State<SearchHospital> {
                                     ),
                                   ],
                                 );
-                            }
-                            else if (snapshot.hasError) {
-                                  return Container();
-                            } 
-                            else if (snapshot.hasData) {
-                              if (snapshot.data.error != null &&
-                                  snapshot.data.error.length > 0) {
-                                return Container();
-                              }
-                              List<CityModel> cityList = List();
-                                cityList.add(new CityModel(-1,""));
-                                snapshot.data.city.forEach((e) {
-                                  cityList.add(e);
-                              });
-                              return Container(                               
-                                  child: DropdownButtonHideUnderline(
-                                child: ButtonTheme(                               
-                                    alignedDropdown: true,
-                                    child: new DropdownButton<String>(
-                                    //isDense: true,
-                                    isExpanded: true,
-                                    hint:  Row(
-                                      children: [
-                                        Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                        Text("市区町村"),
-                                      ],
-                                    ),
-                                    value: _city,
-                                    onChanged: (String newValue) {
-                                      setState(() {
-                                        checkstream=1;
-                                        getTspBloc.drainStream();
-                                        // getDepBloc.drainStream();
-                                        _township = null;
-                                        _city = newValue;     
-                                        stream1=getTspBloc..getTownship(_city);
-                                        // stream2=getDepBloc..getDepartment(_city);
-                                     
-                                     
-                                      });
-                                    },
-                                    items: 
-                                     cityList.map((CityModel cityModel) =>
-                                        DropdownMenuItem(
-                                          value: cityModel.id.toString(),
-                                          child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
-                                            : Row(
-                                              children: [
-                                                Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                                Text("市区町村"),
-                                              ],
-                                            ),
-                                        )
-                                        )
-                                      .toList(),
-                                    // snapshot.data.city
-                                    //     .toList()
-                                    //     .map((CityModel cityModel) =>
-                                    //         DropdownMenuItem(
-                                    //             value: cityModel.id.toString(),
-                                    //             child: Text(cityModel.city_name)))
-                                    //     .toList(),
-                                  ),
-                                ),
-                              ));
-                            } else {
-                              return Stack(
-                              children: <Widget>[
-                                _dropDown("市区町村"),                         
-                                Center(
-                                  child: Opacity(
-                                    opacity:1.0, 
-                                    child:buildLoadingWidget(),//CircularProgressIndicator(),
-                                  ),
-                                ),
-                              ],
-                            );
-                            }
-                          }),
-                    ),
+                                }
+                              }),
+                        ),
 
                     // //Township
+                    (countTspID != null && countTspID != 0) ?Text("[${countTspID.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
 
                     Container(
                       margin: EdgeInsets.all(8),
-                       padding: EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           color: Colors.white,
@@ -360,9 +348,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                             if (snapshot.connectionState == ConnectionState.waiting && checkstream==1) {
                                 return Stack(
                                   children: <Widget>[
-                                   Text(
-                                        "市から探す",                                      
-                                    ),                  
+                                    _dropDown("  市から探す"),                            
                                     Center(
                                       child: Opacity(
                                         opacity:1.0, 
@@ -381,8 +367,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                                 return Container();
                               }
                               checkstream=0;
-                              List<TownshipModel> allTsp =snapshot.data.township;
-                              List<int> selectedTsp = [];
+                              allTsp =snapshot.data.township;
                               return RaisedButton(
                                   padding: const EdgeInsets.only(
                                       left:0,top: 0.0, right: 0.0),
@@ -393,10 +378,10 @@ class _SearchHospitalState extends State<SearchHospital> {
                                       //   size: 35.0,
                                       // ),
                                       Text(
-                                        "    市から探す",
+                                        "  市から探す",
                                         // style: TextStyle(color: Colors.grey[600]),
                                       ),
-                                      SizedBox(width:MediaQuery.of(context).size.width/1.76,),
+                                      SizedBox(width:MediaQuery.of(context).size.width/1.71,),
                                       Icon(Icons.arrow_drop_down_outlined,),
                                     ],
                                   ),
@@ -417,20 +402,115 @@ class _SearchHospitalState extends State<SearchHospital> {
                                   //     side: BorderSide(
                                   //         color: Colors.grey[400], width: 1),
                                   //     borderRadius: BorderRadius.circular(5.0)),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return _TspDialog(
-                                              tsp: allTsp,
-                                              selectedTsp: selectedTsp,
-                                              onSelectedTspListChanged: (tsp) {
-                                                selectedTsp = tsp;
-                                                // selectedTspText = selectedTsp;
-                                                // print(selectedTspText.length);
-                                              });
-                                        });
-                                  },
+                                  // onPressed: () {
+                                  //   showDialog(
+                                  //       context: context,
+                                  //       builder: (context) {
+                                  //         return _TspDialog(
+                                  //             tsp: allTsp,
+                                  //             selectedTsp: selectedTsp,
+                                  //             onSelectedTspListChanged: (tsp) {
+                                  //               selectedTsp = tsp;
+                                  //               // selectedTspText = selectedTsp;
+                                  //               // print(selectedTspText.length);
+                                  //             });
+                                  //       });
+                                  // },
+
+                                onPressed: () async {
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (context) {
+                                  //       return _TspDialog(
+                                  //           tsp: allTsp,
+                                  //           selectedTsp: selectedTsp,
+                                  //           onSelectedTspListChanged: (tsp) {
+                                  //             selectedTsp = tsp;
+                                  //             // selectedTspText = selectedTsp;
+                                  //           });
+                                  //     });
+
+                                  int result = await showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(
+                                          builder: (context, setState) {
+                                            return AlertDialog(
+                                              title: Text(tspText),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context,
+                                                        selectedTspID.length);
+                                                  },
+                                                  child: Text('Done'),
+                                                ),
+                                              ],
+                                              content: Container(
+                                                width: double.minPositive,
+                                                height: 400,
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: allTsp.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    String _move = allTsp[index]
+                                                        .township_name;
+                                                    return CheckboxListTile(
+                                                        value: selectedTspID
+                                                            .contains(
+                                                                allTsp[index]
+                                                                    .id),
+                                                        title: Text(_move),
+                                                        onChanged:
+                                                            (bool value) {
+                                                          if (value) {
+                                                            if (!selectedTspID
+                                                                .contains(
+                                                                    allTsp[index]
+                                                                        .id)) {
+                                                              setState(() {
+                                                                selectedTspID
+                                                                    .add(allTsp[
+                                                                            index]
+                                                                        .id);
+                                                                selectedTspName.add(allTsp[index].township_name);
+                                                              });
+                                                            }
+                                                          } else {
+                                                            if (selectedTspID
+                                                                .contains(
+                                                                    allTsp[index]
+                                                                        .id)) {
+                                                              setState(() {
+                                                                selectedTspID
+                                                                    .removeWhere((s) =>
+                                                                        s ==
+                                                                        allTsp[index]
+                                                                            .id);
+                                                                selectedTspName
+                                                                .removeWhere((s) =>
+                                                                    s ==
+                                                                    allTsp[index]
+                                                                        .township_name);
+                                                                            
+                                                              });
+                                                            }
+                                                          }
+                                                        });
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      });
+                                  setState(() {
+                                    countTspID = result;
+                                  });
+                                },
                                 
                                 //),
                               );
@@ -439,22 +519,19 @@ class _SearchHospitalState extends State<SearchHospital> {
                                 children: <Widget>[
                                     Container(
                                     child: DropdownButtonHideUnderline(
-                                       child: ButtonTheme(
-                                            alignedDropdown: true,
-                                            child: DropdownButton(
-                                            isExpanded: true,
-                                            //value: _value,
-                                            hint: Row(
-                                              children: [
-                                                Text("市から探す"),
-                                              ],
-                                            ),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                //_value = value;
-                                              });
-                                            }),
-                                       ),
+                                      child: DropdownButton(
+                                          isExpanded: true,
+                                          //value: _value,
+                                          hint: Row(
+                                            children: [
+                                              Text("  市から探す"),
+                                            ],
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              //_value = value;
+                                            });
+                                          }),
                                     ),
                                   ),                   
                                   Center(
@@ -487,10 +564,10 @@ class _SearchHospitalState extends State<SearchHospital> {
                     ),
 
                     // //Special Features
-
+                    (countSpeID!= null && countSpeID != 0) ?Text("[${countSpeID.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
                     Container(
                       margin: EdgeInsets.all(8),
-                      padding: EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           color: Colors.white,
@@ -504,17 +581,14 @@ class _SearchHospitalState extends State<SearchHospital> {
                                     children: <Widget>[
                                      Container(
                                         child: DropdownButtonHideUnderline(
-                                           child: ButtonTheme(
-                                                alignedDropdown: true,
-                                                child: DropdownButton(
-                                                isExpanded: true,
-                                                //value: _value,
-                                                hint: Row(
-                                                  children: [
-                                                    Text("特長から探す"),
-                                                  ],
-                                                ),
-                                             ),
+                                          child: DropdownButton(
+                                              isExpanded: true,
+                                              //value: _value,
+                                              hint: Row(
+                                                children: [
+                                                  Text("  特長から探す"),
+                                                ],
+                                              ),
                                            ),
                                         ),
                                       ),                   
@@ -528,19 +602,18 @@ class _SearchHospitalState extends State<SearchHospital> {
                                   );
                               }
                               else if (snapshot.hasError) {
-                                    stream3=getFeaturesBloc..getFeatures();
-                                    return Container();
+                                      return Container();
                               }     
                               else if (snapshot.hasData) {
                                 if (snapshot.data.error != null &&
                                     snapshot.data.error.length > 0) {
-                                    stream3=getFeaturesBloc..getFeatures();
                                     return Container();
                               }
 
+                              checkstream=0;
                               List<SpecialFeaturesModel> allSpec =
                                   snapshot.data.special_feature;
-                              List<int> selectedSpec = [];
+                              // List<int> selectedSpec = [];
 
                               return RaisedButton(
                                   padding: const EdgeInsets.only(
@@ -552,10 +625,10 @@ class _SearchHospitalState extends State<SearchHospital> {
                                       //   size: 35.0,
                                       // ),
                                       Text(
-                                        "特長から探す",
+                                        "  市から探す",
                                         // style: TextStyle(color: Colors.grey[600]),
                                       ),
-                                      SizedBox(width:MediaQuery.of(context).size.width/1.76,),
+                                      SizedBox(width:MediaQuery.of(context).size.width/1.71,),
                                       Icon(Icons.arrow_drop_down_outlined,),
                                     ],
                                   ),
@@ -576,54 +649,125 @@ class _SearchHospitalState extends State<SearchHospital> {
                                   //     side: BorderSide(
                                   //         color: Colors.grey[400], width: 1),
                                   //     borderRadius: BorderRadius.circular(5.0)),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return _SpecFeaturesDialog(
-                                              spec: allSpec,
-                                              selectedSpec: selectedSpec,
-                                              onSelectedSpecListChanged: (spec) {
-                                                selectedSpec = spec;
-                                                // selectedTspText = selectedTsp;
-                                                // print(selectedTspText.length);
-                                              });
-                                        });
-                                  },
+                                  // onPressed: () {
+                                  //   showDialog(
+                                  //       context: context,
+                                  //       builder: (context) {
+                                  //         return _SpecFeaturesDialog(
+                                  //             spec: allSpec,
+                                  //             selectedSpec: selectedSpec,
+                                  //             onSelectedSpecListChanged: (spec) {
+                                  //               selectedSpec = spec;
+                                  //               // selectedTspText = selectedTsp;
+                                  //               // print(selectedTspText.length);
+                                  //             });
+                                  //       });
+
+                                  //   setState(() {
+                                  //       selectedSpec = selectedSpec;
+                                  //   });
+
+                                  // },
+                                onPressed: () async {
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (context) {
+                                  //       return _TspDialog(
+                                  //           tsp: allTsp,
+                                  //           selectedTsp: selectedTsp,
+                                  //           onSelectedTspListChanged: (tsp) {
+                                  //             selectedTsp = tsp;
+                                  //             // selectedTspText = selectedTsp;
+                                  //           });
+                                  //     });
+
+                                  int result = await showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(
+                                          builder: (context, setState) {
+                                            return AlertDialog(
+                                              title: Text(speText),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context,
+                                                        selectedSepID.length);
+                                                  },
+                                                  child: Text('Done'),
+                                                ),
+                                              ],
+                                              content: Container(
+                                                width: double.minPositive,
+                                                height: 400,
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: allSpec.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    String _move = allSpec[index]
+                                                        .name;
+                                                    return CheckboxListTile(
+                                                        value: selectedSepID
+                                                            .contains(
+                                                                allSpec[index]
+                                                                    .id),
+                                                        title: Text(_move),
+                                                        onChanged:
+                                                            (bool value) {
+                                                          if (value) {
+                                                            if (!selectedSepID
+                                                                .contains(
+                                                                    allSpec[index]
+                                                                        .id)) {
+                                                              setState(() {
+                                                                selectedSepID
+                                                                    .add(allSpec[
+                                                                            index]
+                                                                        .id);
+                                                              selectedSepName.add(allSpec[index].name);
+                                                              });
+                                                            }
+                                                          } else {
+                                                            if (selectedSepID
+                                                                .contains(
+                                                                    allSpec[index]
+                                                                        .id)) {
+                                                              setState(() {
+                                                                selectedSepID
+                                                                    .removeWhere((s) =>
+                                                                        s ==
+                                                                        allSpec[index]
+                                                                            .id);
+                                                                selectedSepName
+                                                                .removeWhere((s) =>
+                                                                    s ==
+                                                                    allSpec[index]
+                                                                        .name);
+                                                              });
+                                                            }
+                                                          }
+                                                        });
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      });
+                                  setState(() {
+                                    countSpeID = result;
+                                  });
+                                },
                                 
                                 //),
                               );
+                            } else if (snapshot.hasError) {
+                              return Container();
                             } else {
-                               return Stack(
-                                  children: <Widget>[
-                                      Container(
-                                      child: DropdownButtonHideUnderline(
-                                         child: ButtonTheme(
-                                              alignedDropdown: true,
-                                              child: DropdownButton(
-                                              isExpanded: true,
-                                              //value: _value,
-                                              hint: Row(
-                                                children: [
-                                                  Text("特長から探す"),
-                                                ],
-                                              ),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  //_value = value;
-                                                });
-                                              }),
-                                         ),
-                                      ),
-                                    ),                   
-                                    Center(
-                                      child: Opacity(
-                                        opacity:1.0, 
-                                        child:buildLoadingWidget(),
-                                      ),
-                                    ),
-                                ],
-                              );
+                              return Container(); //buildLoadingWidget();
                             }
                           }),
                     ),
@@ -634,18 +778,19 @@ class _SearchHospitalState extends State<SearchHospital> {
                       thickness: 1,
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        "診療科目",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 8.0),
+                    //   child: Text(
+                    //     "診療科目",
+                    //     style: TextStyle(
+                    //       fontWeight: FontWeight.bold,
+                    //       fontSize: 18,
+                    //     ),
+                    //   ),
+                    // ),
 
                     //Department
+                    (countDepId != null && countDepId != 0) ?Text("[${countDepId.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
 
                     Container(
                       child: StreamBuilder<DepartmentResponse>(
@@ -654,13 +799,14 @@ class _SearchHospitalState extends State<SearchHospital> {
                               AsyncSnapshot<DepartmentResponse> snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Container(                              
-                                child:  Center(
-                                      child: Opacity(
-                                        opacity:1.0, 
-                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
-                                      ),
-                                    ),
+                              return Container(
+                                height:
+                                    MediaQuery.of(context).size.height / 1.5,
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Center(child: CircularProgressIndicator()),
+                                    ]),
                               ); //
                             } else if (snapshot.hasError) {
                               return Container();
@@ -668,13 +814,174 @@ class _SearchHospitalState extends State<SearchHospital> {
                               if (snapshot.data.error != null &&
                                   snapshot.data.error.length > 0) {
                                 return Container();
-                              } else {
-                                return Column(
-                                    children: getTextWidgets(
-                                        snapshot.data.department));
+                              } 
+                              // else {
+                              //   return Column(
+                              //       children: getTextWidgets(
+                              //           snapshot.data.department));
+                              // }
+                              else {
+                                List products = [];
+                                //List<int> selectedOcc = [];
+                                List<DepartmentModel> depList =
+                                    snapshot.data.department;
+                                var j = 0;
+
+                                for (var i = 0; i < depList.length; i++) {
+                                  j = j + 1;
+                                  var productMap = {
+                                    'item' + j.toString(): false,
+                                    'id': depList[i].id,
+                                    'name': depList[i].name
+                                  };
+
+                                  products.add(productMap);
+                                }
+
+                                List<Widget> list = new List<Widget>();
+                                list.add(_paddings("  診療科目"));
+                                for (var i = 0; i < depList.length; i++) {
+                                  List<DepartmentChildModel> allDep =
+                                      depList[i].child;                               
+                                  list.add(new Container(
+                                    //margin: EdgeInsets.all(8),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 5.0),
+                                    // decoration: BoxDecoration(
+                                    //     borderRadius: BorderRadius.circular(5.0),
+                                    //     color: Colors.white,
+                                    //     border: Border.all(color: Colors.grey[400])),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RaisedButton(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 6, vertical: 1),
+                                        child: ListTile(
+                                          dense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          leading: Text("   "+depList[i].name),
+                                          trailing: Icon(
+                                              Icons.arrow_drop_down_outlined),
+                                        ),
+                                        color: Colors.white,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: Colors.grey[400],
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
+                                        onPressed: () async {
+                                          // showDialog(
+                                          //     context: context,
+                                          //     builder: (context) {
+                                          //       return _OccupationDialog(
+                                          //           occ: allOcc,
+                                          //           selectedOcc: selectedOcc,
+                                          //           onSelectedOccListChanged: (occ) {
+                                          //             selectedOcc = occ;
+                                          //             //print(selectedCities);
+                                          //           });
+                                          //     });
+
+                                          int result = await showDialog(
+                                              barrierDismissible: false,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return StatefulBuilder(
+                                                  builder: (context, setState) {
+                                                    return AlertDialog(
+                                                      title:
+                                                          Text(depList[i].name),
+                                                      actions: <Widget>[
+                                                        FlatButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context,
+                                                                selectedDepID
+                                                                    .length);
+                                                          },
+                                                          child: Text('Done'),
+                                                        ),
+                                                      ],
+                                                      content: Container(
+                                                        width: double.minPositive,
+                                                        height: 400,
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount:
+                                                              allDep.length,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  int index) {
+                                                            String _move =
+                                                                allDep[index]
+                                                                    .name;
+                                                            return CheckboxListTile(
+                                                                value: selectedDepID
+                                                                    .contains(
+                                                                        allDep[index]
+                                                                            .id),
+                                                                title:
+                                                                    Text(_move),
+                                                                onChanged:
+                                                                    (bool value) {
+                                                                  if (value) {
+                                                                    if (!selectedDepID
+                                                                        .contains(
+                                                                            allDep[index]
+                                                                                .id)) {
+                                                                      setState(
+                                                                          () {
+                                                                        selectedDepID.add(
+                                                                            allDep[index]
+                                                                                .id);
+                                                                        selectedDepName.add(allDep[index].name);
+                                                                      });
+                                                                    }
+                                                                  } else {
+                                                                    if (selectedDepID
+                                                                        .contains(
+                                                                            allDep[index]
+                                                                                .id)) {
+                                                                      setState(
+                                                                          () {
+                                                                        selectedDepID.removeWhere((s) =>
+                                                                            s ==
+                                                                            allDep[index]
+                                                                                .id);
+                                                                        selectedDepName.removeWhere((s) =>
+                                                                        s ==
+                                                                        allDep[index]
+                                                                            .name);
+                                                                      });
+                                                                    }
+                                                                  }
+                                                                });
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              });
+                                          setState(() {
+                                            countDepId = result;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ));
+                                }
+                                return Column( 
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: list
+                                    //getTextWidgets(snapshot.data.occList)
+                                    );
                               }
                             } else {
-                              return buildLoadingWidget(); //buildLoadingWidget();
+                              return Container(); //buildLoadingWidget();
                             }
                           }),
                     ),
@@ -684,18 +991,25 @@ class _SearchHospitalState extends State<SearchHospital> {
               SizedBox(
                 height: 15,
               ),
+
+              //Search Button 
+
               RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)),
                   onPressed: () {
                     setState(() {
-                      getHospitalBloc..getHospital();
+                      _load=true;
+                      searchDisplayData = List();
+                      searchDisplayData = _getDisplaySearchData();
+                      getHospitalBloc..getHospital(_city.toString(), selectedTspID, selectedSepID, selectedDepID);
+                      
                     });
                   },
                   color: Colors.green,
                   textColor: Colors.white,
-                  child: Row(                    
-                    mainAxisAlignment : MainAxisAlignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.search),
                       SizedBox(width: 6),
@@ -714,39 +1028,110 @@ class _SearchHospitalState extends State<SearchHospital> {
                 height: 15,
               ),
 
-              Container(
+              searchDisplayData.length > 0 ? Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.0),
+                ),
+               
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(searchDisplayData.join(", ")),
+                ),
+              ): Container(),
+
+              _load ? Container(
               child: StreamBuilder<HospitalResponse>(
                   stream: getHospitalBloc.subject.stream,
                   builder: (context, AsyncSnapshot<HospitalResponse> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        // height: MediaQuery.of(context).size.height / 1.5,
-                        // child: Column(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        // ),
-                      ); //
-                    } else if (snapshot.hasError) {
-                      return Container();
-                    } else if (snapshot.hasData) {
-                      //print(snapshot.data);
+                    if (snapshot.hasError) {
+                      return Container(child: Text("error"));
+                    } 
+                    else if (snapshot.hasData) {
                       if (snapshot.data.error != null &&
                           snapshot.data.error.length > 0) {
-                        return Container();
+                        return Container(
+                            child: Text(snapshot.data.error));
+                      } 
+                      else if (snapshot.data.hospital.isEmpty) {
+                        return Container(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  color: Colors.grey[300],
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(Icons.search_off_sharp,
+                                        color: Colors.grey[600]),
+                                  ),
+                                ),
+                                Text(
+                                  "お探しの条件に合う施設は見つかりませんでした。",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color(0xff2980b9),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text(
+                                  "条件の変更を行い再度ご検索いだだくと見つかる可能性がございます。",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ]),
+                        ));
+                      } 
+                      else {
+                        return Column(
+                            children:_getSearchResultWidget(snapshot.data));
                       }
-                      //return _getSearchResultWidget(snapshot.data);
-                      return Column(
-                          children: _getSearchResultWidget(snapshot.data));
-                    } else {
-                      return Container(
-                          child: Column()); //return buildLoadingWidget();
+                    } 
+                    else {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: buildLoadingWidget(),
+                      );
                     }
-                  })),
+
+                  })): Container(),
 
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<String> _getDisplaySearchData(){
+    List<String> st = List();
+    cityList
+        .map((e) => (e.id.toString() == _city && e.id != -1)
+            ? st.add(e.city_name)
+            : null)
+        .toList();
+
+    print(st);
+    // ??
+    (selectedTspName.length > 0 ? st.add(selectedTspName.toString()) : null);
+    (selectedSepName.length > 0 ? st.add(selectedSepName.toString()) : null);
+    (selectedDepName.length > 0 ? st.add(selectedDepName.toString()) : null);
+
+
+
+    // st.add(selectedTspName.toString());
+    // st.add(selectedSepName.toString());
+    // st.add(selectedDepName.toString());
+    
+    return st;
   }
 
   List<Widget> _getSearchResultWidget(HospitalResponse data) {
@@ -757,6 +1142,20 @@ class _SearchHospitalState extends State<SearchHospital> {
   List<Widget> searchListWidget(hospitals) {
     List<HospitalModel> HospitalList = hospitals;
     List<Widget> list = new List<Widget>();
+    String tempsub;
+    var subarr = [];
+    tempsub = HospitalList[0].subject;
+    subarr = tempsub.split(',');
+
+    
+
+
+
+    
+
+
+
+
     for (int i = 0; i < HospitalList.length; i++) {
       list.add(new 
       Container(
@@ -778,11 +1177,12 @@ class _SearchHospitalState extends State<SearchHospital> {
                 ),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Text("施設番号 : " + HospitalList[i].profilenumber.toString()),
+              child: Text("施設番号:${HospitalList[i].profilenumber.length == 0 ? '' : HospitalList[i].profilenumber}"),
+              
             ),
             InkWell(
               child: Text(
-                HospitalList[i].name.toString(),
+                "${HospitalList[i].name == null ? '' : HospitalList[i].name}",
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 18.0,
@@ -790,45 +1190,36 @@ class _SearchHospitalState extends State<SearchHospital> {
                   decoration: TextDecoration.underline)
               ),
               onTap: (){
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDetail()));
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=> HospitalDetail(hospitalID: HospitalList[i].id.toString())));
               },
             ),
+            SizedBox(height: 5,),
+
+            
             Row(
               children: [
-                Card(
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text("神経内科", style: TextStyle(color: Colors.white),),
-                  ),
-                ),
-                Card(
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text("呼吸器科", style: TextStyle(color: Colors.white),),
-                  ),
-                ),
-                Card(
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text("消化器科", style: TextStyle(color: Colors.white),),
-                  ),
-                ),
-                Card(
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text("胃腸科", style: TextStyle(color: Colors.white),),
-                  ),
-                ),
+
+                Wrap(children: subarr.map((item) => subarr.length != 0 ?
+                Row(
+                  children: [
+                    Card(
+                      color: Colors.blue,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(item, style: TextStyle(color: Colors.white),),
+                      ),
+                    ),
+                  ],
+                )
+                :  Container()).toList()),
+
               ]
             ),
             Divider( color: Colors.grey,),
             SizedBox(height: 10),
 
-            Image.asset("assets/img/placeholder.jpg"),
+            (HospitalList[i].logo == null ? Image.asset("assets/img/placeholder.jpg") : Image.asset("asset/img/${HospitalList[i].logo}")),
+            
             SizedBox(height: 10),
                   
             Container(
@@ -851,7 +1242,7 @@ class _SearchHospitalState extends State<SearchHospital> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1.0),
               ), 
-              child: ListTile(title: Text(HospitalList[i].email.toString()),),
+              child: ListTile(title: Text("${HospitalList[i].email == null ? '' : HospitalList[i].email}",),),
             ),
                   
             Container(
@@ -873,131 +1264,211 @@ class _SearchHospitalState extends State<SearchHospital> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1.0),
               ), 
-              child: ListTile(title: Text(HospitalList[i].address.toString()),),
+              child: ListTile(title: Text("${HospitalList[i].city_name}${HospitalList[i].township_name}${HospitalList[i].address == null ? '' : HospitalList[i].address}"),),
             ),
                   
             SizedBox(height: 10.0),
             Text("こだわりの特長", style: TextStyle(fontWeight: FontWeight.bold),),
+
+
+
             SizedBox(height: 10.0),
 
             DottedLine(dashColor: Colors.blue,),
             SizedBox(height: 10.0),
+            
 
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 1.0),
-                    borderRadius: BorderRadius.circular(20)
-                  ), 
-                  child: Text("土曜診療",style: TextStyle(color: Colors.blue),),
-                ),
-                SizedBox(width: 3),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 1.0),
-                    borderRadius: BorderRadius.circular(20)
-                  ), 
-                  child: Text("日曜祝日診療",style: TextStyle(color: Colors.blue),),
-                ),
-                SizedBox(width: 3),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 1.0),
-                    borderRadius: BorderRadius.circular(20)
-                  ), 
-                  child: Text("日曜祝日診療",style: TextStyle(color: Colors.blue),),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
+              margin: EdgeInsets.all(8),
+              padding: EdgeInsets.symmetric(horizontal: 0.0),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue, width: 1.0),
-                borderRadius: BorderRadius.circular(20)
-              ), 
-              child: Text("早朝(9時前より)",style: TextStyle(color: Colors.blue),),
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.white,
+                  // border: Border.all(color: Colors.grey[400]),
+                  ),
+              child: StreamBuilder<HospitalResponse>(
+                  stream: getHospitalBloc.subject.stream,
+                  builder: (context,
+                      AsyncSnapshot<HospitalResponse> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                      }
+                      else if (snapshot.hasError) {
+                              return Container();
+                      }     
+                      else if (snapshot.hasData) {
+                        if (snapshot.data.error != null &&
+                            snapshot.data.error.length > 0) {
+                            return Container();
+                      }
+
+                      checkstream=0;
+                      List<HospitalSpecFeatModel> specfeat =
+                          snapshot.data.specialfeature;
+                      return new Wrap(children: specfeat.map((item) => item.name != null ?
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal:3.0),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 4),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.blue, width: 1.0),
+                                      borderRadius: BorderRadius.circular(20)
+                                    ), 
+                              child: Text(item.name,style: TextStyle(color: Colors.blue),),
+                            ),
+                          ),
+                          SizedBox(height: 10,)
+                        ],
+                      )
+                      :  Container()).toList());
+                    } else if (snapshot.hasError) {
+                      return Container();
+                    } else {
+                      return Container(); //buildLoadingWidget();
+                    }
+                  }),
             ),
-            SizedBox(height: 10.0),
+
             Text("診療時間", style: TextStyle(fontWeight: FontWeight.bold),),
             SizedBox(height: 10.0),
 
             DottedLine(dashColor: Colors.blue,),
             SizedBox(height: 10.0),
 
-            Table(
-              border: TableBorder.all(color: Colors.grey),
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                TableRow(
-                  children: [
-                    _column("日付" ,Color(0xff80919a), Colors.white),
-                    _column("午前" ,Color(0xffecf8ff), Colors.black),
-                    _column("午後" ,Color(0xffecf8ff), Colors.black),
-                  ]
-                ),
-                TableRow(
-                  children: [
-                    _column("月" ,Color(0xff80919a), Colors.white),
-                    _column("9-12" ,Color(0xffffffff), Colors.black),
-                    _column("13-17" ,Color(0xffffffff), Colors.black),
-                  ]
-                ),
-                TableRow(
-                  children: [
-                    _column("火" ,Color(0xff80919a), Colors.white),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                  ]
-                ),
-                TableRow(
-                  children: [
-                    _column("水" ,Color(0xff80919a), Colors.white),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                  ]
-                ),
-                TableRow(
-                  children: [
-                    _column("木" ,Color(0xff80919a), Colors.white),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                  ]
-                ),
-                TableRow(
-                  children: [
-                    _column("金" ,Color(0xff80919a), Colors.white),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                  ]
-                ),
-                TableRow(
-                  children: [
-                    _column("土" ,Color(0xff80919a), Colors.white),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                  ]
-                ),
-                TableRow(
-                  children: [
-                    _column("日" ,Color(0xff80919a), Colors.white),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                    _column("-" ,Color(0xffffffff), Colors.black),
-                  ]
-                ),
+
+            Container(
+              margin: EdgeInsets.all(8),
+              padding: EdgeInsets.symmetric(horizontal: 0.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey[400])),
+              child: StreamBuilder<HospitalResponse>(
+                  stream: getHospitalBloc.subject.stream,
+                  builder: (context,
+                      AsyncSnapshot<HospitalResponse> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Stack(
+                            children: <Widget>[                
+                              Center(
+                                child: Opacity(
+                                  opacity:1.0, 
+                                  child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                ),
+                              ),
+                            ],
+                          );
+                      }
+                      else if (snapshot.hasError) {
+                              return Container();
+                      }     
+                      else if (snapshot.hasData) {
+                        if (snapshot.data.error != null &&
+                            snapshot.data.error.length > 0) {
+                            return Container();
+                      }
+
+                      checkstream=0;
+                      List<HospitalTimeTableModel> hos_timetable =
+                          snapshot.data.timetable;
+                      List<int> temp_timetable = [];
+                      List<HospitalTimeTableModel> first_timetable = [];
+
+                      hos_timetable.map((item) => item.profile_id == HospitalList[i].id ?
+
+                      first_timetable.add(item)
+                      :  null).toList();
+                      return Container(
+                        child: Column(
+                          children: [
+
+                            Table(
+                              border: TableBorder.all(color: Colors.grey),
+                              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                              children: [
+                                TableRow(
+                                  children: [
+                                    _column("日付" ,Color(0xff80919a), Colors.white),
+                                    _column("午前" ,Color(0xffecf8ff), Colors.black),
+                                    _column("午後" ,Color(0xffecf8ff), Colors.black),
+                                  ]
+                                ),
+                                TableRow(
+                                  children: [
+                                    _column("月" ,Color(0xff80919a), Colors.white),
+                                    _column(first_timetable[0].mon ,Color(0xffffffff), Colors.black),
+                                    _column(first_timetable[1].mon ,Color(0xffffffff), Colors.black),
+                                  ]
+                                ),
+                                TableRow(
+                                  children: [
+                                    _column("火" ,Color(0xff80919a), Colors.white),
+                                    _column(first_timetable[0].tue ,Color(0xffffffff), Colors.black),
+                                    _column(first_timetable[1].tue ,Color(0xffffffff), Colors.black),
+                                  ]
+                                ),
+                                TableRow(
+                                  children: [
+                                    _column("水" ,Color(0xff80919a), Colors.white),
+                                    _column(first_timetable[0].wed ,Color(0xffffffff), Colors.black),
+                                    _column(first_timetable[1].wed ,Color(0xffffffff), Colors.black),
+                                  ]
+                                ),
+                                TableRow(
+                                  children: [
+                                    _column("木" ,Color(0xff80919a), Colors.white),
+                                    _column(first_timetable[0].thu ,Color(0xffffffff), Colors.black),
+                                    _column(first_timetable[1].thu ,Color(0xffffffff), Colors.black),
+                                  ]
+                                ),
+                                TableRow(
+                                  children: [
+                                    _column("金" ,Color(0xff80919a), Colors.white),
+                                    _column(first_timetable[0].fri ,Color(0xffffffff), Colors.black),
+                                    _column(first_timetable[1].fri ,Color(0xffffffff), Colors.black),
+                                  ]
+                                ),
+                                TableRow(
+                                  children: [
+                                    _column("土" ,Color(0xff80919a), Colors.white),
+                                    _column(first_timetable[0].sat ,Color(0xffffffff), Colors.black),
+                                    _column(first_timetable[1].sat ,Color(0xffffffff), Colors.black),
+                                  ]
+                                ),
+                                TableRow(
+                                  children: [
+                                    _column("日" ,Color(0xff80919a), Colors.white),
+                                    _column(first_timetable[0].sun ,Color(0xffffffff), Colors.black),
+                                    _column(first_timetable[1].sun ,Color(0xffffffff), Colors.black),
+                                  ]
+                                ),
                         
-              ]
+                              ]
+                            ),
+
+                            
+                            // Text(first_timetable[0].mon.toString()),
+                            // Text(first_timetable[1].mon.toString()),
+
+                          ],
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Container();
+                    } else {
+                      return Container(); //buildLoadingWidget();
+                    }
+                  }),
             ),
+
+            
             SizedBox(height: 10),
 
             Row(
               children: [
                 Text("休診日：", style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(HospitalList[i].closed_day.toString()),
+                Text("${HospitalList[i].closed_day == null ? '' : HospitalList[i].closed_day}"),
               ],
             ),
 
@@ -1019,7 +1490,7 @@ class _SearchHospitalState extends State<SearchHospital> {
                     child: Icon(Icons.phone, color: Color(0xffc40000)),
                   ),
                   SizedBox(width: 10),
-                  Text("09044446666",
+                  Text("${HospitalList[i].phone == null ? '' : HospitalList[i].phone}",
                     style: TextStyle(
                       color: Color(0xffc40000),
                       fontWeight: FontWeight.bold,
@@ -1038,7 +1509,7 @@ class _SearchHospitalState extends State<SearchHospital> {
             Container(
               padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xffc40000), width: 2),
+                border: Border.all(color: Colors.black, width: 2),
                 borderRadius: BorderRadius.circular(4)
               ),
               child: Row(
@@ -1064,8 +1535,11 @@ class _SearchHospitalState extends State<SearchHospital> {
                                    
             SizedBox(height: 10.0),
             RaisedButton(
+              // onPressed: () {
+              //   // Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDetail()));
+              // },
               onPressed: () {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDetail()));
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=> HospitalDetail(hospitalID: HospitalList[i].id.toString())));
               },
               color: Colors.blue,
               textColor: Colors.white,
@@ -1082,22 +1556,32 @@ class _SearchHospitalState extends State<SearchHospital> {
     
   Widget _dropDown(String hintText){
     return  DropdownButtonHideUnderline(
-        child: ButtonTheme(
-          alignedDropdown: true,
-          child: new DropdownButton<String>(
-          //isDense: true,
-          isExpanded: true,
-          hint:  Row(
-            children: [
-              Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-              Text(hintText),
-            ],
-          ),
-          onChanged: (String newValue) {},
-          items: [],
-      ),
+      child: new DropdownButton<String>(
+        //isDense: true,
+        isExpanded: true,
+        hint:  Row(
+          children: [
+            Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+            Text(hintText),
+          ],
         ),
+        onChanged: (String newValue) {},
+        items: [],
+      ),
     );
+  }
+
+  Widget _paddings(String name){
+      return Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  );
   }
 
   Widget _header(String name) {
@@ -1140,7 +1624,6 @@ class _SearchHospitalState extends State<SearchHospital> {
 
   List<Widget> getTextWidgets(List<DepartmentModel> dep) {
     List products = [];
-    List<int> selectedDep = [];
     var j = 0;
 
     for (var i = 0; i < dep.length; i++) {
@@ -1161,9 +1644,7 @@ class _SearchHospitalState extends State<SearchHospital> {
 
       list.add(new Container(
         //margin: EdgeInsets.all(8),
-        padding: EdgeInsets.only(left: 5),
-        // padding: EdgeInsets.symmetric(horizontal: 5.0),
-     
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
         // decoration: BoxDecoration(
         //     borderRadius: BorderRadius.circular(5.0),
         //     color: Colors.white,
@@ -1270,7 +1751,7 @@ class _TspDialogState extends State<_TspDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(            
+            child: ListView.builder(
                 itemCount: widget.tsp.length,
                 itemBuilder: (BuildContext context, int index) {
                   final tspObject = widget.tsp[index];
@@ -1357,7 +1838,7 @@ class _SpecFeaturesDialogState extends State<_SpecFeaturesDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(              
+            child: ListView.builder(
                 itemCount: widget.spec.length,
                 itemBuilder: (BuildContext context, int index) {
                   final specObject = widget.spec[index];
@@ -1443,7 +1924,7 @@ class _OccupationDialogState extends State<_OccupationDialog> {
             ],
           ),
           Expanded(
-            child: ListView.builder(              
+            child: ListView.builder(
                 itemCount: widget.dep.length,
                 itemBuilder: (BuildContext context, int index) {
                   final tspObject = widget.dep[index];

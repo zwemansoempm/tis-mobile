@@ -7,8 +7,9 @@ class GetHospitalBloc {
   final NewsRepository _repository = NewsRepository();
   final BehaviorSubject<HospitalResponse> _subject = BehaviorSubject<HospitalResponse>();
 
-  getHospital() async{
-    HospitalResponse response = await _repository.getHospital();
+  getHospital(String _city, var selectedTspID, var selectedSepID,
+    var selectedDepID) async{
+    HospitalResponse response = await _repository.getHospital(_city, selectedTspID, selectedSepID, selectedDepID);
     _subject.sink.add(response);
   }
 

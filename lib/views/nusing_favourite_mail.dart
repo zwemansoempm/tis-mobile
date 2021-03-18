@@ -9,10 +9,14 @@ import 'package:tis/bloc/get_tsp_bloc.dart';
 import 'package:tis/elements/loader.dart';
 import 'package:tis/model/city.dart';
 import 'package:tis/model/city_response.dart';
+import 'package:tis/model/nursingMailComment.dart';
+import 'package:tis/model/nursing_detail_response.dart';
 import 'package:tis/model/postal_list.dart';
 import 'package:tis/model/postal_list_response.dart';
 import 'package:tis/model/township.dart';
 import 'package:tis/model/township_response.dart';
+import 'package:tis/views/nursing_mail_confirm.dart';
+import 'package:tis/views/nusing_detail.dart';
 import 'package:tis/views/send_completely.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,7 +37,7 @@ class _NusingMailState extends State<NusingMail> {
   TextEditingController nameController = TextEditingController();
   TextEditingController furiganaController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
-  //TextEditingController genderController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
   TextEditingController zipCodeController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController cityController = TextEditingController();
@@ -43,6 +47,7 @@ class _NusingMailState extends State<NusingMail> {
   TextEditingController mailController = TextEditingController();
   TextEditingController hopeController = TextEditingController();
   TextEditingController tnameController = TextEditingController();
+  TextEditingController relGenderController = TextEditingController();
 
   DateTime _selectedDate;
   final format = DateFormat("yyyy-MM-dd");
@@ -64,26 +69,37 @@ class _NusingMailState extends State<NusingMail> {
   var stream;
   List<PostalList> postalList;
   List<TownshipModel> tspIdList;
-  GlobalKey<FormState> _form = GlobalKey<FormState>();
+  GlobalKey<FormState> _form = GlobalKey<FormState>(); 
   ScrollController _scrollController = new ScrollController();
   Gender _relationGender;
   String _fect;
   String relation;
   String nursing;
+  String years;
+  bool ispostalError = false; 
+
 
   List<String> relationList = ["本人", "家族", "親族", "友人", "ケアマネージャー", "ソーシャルワーカー", "その他"];
   List<String> nursingList = ["自立", "要支援", "要介護1", "要介護2", "要介護4", "要介護5", "不明"];
+  List<String> yearsList = ["50","51","52","53","54","55","56","57","58","59",
+                          "60","61","62","63","64","65","66","67","68","69",
+                          "70","71","72","73","74","75","76","77","78","79",
+                          "80","81","82","83","84","85","86","87","88","89",
+                          "90","91","92","93","94","95","96","97","98","99",
+                          "100","101","102","103","104","105","106","107","108","109","110"];
 
   _validate() {
     return _form.currentState.validate();
   }
-  //int selectedRadio;
+
+  GetNursingDetailBloc _detailBloc = new GetNursingDetailBloc();
 
   @override
   void initState() {
     super.initState();
     stream = getNursingDetailBloc..getNursingDetailData(widget.nursingId);
-    //selectedRadio = 0 ;
+    fetchDat();
+    print(profileNumber);
   }
 
   @override
@@ -92,33 +108,21 @@ class _NusingMailState extends State<NusingMail> {
     super.dispose();
   }
 
-  setSelectedRadioGender(Gender val){
-    setState(() {
-      _gender = val;
-    });
-  }
-
-  setSelectedRadioRelGender(Gender val){
-    setState(() {
-      _relationGender = val;
-    });
-  }
-
   setSelectedRadioFect(String val){
     setState(() {
       _fect = val;
     });
   }
 
-  // fetchDat() async {
-  //   return await 
-  //   return await fetchCategories().then((catList) {
-  //     categories = catList;
-  //     tabController = TabController(length: categories.length, vsync: this);
-  //   }).catchError((onError) {
-  //     print("Can't Fetch Error");
-  //   });
-  // }
+  NursingDetailResponse detailResponse ;
+  String profileNumber;
+
+  fetchDat()  {
+    return getNursingDetailBloc.subject.stream.listen((event) {
+      event.profilenumbers.map((e) => {profileNumber = e.profilenumber}) ;
+      detailResponse = event;
+     });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,9 +131,12 @@ class _NusingMailState extends State<NusingMail> {
         appBar: AppBar(
           title: Text("介護施設資料請求"),
           backgroundColor:Color(0xff63b7ff),
+          automaticallyImplyLeading: false,
         ),
         body: Form(
+          key: _form,
           child: SingleChildScrollView(
+            controller: _scrollController,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
                 child: Column(
@@ -231,7 +238,8 @@ class _NusingMailState extends State<NusingMail> {
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
                                 contentPadding: EdgeInsets.all(8),
-                                labelText: 'お名前を入力してください。',
+                                //labelText: 'お名前を入力してください。',
+                                hintText: 'お名前を入力してください。',
                               ),
                             ),
                             data: Theme.of(context).copyWith(
@@ -255,14 +263,15 @@ class _NusingMailState extends State<NusingMail> {
                         children: [
                           Theme(
                             child: TextFormField(                                                
-                              validator:new ValidationBuilder().regExp(RegExp("/[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+/u",unicode: false),"フリガナを入力してください。")
-                              .minLength(1).maxLength(50).build(),                          
+                              // validator:new ValidationBuilder().regExp(RegExp("/[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+/u",unicode: false),"フリガナを入力してください。")
+                              // .minLength(1).maxLength(50).build(),                          
                               controller: furiganaController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.all(8),
                                 fillColor: Colors.grey,
-                                labelText: 'フリガナを入力してください。',
+                                // labelText: 'フリガナを入力してください。',
+                                hintText: 'フリガナを入力してください。',
                               ),
                             ),
                             data: Theme.of(context).copyWith(
@@ -285,13 +294,15 @@ class _NusingMailState extends State<NusingMail> {
                           primaryColor: Colors.blue,
                         ),
                         child: TextFormField(
-                          validator:new ValidationBuilder().regExp(RegExp("^([0-9]{4}|[0-9]{2})[-]([0]?[1-9]|[1][0-2])[-]([0]?[1-9]|[1|2][0-9]|[3][0|1])",unicode: false),"生年月日を入力してください。")
-                          .minLength(10).maxLength(10).build(), 
+                          //keyboardType: TextInputType.number,
+                          // validator:new ValidationBuilder().regExp(RegExp("^([0-9]{4}|[0-9]{2})[-]([0]?[1-9]|[1][0-2])[-]([0]?[1-9]|[1|2][0-9]|[3][0|1])",unicode: false),"生年月日を入力してください。")
+                          // .minLength(10).maxLength(10).build(), 
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             fillColor: Colors.grey,
                             contentPadding: EdgeInsets.fromLTRB(30.0, 10.0, 100.0, 10.0),
-                            labelText: '年 - 月 - 日',
+                            // labelText: '年 - 月 - 日',
+                            hintText: '年 - 月 - 日',
                             hintStyle: TextStyle(fontSize: 15),
                           ),
                           controller: birthdayController,
@@ -314,8 +325,11 @@ class _NusingMailState extends State<NusingMail> {
                             value: Gender.male,
                             dense: true,
                             groupValue: _gender,
-                            onChanged: (val) {
-                              setSelectedRadioGender(val);
+                            onChanged: (Gender value) {
+                              setState(() {
+                                _gender = value;
+                                genderController.text = '男性';
+                              });
                             },
                           ),
                           RadioListTile(
@@ -324,7 +338,12 @@ class _NusingMailState extends State<NusingMail> {
                             value: Gender.female,
                             dense: true,
                             groupValue: _gender,
-                            onChanged: (val) { setSelectedRadioGender(val); },
+                            onChanged: (Gender value) {
+                              setState(() {
+                                _gender = value;
+                                genderController.text = '女性';
+                              });
+                            },
                           ),
                           RadioListTile(
                             //contentPadding: EdgeInsets.zero,
@@ -332,7 +351,12 @@ class _NusingMailState extends State<NusingMail> {
                             value: Gender.couple,
                             dense: true,
                             groupValue: _gender,
-                            onChanged: (val) { setSelectedRadioGender(val); },
+                            onChanged: (Gender value) {
+                              setState(() {
+                                _gender = value;
+                                genderController.text = '夫婦';
+                              });
+                            },
                           ),
                         ],
                       )
@@ -350,17 +374,18 @@ class _NusingMailState extends State<NusingMail> {
                           Text("郵便番号"),
                           SizedBox(height: 10.0),
                           Theme(
-                            child: TextFormField(                     
+                            child: TextFormField(   
+                              //keyboardType: TextInputType.phone,                  
                               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               validator:new ValidationBuilder()
-                              .minLength(1).maxLength(10).build(),    
+                              .minLength(1).maxLength(10).build(),  
                               controller: zipCodeController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.all(8),
                                 fillColor: Colors.grey,
-                                labelText: '郵便番号を入力してください。',
-                                //hintText: '郵便番号を入力してください。',
+                                //labelText: '郵便番号を入力してください。',
+                                hintText: '郵便番号を入力してください。',
                                 hintStyle: TextStyle(fontSize: 15),
                               ),
                             ),
@@ -410,14 +435,7 @@ class _NusingMailState extends State<NusingMail> {
                             ],
                           ),
                           SizedBox(height: 12.0),
-                          Row(
-                            children: [
-                              Text("都道府県"),
-                              SizedBox(width: 20),
-                              _orangeCard()
-                            ],
-                          ),
-                          SizedBox(height: 10.0),
+                          
                           checkSearch == 0
                           ? columnData()
                           : Container(
@@ -442,11 +460,30 @@ class _NusingMailState extends State<NusingMail> {
                                     } else if (snapshot.hasError) {
                                       return Container();
                                     } else if (snapshot.hasData) {
+                                      
                                       if (snapshot.data.error != null &&
                                           snapshot.data.error.length > 0) {
-                                        return Container();
+                                            
+                                        checkSearch = 0;
+                                        ispostalError = true;
+                                        return columnData();
+                                      }else if((snapshot.data.postalList == null ||snapshot.data.postalList.length == 0) &&
+                                        (snapshot.data.tspList == null || snapshot.data.tspList.length == 0)){
+                                        
+                                        checkSearch = 0;
+                                        ispostalError = true;
+                                        return columnData();
                                       }
+                                      // postalList = snapshot.data.postalList;
+                                      // tspIdList = snapshot.data.tspList;
+                                      // getTspBloc.drainStream();
+                                      // _cityModel = new CityModel(postalList[0].city_id, postalList[0].pref);
+                                      // stream1 = getTspBloc..getTownship(_cityModel.id.toString());
+                                      // _townshipModel = new TownshipModel(tspIdList[0].id, postalList[0].city, _cityModel.id.toString());
+                                      // addressController.text = postalList[0].street;
+                                      // checkstream = 1;
 
+                                      ispostalError = false;
                                       postalList = snapshot.data.postalList;
                                       tspIdList = snapshot.data.tspList;
                                       city_id = postalList[0].city_id;
@@ -459,8 +496,17 @@ class _NusingMailState extends State<NusingMail> {
                                           ? tspIdList[0].id.toString()
                                           : '';
                                       _street = postalList[0].street;
-                                      addressController.text = _street;                                    
+                                      stateController.text = postalList[0].pref;
+                                      cityController.text = postalList[0].city;
+
+                                      addressController.text = _street;
+
+                                      print(stateController.text);
+                                      print(cityController.text);
+                                      print(addressController.text);
+                                      checkstream = 1;
                                       return columnData();
+                                      
                                     } else {
                                       return Center(
                                         child: Opacity(
@@ -498,7 +544,8 @@ class _NusingMailState extends State<NusingMail> {
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.all(8),
                                 fillColor: Colors.grey,
-                                labelText: '電話番号を入力してください。',
+                                // labelText: '電話番号を入力してください。',
+                                hintText: '電話番号を入力してください。',
                               ),
                             ),
                             data: Theme.of(context).copyWith(
@@ -528,7 +575,8 @@ class _NusingMailState extends State<NusingMail> {
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
                                 contentPadding: EdgeInsets.all(8),
-                                labelText: 'メールアドレスを入力してください。',
+                                // labelText: 'メールアドレスを入力してください。',
+                                hintText: 'メールアドレスを入力してください。',
                               ),
                             ),
                             data: Theme.of(context).copyWith(
@@ -556,9 +604,7 @@ class _NusingMailState extends State<NusingMail> {
                       children: [
                         RaisedButton(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          onPressed: () {
-                            //Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingMail()));
-                          },
+                          onPressed: submit,
                           color: Colors.green,
                           textColor: Colors.white,
                           child: Text('確認ページに進む', style: TextStyle(fontSize: 16,)),
@@ -615,13 +661,14 @@ class _NusingMailState extends State<NusingMail> {
                         children: [
                           Theme(
                             child: TextFormField(
-                              validator:ValidationBuilder().regExp(RegExp("(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)", unicode: false),"First Name,Last Nameを入力してください。").minLength(1).maxLength(50).build(),
+                              //validator:ValidationBuilder().regExp(RegExp("(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)", unicode: false),"First Name,Last Nameを入力してください。").minLength(1).maxLength(50).build(),
                               controller: tnameController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
                                 contentPadding: EdgeInsets.all(8),
-                                labelText: 'お名前を入力してください。',
+                                // labelText: 'お名前を入力してください。',
+                                hintText: 'お名前を入力してください。',
                               ),
                             ),
                             data: Theme.of(context).copyWith(
@@ -645,8 +692,11 @@ class _NusingMailState extends State<NusingMail> {
                             value: Gender.male,
                             dense: true,
                             groupValue: _relationGender,
-                            onChanged: (val) {
-                              setSelectedRadioRelGender(val);
+                            onChanged: (Gender value) {
+                              setState(() {
+                                _relationGender = value;
+                                relGenderController.text = '男性';
+                              });
                             },
                           ),
                           RadioListTile(
@@ -654,8 +704,11 @@ class _NusingMailState extends State<NusingMail> {
                             value: Gender.female,
                             dense: true,
                             groupValue: _relationGender,
-                            onChanged: (val) { 
-                              setSelectedRadioRelGender(val);
+                            onChanged: (Gender value) {
+                              setState(() {
+                                _relationGender = value;
+                                relGenderController.text = '女性';
+                              });
                             },
                           ),
                           RadioListTile(
@@ -663,14 +716,17 @@ class _NusingMailState extends State<NusingMail> {
                             value: Gender.couple,
                             dense: true,
                             groupValue: _relationGender,
-                            onChanged: (val) {
-                              setSelectedRadioRelGender(val);
+                            onChanged: (Gender value) {
+                              setState(() {
+                                _relationGender = value;
+                                relGenderController.text = '夫婦';
+                              });
                             },
                           ),
                         ],
                       )
                     ),
-                    _itemHeader("年齢"),
+                    _itemHeaderButton("年齢", false),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       decoration: BoxDecoration(
@@ -690,17 +746,17 @@ class _NusingMailState extends State<NusingMail> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text("選択してください"),
                             ),
-                            items: [
-                              DropdownMenuItem(
-                                child: Text("First Item"),
-                                value: 1,
-                              ),
-                              DropdownMenuItem(
-                                child: Text("Second Item"),
-                                value: 2,
-                              ),
-                            ],
+                            value: years,
+                              items: yearsList.map((String year) => 
+                                DropdownMenuItem(
+                                  child: Text("  "+year),
+                                  value: year,
+                                ),
+                              ).toList(),
                             onChanged: (value) {
+                              setState(() {
+                                years = value;
+                              });
                             }),
                           ),
                         ),
@@ -735,7 +791,9 @@ class _NusingMailState extends State<NusingMail> {
                                 ),
                               ).toList(),
                               onChanged: (value) {
-
+                                setState(() {
+                                  nursing = value;
+                                });
                               }
                             ),
                           ),
@@ -788,7 +846,7 @@ class _NusingMailState extends State<NusingMail> {
                       ),
                       child: Theme(
                         child: TextFormField(   
-                          validator: ValidationBuilder().minLength(1).build(),
+                          //validator: ValidationBuilder().minLength(1).build(),
                           controller: hopeController ,
                           maxLines: 3,
                           decoration: InputDecoration(
@@ -819,9 +877,7 @@ class _NusingMailState extends State<NusingMail> {
                       children: [
                         RaisedButton(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const SendCompletely()));
-                          },
+                          onPressed: submit,
                           color: Colors.green,
                           textColor: Colors.white,
                           child: Text('確認ページに進む', style: TextStyle(fontSize: 16,)),
@@ -838,9 +894,63 @@ class _NusingMailState extends State<NusingMail> {
     );
   }
 
-    Widget columnData() {
+  void submit(){
+    if (_form.currentState.validate()) {
+        NursingMailCommentModel user = new NursingMailCommentModel(
+          nameController.text,
+          furiganaController.text,
+          birthdayController.text, 
+          genderController.text, 
+          zipCodeController.text, 
+          //city,
+          cityController.text,
+          townshipId.text,
+          addressController.text,
+          phoneNoController.text, 
+          mailController.text, 
+          relation, 
+          nameController.text,
+          relGenderController.text, 
+          years, 
+          nursing, 
+          _fect,
+          hopeController.text);
+          var route = new MaterialPageRoute(
+            builder: (BuildContext context) =>
+                new NursingMailConfirm(
+                    nursingId: widget.nursingId,
+                    mailcomment: user),
+          );
+          Navigator.of(context).push(route);
+        } else {
+          _scrollController.animateTo(
+            0.0,
+            curve: Curves.easeOut,
+            duration: const Duration(milliseconds: 300),
+          );
+        }
+          
+      FocusScope.of(context).unfocus();
+  }
+
+  Widget columnData() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        ispostalError ? Text('郵便番号の書式を確認してください。',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.red,
+          )) : Container(),
+        SizedBox(height: 10.0),
+        Row(
+          children: [
+            Text("都道府県"),
+            SizedBox(width: 20),
+            _orangeCard()
+          ],
+        ),
+        SizedBox(height: 10.0),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
@@ -882,16 +992,27 @@ class _NusingMailState extends State<NusingMail> {
                       child: new DropdownButton<String>(
                         isExpanded: true,
                         hint: Text("選択してください。"),
+                        // value: _cityModel == null ? null : _cityModel.id.toString(),
+                        // onChanged: (val){
+                        //   setState(() {
+                        //     _cityModel = null;
+                        //     _townshipModel = null;
+                        //     getTspBloc.drainStream();
+                        //     stream1 =getTspBloc..getTownship(val);
+                        //     _cityModel = cityList.firstWhere((c) => c.id.toString() == val, orElse: () => cityList.first);
+                        //     checkstream = 1;
+                        //   });
+                        // },
                         value: _city,
                         onChanged: (String newValue) {
-                          //_city = '';
+                          _city = '';
                           setState(() {
                             stateController.text= cityList[int.parse(newValue)].city_name.toString();
 
                             if (checkSearch == 1) {
                               checkSearch = 0;
                             }
-                            //checkstream=1;
+                            checkstream=1;
                             _township = null;
                             getTspBloc.drainStream();
                             stream1 = getTspBloc..getTownship(newValue);
@@ -972,12 +1093,12 @@ class _NusingMailState extends State<NusingMail> {
                   );
                 } else if (snapshot.hasError) {
                   return Container();
-                } else if (snapshot.hasData && checkstream==1) {
+                } else if (snapshot.hasData) {
                   if (snapshot.data.error != null &&
                       snapshot.data.error.length > 0) {
                     return Container();
                   }               
-        
+                  checkstream=0;
                   List<TownshipModel> townships = List();
                   townships.add(new TownshipModel(-1, "", ""));
                   snapshot.data.township.forEach((e) {                
@@ -990,15 +1111,15 @@ class _NusingMailState extends State<NusingMail> {
                       child: new DropdownButton<String>(
                         //isDense: true,
                         isExpanded: true,
-                        hint: Row(
-                          children: [
-                            Icon(
-                              Icons.arrow_drop_down_outlined,
-                              size: 35.0,
-                            ),
-                            Text("選択してください。"),
-                          ],
-                        ),
+                        hint: Text("選択してください。"),
+                        // value: _townshipModel == null ? null : _townshipModel.id.toString(),
+                        // onChanged: (val){
+                        //   setState(() {
+                        //     print(val);
+                        //     _townshipModel = null;
+                        //     _townshipModel = townships.firstWhere((c) => c.id.toString() == val, orElse: () => townships.first);
+                        //   });
+                        // },
                         value: township_id == '' ? _township : township_id,
                         onChanged: (String newValue) {                       
                           setState(() {
@@ -1018,7 +1139,6 @@ class _NusingMailState extends State<NusingMail> {
                         items: townships
                             .map((TownshipModel tspModel) => DropdownMenuItem(
                                   value: tspModel.id.toString(),
-                                  //child: Text(tspModel.township_name)
                                   child: tspModel.id != -1
                                       ? Text(tspModel.township_name)
                                       : Row(
@@ -1070,7 +1190,8 @@ class _NusingMailState extends State<NusingMail> {
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.all(8),
               fillColor: Colors.grey,
-              labelText: '番地を入力してください。',
+              // labelText: '番地を入力してください。',
+              hintText: '番地を入力してください。',
             ),
           ),
           data: Theme.of(context).copyWith(

@@ -745,7 +745,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                         ),
                                       ),
                                       Divider(
-                                        color: Colors.grey[300],
+                                        color: Colors.grey[400],
                                         thickness: 1,
                                       ),
                                       (selectedFacType.length > 1) ?
@@ -831,7 +831,7 @@ class _NusingSearchState extends State<NusingSearch> {
                                           ),
                                         ),
                                       Divider(
-                                        color: Colors.grey[300],
+                                        color: Colors.grey[400],
                                         thickness: 1,
                                       ), 
                                       (selectedMedAcceptance.length > 1) ?
@@ -928,7 +928,7 @@ class _NusingSearchState extends State<NusingSearch> {
                               }
                         }),
                         Divider(
-                          color: Colors.grey[300],
+                          color: Colors.grey[400],
                           thickness: 1,
                         ),
 
@@ -1308,12 +1308,12 @@ class _NusingSearchState extends State<NusingSearch> {
             children: [
               _checkBoxLoadBuildWidget(specFeatureText),
               Divider(
-                color: Colors.grey[300],
+                color: Colors.grey[400],
                 thickness: 1,
               ),
               _checkBoxLoadBuildWidget(facTypeText),
               Divider(
-                color: Colors.grey[300],
+                color: Colors.grey[400],
                 thickness: 1,
               ),
               _checkBoxLoadBuildWidget(medAcceptanceText),

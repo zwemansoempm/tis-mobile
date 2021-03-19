@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:tis/views/top.dart';
 
-class ReviewThree extends StatelessWidget {
-  const ReviewThree();
+class ReviewThree extends StatefulWidget {
+  final String hospitalID;
+  ReviewThree({Key key,@required this.hospitalID}) : super(key: key);
+
+  @override
+  _ReviewThreeState createState() => _ReviewThreeState();
+}
+
+class _ReviewThreeState extends State<ReviewThree> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,8 +150,11 @@ class ReviewThree extends StatelessWidget {
               borderRadius: BorderRadius.circular(5.0),
               side: BorderSide(color: Colors.grey),
               ),
-              onPressed: (){
-                // Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewThree()));
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const TopPage()));
               },
               color: Colors.lightBlue[300],
               child: Text(

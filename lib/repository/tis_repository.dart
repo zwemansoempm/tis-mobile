@@ -641,47 +641,86 @@ class NewsRepository {
       var selectedTspID,
       var selectedSepID,
       var selectedDepID) async {
-
+      
     await Future.delayed(Duration(milliseconds: 500));
-    print(city);
+    var cityID;
+
     if (city == 'null' || city.isEmpty) {
-      city = "-1";
+      cityID = "-1";
+    } else {
+      cityID = city;
     }
-    // https://test.t-i-s.jp/api/gethospitalsearch/null?id=-1&townshipID[]=0&specialfeatureID[]=0&subjectID[]=0&local=7
-    print(city);
-    try {
-      var uri = Uri(
-        scheme: 'https',
-        host: url,
-        path: '/api/gethospitalsearch/null',
-        queryParameters: {
-          'id': city,
-          
-          'townshipID[]':
-              (selectedTspID == null || selectedTspID.isEmpty)
-                  ? ["0"]
-                  : selectedTspID.toString(),
-          'specialfeatureID[]':
-              (selectedSepID == null || selectedSepID.isEmpty)
-                  ? ["0"]
-                  : selectedSepID.toString(),
-          'subjectID[]': (selectedDepID == null || selectedDepID.isEmpty)
-              ? ["0"]
-              : selectedDepID.toString(),
-          'local': '7',
-        },
-      );
-      Response response = await _dio.get(uri.toString());
-      if (response.statusCode == HttpStatus.ok) {
-        return HospitalResponse.fromJson(response.data);
-      } else {
-        throw SocketException('No Internet');
+
+    var townshipID = "";
+    if (selectedTspID == null || selectedTspID.isEmpty) {
+      townshipID = "townshipID[]=0";
+    } else {
+      List<dynamic> tsp = selectedTspID;
+      for (int i = 0; i < tsp.length; i++) {
+        if (i == tsp.length - 1) {
+          townshipID = townshipID + "townshipID[]=" + tsp[i];
+        } else {
+          townshipID = townshipID + "townshipID[]=" + tsp[i] + "&";
+        }
       }
-    } catch (error, stacktrace) {
-      //throw SocketException('No Internet');
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return HospitalResponse.withError("$error");
     }
+
+    var specFeatureID = "";
+
+    if (selectedSepID == null || selectedSepID.isEmpty) {
+      specFeatureID = "specialfeatureID[]=0";
+    } else {
+      List<dynamic> spec = selectedSepID;
+      for (int i = 0; i < spec.length; i++) {
+        if (i == spec.length - 1) {
+          specFeatureID = specFeatureID + "specialfeatureID[]=" + spec[i];
+        } else {
+          specFeatureID = specFeatureID + "specialfeatureID[]=" + spec[i] + "&";
+        }
+      }
+    }
+
+    var departmentID = "";
+
+    if (selectedDepID == null || selectedDepID.isEmpty) {
+      departmentID = "subjectID[]=0";
+    } else {
+      List<dynamic> dep = selectedDepID;
+      for (int i = 0; i < dep.length; i++) {
+        if (i == dep.length - 1) {
+          departmentID = departmentID + "subjectID[]=" + dep[i];
+        } else {
+          departmentID = departmentID + "subjectID[]=" + dep[i] + "&";
+        }
+      }
+    }
+
+    // https://test.t-i-s.jp/api/gethospitalsearch/null?id=-1&townshipID[]=0&specialfeatureID[]=0&subjectID[]=0&local=
+
+    var url = "https://test.t-i-s.jp/api/gethospitalsearch/null?id=" +
+          cityID +
+          "&" +
+          townshipID +
+          "&" +
+          specFeatureID +
+          "&" +
+          departmentID + 
+          "&local=";
+
+      try {
+        Response response = await _dio.get(url.toString());
+
+        if (response.statusCode == HttpStatus.ok) {
+          return HospitalResponse.fromJson(response.data);
+        } else {
+          throw SocketException('No Internet');
+        }
+      } catch (error, stacktrace) {
+        // throw SocketException('No Internet');
+        print("Exception occured: $error stackTrace: $stacktrace");
+        return HospitalResponse.withError("$error");
+      }
+    
   }
 
   Future<JobDetailResponse> getJobDetail(String _jobId) async {

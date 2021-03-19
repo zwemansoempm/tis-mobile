@@ -15,6 +15,7 @@ import 'package:tis/model/hospital_specfeat.dart';
 import 'package:tis/model/hospital_timetable.dart';
 import 'package:tis/model/hospital_timetable_responese.dart';
 import 'package:tis/screens/hospital/hospital_comment.dart';
+import 'package:tis/views/reviewone.dart';
 
 import '../../app-format.dart';
 
@@ -263,8 +264,9 @@ class _HospitalDetailState extends State<HospitalDetail> {
             ),
             SizedBox(height: 20.0),
             Text("こだわりの特長",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(fontSize: 17, color: Colors.blue, fontWeight: FontWeight.bold)
             ),
+            SizedBox(height:5),
             DottedLine(dashColor: Colors.blue),
             SizedBox(height: 10.0),
 
@@ -355,7 +357,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
             _subHeader("診療時間"),
             SizedBox(height: 10.0),
             _getTimeTableWidgets(),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
 
             Row(
               children: [
@@ -455,7 +457,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
             detail.videos.length == 0 ? Padding(
               padding: const EdgeInsets.only(bottom:10.0),
               child: _noData(),
-            ) : Column(
+            ) : Container(
               
             ),
 
@@ -475,9 +477,9 @@ class _HospitalDetailState extends State<HospitalDetail> {
                 
             SizedBox(height: 20.0),
             _itemHeader("公式サイト"),
-            _itemData(hos_detail.website),
+            _itemData(hos_detail.website == null ? '-' : hos_detail.website),
             _itemHeader("メールアドレス"),
-            _itemData(hos_detail.email),
+            _itemData(hos_detail.email == null ? '-' : hos_detail.email),
             _itemHeader("アクセス"),
             _itemData(hos_detail.access == null ? '-' : hos_detail.access.toString()),
             _itemHeader("混雑状況"),
@@ -501,16 +503,29 @@ class _HospitalDetailState extends State<HospitalDetail> {
 
                         List<CommentsModel> cmt = snapshot.data.comments;
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom:10.0),
+                        return cmt.length == 0 || cmt.length == null ?  Padding(
+                          padding: const EdgeInsets.only(left:17.0),
                           child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(Icons.chat_bubble_outline),
+                            // Icon(Icons.chat_bubble_outline, size: 30,),
                             SizedBox(width: 4.0),
                             Text('口コミを投稿する', style: TextStyle(fontSize: 16,)),
                         ],)
+                        ) : Container(
+              
                         );
+
+                        // return Padding(
+                        //   padding: const EdgeInsets.only(bottom:10.0),
+                        //   child: Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   children: [
+                        //     Icon(Icons.chat_bubble_outline),
+                        //     SizedBox(width: 4.0),
+                        //     Text('口コミを投稿する', style: TextStyle(fontSize: 16,)),
+                        // ],)
+                        // );
 
                         // return Wrap(
                         //   children: snapshot.data.comments.map((s) => 
@@ -546,7 +561,9 @@ class _HospitalDetailState extends State<HospitalDetail> {
                 RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> HospitalComment()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewPost(hospitalID: hos_detail.id.toString())));
+                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> const HospitalComment()));
+
                   },
                   color: Colors.green,
                   textColor: Colors.white,
@@ -566,11 +583,35 @@ class _HospitalDetailState extends State<HospitalDetail> {
     );
   }
 
+  // Widget _getFacilityWidget(FacilityList faclist ,List<Facility> fac){
+  //   return Container(
+  //     child: Column(
+  //       children: [
+  //         _facility(faclist.description,Color(0xffdee2e6)),
+  //         Column(
+  //         children:fac.map((fac) => 
+  //         (fac.id == faclist.id) ?
+  //         _facilityData(Colors.white)
+  //         : Container()
+  //         ).toList(),
+  //         ),
+
+  //         SizedBox(width: 10),
+  //     ],) 
+  //   );
+  // }
+
   Widget _getFacilityWidget(FacilityList faclist ,List<Facility> fac){
+    var list = [];
     return Container(
       child: Column(
         children: [
           _facility(faclist.description,Color(0xffdee2e6)),
+
+          // Column(
+          //   children: fac.map((e) =>list.add(e.id)),
+          // ),
+
           Column(
           children:fac.map((fac) => 
           (fac.id == faclist.id) ?
@@ -582,6 +623,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
           SizedBox(width: 10),
       ],) 
     );
+    
   }
 
    Widget _getSpecFeatWidgets()
@@ -792,7 +834,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(name),
+          Text(name, style: TextStyle(fontSize: 17,),),
           SizedBox(
             height: 20.0,
             width: 30.0,
@@ -824,6 +866,18 @@ class _HospitalDetailState extends State<HospitalDetail> {
         color: color,
       ),
       child: Center(child: Icon(Icons.circle, color: Color(0xff346e90)),)
+    );
+  }
+
+  Widget _facilityData2(){
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10.0),
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[200]),
+        color: Colors.white,
+      ),
+      child: Center(child: Icon(Icons.circle, color: Colors.white),)
     );
   }
 

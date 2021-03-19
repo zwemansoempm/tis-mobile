@@ -221,115 +221,213 @@ class _SearchHospitalState extends State<SearchHospital> {
                   children: [
                     //City
 
-                        Container(
-                          margin: EdgeInsets.all(8),
-                          padding: EdgeInsets.symmetric(horizontal: 0.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white,
-                              border: Border.all(color: Colors.grey[400])),
-                          child: StreamBuilder<CityResponse>(
-                              stream: getCityBloc.subject.stream,
-                              builder:
-                                (context, AsyncSnapshot<CityResponse> snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                        Padding(
+                          padding: const EdgeInsets.only(
+                          top: 10.0, left: 10.0, right: 10.0),
+                          child: Container(
+                            //padding: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.only(left: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                color: Colors.white,
+                                border: Border.all(color: Colors.grey[400])),
+                            child: StreamBuilder<CityResponse>(
+                                stream: getCityBloc.subject.stream,
+                                builder: (context,
+                                    AsyncSnapshot<CityResponse> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return Stack(
                                       children: <Widget>[
-                                        // Row(
-                                        //   children: [
-                                        //     Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                        //     Text("  市区町村"),
-                                        //   ],
-                                        // ),
-                                        _dropDown("市区町村"),                            
+                                        _dropDown("市区町村"),
                                         Center(
                                           child: Opacity(
-                                            opacity:1.0, 
-                                            child:buildLoadingWidget(),//CircularProgressIndicator(),
+                                            opacity: 1.0,
+                                            child:
+                                                buildLoadingWidget(), //CircularProgressIndicator(),
                                           ),
                                         ),
                                       ],
                                     );
-                                }
-                                else if (snapshot.hasError) {
-                                      return Container();
-                                } 
-                                else if (snapshot.hasData) {
-                                  if (snapshot.data.error != null &&
-                                      snapshot.data.error.length > 0) {
+                                  } else if (snapshot.hasError) {
                                     return Container();
-                                  }
-                                  List<CityModel> cityList = List();
-                                    cityList.add(new CityModel(-1,""));
+                                  } else if (snapshot.hasData) {
+                                    if (snapshot.data.error != null &&
+                                        snapshot.data.error.length > 0) {
+                                      return Container();
+                                    }
+                                    cityList = List();
+                                    cityList.add(new CityModel(-1, ""));
                                     snapshot.data.city.forEach((e) {
                                       cityList.add(e);
-                                  });
-                                  return Container(                               
-                                      child: DropdownButtonHideUnderline(
-                                    child: ButtonTheme(                               
-                                        alignedDropdown: true,
+                                    });
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                      top: 0.0, left: 10.0, right: 10.0),
+                                      child: Container(
+                                          //width: 320.0,
+                                          child: DropdownButtonHideUnderline(
                                         child: new DropdownButton<String>(
-                                        //isDense: true,
-                                        isExpanded: true,
-                                        hint:  Row(
-                                          children: [
-                                            Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                            Text("市区町村"),
-                                          ],
+                                          //isDense: true,
+                                          isExpanded: true,
+                                          hint: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.arrow_drop_down_outlined,
+                                                size: 35.0,
+                                              ),
+                                              Text("市区町村"),
+                                            ],
+                                          ),
+                                          value: _city,
+                                          onChanged: (String newValue) {
+                                            setState(() {
+                                              _township = null;
+                                              getTspBloc.drainStream();
+                                              stream1 = getTspBloc
+                                                ..getTownship(newValue);
+                                              checkstream = 1;
+                                              _city = newValue;
+                                            });
+                                          },
+
+                                          items: cityList
+                                              .map((CityModel cityModel) =>
+                                                  DropdownMenuItem(
+                                                    value: cityModel.id.toString(),
+                                                    child: cityModel.id != -1
+                                                        ? Text(cityModel.city_name)
+                                                        : Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_outlined,
+                                                                size: 35.0,
+                                                              ),
+                                                              Text("市区町村"),
+                                                            ],
+                                                          ),
+                                                  ))
+                                              .toList(),
                                         ),
-                                        value: _city,
-                                        onChanged: (String newValue) {
-                                          setState(() {
-                                            checkstream=1;
-                                            getTspBloc.drainStream();
-                                            // getDepBloc.drainStream();
-                                            _township = null;
-                                            _city = newValue;     
-                                            stream1=getTspBloc..getTownship(_city);
-                                            // stream2=getDepBloc..getDepartment(_city);
-                                     
-                                     
-                                          });
-                                        },
-                                        items: 
-                                         cityList.map((CityModel cityModel) =>
-                                            DropdownMenuItem(
-                                              value: cityModel.id.toString(),
-                                              child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
-                                                : Row(
-                                                  children: [
-                                                    Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
-                                                    Text("市区町村"),
-                                                  ],
-                                                ),
-                                            )
-                                            )
-                                          .toList(),
-                                        // snapshot.data.city
-                                        //     .toList()
-                                        //     .map((CityModel cityModel) =>
-                                        //         DropdownMenuItem(
-                                        //             value: cityModel.id.toString(),
-                                        //             child: Text(cityModel.city_name)))
-                                        //     .toList(),
-                                      ),
-                                    ),
-                                  ));
-                                } else {
-                                  return Stack(
-                                  children: <Widget>[
-                                    _dropDown("市区町村"),                         
-                                    Center(
-                                      child: Opacity(
-                                        opacity:1.0, 
-                                        child:buildLoadingWidget(),//CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                                }
-                              }),
+                                      )),
+                                    );
+                                  } else {
+                                    return Stack(
+                                      children: <Widget>[
+                                        _dropDown("市区町村"),
+                                        Center(
+                                          child: Opacity(
+                                            opacity: 1.0,
+                                            child:
+                                                buildLoadingWidget(), //CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                    // );//_dropDown("市区町村"); //buildLoadingWidget();
+                                  }
+                                }),
+                          ),
                         ),
+
+                        SizedBox(height: 10,),
+
+                        // Container(
+                        //   margin: EdgeInsets.all(8),
+                        //   padding: EdgeInsets.symmetric(horizontal: 0.0),
+                        //   decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(5.0),
+                        //       color: Colors.white,
+                        //       border: Border.all(color: Colors.grey[400])),
+                        //   child: StreamBuilder<CityResponse>(
+                        //       stream: getCityBloc.subject.stream,
+                        //       builder:
+                        //         (context, AsyncSnapshot<CityResponse> snapshot) {
+                        //           if (snapshot.connectionState == ConnectionState.waiting) {
+                        //             return Stack(
+                        //               children: <Widget>[
+                        //                 _dropDown("市区町村"),                            
+                        //                 Center(
+                        //                   child: Opacity(
+                        //                     opacity:1.0, 
+                        //                     child:buildLoadingWidget(),//CircularProgressIndicator(),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             );
+                        //         }
+                        //         else if (snapshot.hasError) {
+                        //               return Container();
+                        //         } 
+                        //         else if (snapshot.hasData) {
+                        //           if (snapshot.data.error != null &&
+                        //               snapshot.data.error.length > 0) {
+                        //             return Container();
+                        //           }
+                        //           List<CityModel> cityList = List();
+                        //             cityList.add(new CityModel(-1,""));
+                        //             snapshot.data.city.forEach((e) {
+                        //               cityList.add(e);
+                        //           });
+                        //           return Container(                               
+                        //               child: DropdownButtonHideUnderline(
+                        //             child: ButtonTheme(                               
+                        //                 alignedDropdown: true,
+                        //                 child: new DropdownButton<String>(
+                        //                 //isDense: true,
+                        //                 isExpanded: true,
+                        //                 hint:  Row(
+                        //                   children: [
+                        //                     Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                        //                     Text("市区町村"),
+                        //                   ],
+                        //                 ),
+                        //                 value: _city,
+                        //                 onChanged: (String newValue) {
+                        //                   setState(() {
+                        //                     checkstream=1;
+                        //                     getTspBloc.drainStream();
+                        //                     // getDepBloc.drainStream();
+                        //                     _township = null;
+                        //                     _city = newValue;     
+                        //                     stream1=getTspBloc..getTownship(_city);
+                                     
+                                     
+                        //                   });
+                        //                 },
+                        //                 items: 
+                        //                  cityList.map((CityModel cityModel) =>
+                        //                     DropdownMenuItem(
+                        //                       value: cityModel.id.toString(),
+                        //                       child: cityModel.id != -1 ? Text("  "+cityModel.city_name) 
+                        //                         : Row(
+                        //                           children: [
+                        //                             Icon(Icons.arrow_drop_down_outlined, size: 35.0,),
+                        //                             Text("市区町村"),
+                        //                           ],
+                        //                         ),
+                        //                     )
+                        //                     )
+                        //                   .toList(),
+                        //               ),
+                        //             ),
+                        //           ));
+                        //         } else {
+                        //           return Stack(
+                        //           children: <Widget>[
+                        //             _dropDown("市区町村"),                         
+                        //             Center(
+                        //               child: Opacity(
+                        //                 opacity:1.0, 
+                        //                 child:buildLoadingWidget(),//CircularProgressIndicator(),
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         );
+                        //         }
+                        //       }),
+                        // ),
 
                     // //Township
                     (countTspID != null && countTspID != 0) ?Text("[${countTspID.toString()}]件選択されました.", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),): Container(),
@@ -1113,11 +1211,7 @@ class _SearchHospitalState extends State<SearchHospital> {
 
   List<String> _getDisplaySearchData(){
     List<String> st = List();
-    cityList
-        .map((e) => (e.id.toString() == _city && e.id != -1)
-            ? st.add(e.city_name)
-            : null)
-        .toList();
+    cityList.map((e) => (e.id.toString() == _city && e.id != -1 ) ? st.add(e.city_name): null).toList();
 
     print(st);
     // ??

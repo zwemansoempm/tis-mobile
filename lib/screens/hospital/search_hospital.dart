@@ -1238,8 +1238,7 @@ class _SearchHospitalState extends State<SearchHospital> {
     List<Widget> list = new List<Widget>();
     String tempsub;
     var subarr = [];
-    tempsub = HospitalList[0].subject;
-    subarr = tempsub.split(',');
+
 
     
 
@@ -1251,6 +1250,8 @@ class _SearchHospitalState extends State<SearchHospital> {
 
 
     for (int i = 0; i < HospitalList.length; i++) {
+      tempsub = HospitalList[i].subject;
+      subarr = tempsub.split(',');
       list.add(new 
       Container(
         padding: EdgeInsets.all(10.0),
@@ -1293,7 +1294,7 @@ class _SearchHospitalState extends State<SearchHospital> {
             Row(
               children: [
 
-                Wrap(children: subarr.map((item) => subarr.length != 0 ?
+                (tempsub == '' ? Container() :Wrap(children: subarr.map((item) => 
                 Row(
                   children: [
                     Card(
@@ -1304,8 +1305,21 @@ class _SearchHospitalState extends State<SearchHospital> {
                       ),
                     ),
                   ],
-                )
-                :  Container()).toList()),
+                )).toList())
+                ),
+
+                // Wrap(children: subarr.map((item) => 
+                // Row(
+                //   children: [
+                //     Card(
+                //       color: Colors.blue,
+                //       child: Padding(
+                //         padding: const EdgeInsets.all(4.0),
+                //         child: Text(item, style: TextStyle(color: Colors.white),),
+                //       ),
+                //     ),
+                //   ],
+                // )).toList()),
 
               ]
             ),
@@ -1398,9 +1412,10 @@ class _SearchHospitalState extends State<SearchHospital> {
                       checkstream=0;
                       List<HospitalSpecFeatModel> specfeat =
                           snapshot.data.specialfeature;
-                      return new Wrap(children: specfeat.map((item) => item.name != null ?
+                      return new Wrap(children: specfeat.map((item) => item.profile_id == HospitalList[i].hos_id ?
                       Column(
                         children: [
+                          // Text(item.profile_id.toString()),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal:3.0),
                             child: Container(

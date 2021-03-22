@@ -33,6 +33,8 @@ class _HospitalDetailState extends State<HospitalDetail> {
   var stream;var stream1;var stream2;var stream3;var stream4;
   String tempsub;
   var subarr = [] ;
+  var temp_list = [];
+
 
   @override
   void initState() {
@@ -91,8 +93,10 @@ class _HospitalDetailState extends State<HospitalDetail> {
     Address address = detail.addressList[0];
 
     tempsub = hos_detail.subject;
+    
     subarr = tempsub.split(',');
     var tempfaclistid = [];
+
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -205,7 +209,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: ListTile(
-                title: Text("${hos_detail.phone == null ? '' : hos_detail.phone}", 
+                title: Text("${hos_detail.phone == null ? '-' : hos_detail.phone}", 
                   style: TextStyle(
                     fontSize: 14.0,
                   ),
@@ -255,7 +259,7 @@ class _HospitalDetailState extends State<HospitalDetail> {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: ListTile(
-                title: Text("${hos_detail.subject == null ? '' : hos_detail.subject}", 
+                title: Text("${tempsub == '' ? '-' : hos_detail.subject}", 
                   style: TextStyle(
                     fontSize: 14.0,
                   ),
@@ -312,7 +316,8 @@ class _HospitalDetailState extends State<HospitalDetail> {
             
 
             SizedBox(height: 10.0),
-            Padding(
+
+            (tempsub == '' ? _noData() : Padding(
 
               padding: const EdgeInsets.only(left:10),
               child: Row(
@@ -338,7 +343,35 @@ class _HospitalDetailState extends State<HospitalDetail> {
                   // Text("胃腸科"),
                 ],
               ),
-            ),
+            )),
+            
+            // Padding(
+
+            //   padding: const EdgeInsets.only(left:10),
+            //   child: Row(
+                
+            //     children: [
+
+            //       Wrap(children: subarr.map((item) => subarr.length != 0 ?
+            //       Row(
+            //         children: [
+            //           Text(item),
+            //           SizedBox(width: 10,)
+            //         ],
+            //       )
+            //       :  Container()).toList()),
+
+                  
+            //       // Text(subarr[]),
+            //       // SizedBox(width: 10.0),
+            //       // Text("呼吸器科"),
+            //       // SizedBox(width: 10.0),
+            //       // Text("消化器科"),
+            //       // SizedBox(width: 10.0),
+            //       // Text("胃腸科"),
+            //     ],
+            //   ),
+            // ),
             SizedBox(height: 20.0),
 
             _subHeader("医院からのお知らせ"),
@@ -373,14 +406,27 @@ class _HospitalDetailState extends State<HospitalDetail> {
             detail.facility_list.length == 0 && detail.facility.length == 0 ? Padding(
               padding: const EdgeInsets.only(bottom:10.0),
               child: _noData(),
-            ) : Column(
-              children: detail.facility_list.map((faclist) => 
-              // _facility(f.description, Color(0xffdee2e6)),
-              _getFacilityWidget(faclist ,detail.facility)
+            ) : Container(
+              child: Column(
+                children: detail.facility_list.map((faclist) => 
+                // _facility(f.description, Color(0xffdee2e6)),
+                _getFacilityWidget(faclist ,detail.facility),
+                
+                
+                ).toList(),
+                
+
+                
+                
+              ),
               
               
-              ).toList(),
+              
+
+              
             ),
+
+            
 
             SizedBox(height: 10,),
 
@@ -413,6 +459,9 @@ class _HospitalDetailState extends State<HospitalDetail> {
             _subHeader("フォトアルバム"),
             Row(
               children: [
+
+
+                // Text(detail.images.length.toString()),
                 
 
                 detail.images.length == 0 ? Padding(
@@ -602,27 +651,57 @@ class _HospitalDetailState extends State<HospitalDetail> {
   // }
 
   Widget _getFacilityWidget(FacilityList faclist ,List<Facility> fac){
-    var list = [];
+
+    // if (fac.contains(faclist.id)) {
+    //   return _facility(faclist.description,Color(0xffdee2e6));
+    // } else {
+    //   return  _facilityData2();
+
+    // }
+
+    // return Text(temp_list.toString());
+
+
+
     return Container(
       child: Column(
         children: [
           _facility(faclist.description,Color(0xffdee2e6)),
 
-          // Column(
-          //   children: fac.map((e) =>list.add(e.id)),
-          // ),
-
-          Column(
+          Container(
+          child:Column(
           children:fac.map((fac) => 
           (fac.id == faclist.id) ?
           _facilityData(Colors.white)
           : Container()
           ).toList(),
           ),
+             
+          ),
 
           SizedBox(width: 10),
       ],) 
     );
+    
+    // return Container(
+    //   child: Column(
+    //     children: [
+    //       _facility(faclist.description,Color(0xffdee2e6)),
+
+    //       Container(
+    //       child:Column(
+    //       children:fac.map((fac) => 
+    //       (fac.id == faclist.id) ?
+    //       _facilityData(Colors.white)
+    //       : Container()
+    //       ).toList(),
+    //       ),
+             
+    //       ),
+
+    //       SizedBox(width: 10),
+    //   ],) 
+    // );
     
   }
 

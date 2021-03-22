@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -26,20 +28,20 @@ class NusingDetail extends StatefulWidget {
 
 class _NusingDetailState extends State<NusingDetail> {
 
-  var stream;var stream1;
+  //var stream;var stream1;
 
   List<int> _visibleId = List();
 
   @override
   void initState() {
-    stream = getNursingDetailBloc..getNursingDetailData(widget.nursingId);
-    stream1 = getProfileFeaturesBloc..getProfileFeatures("nursing", widget.nursingId);
+    getNursingDetailBloc..getNursingDetailData(widget.nursingId);
+    getProfileFeaturesBloc..getProfileFeatures("nursing", widget.nursingId);
     super.initState();
   }
 
   @override
   void dispose() {
-    getNursingDetailBloc.drainStream();
+    //getNursingDetailBloc.drainStream();
     super.dispose();
   }
 
@@ -108,7 +110,7 @@ class _NusingDetailState extends State<NusingDetail> {
           _header("現在の検索条件"),
           SizedBox(height: 10.0),
          
-          _mailButton(),
+          _mailButton(nursingData.id , nursingData.email, nursingData.name),
           SizedBox(height: 10.0),
 
           Padding(
@@ -292,14 +294,14 @@ class _NusingDetailState extends State<NusingDetail> {
           
           _header("特長"),
           SizedBox(height: 10.0),
-          _mailButton(),
+          _mailButton(nursingData.id , nursingData.email, nursingData.name),
           SizedBox(height: 10.0),
           nursingData.feature == null ? _noData() : Html(data: nursingData.feature,),
           SizedBox(height: 10.0),
           
           _header("費用"),
           SizedBox(height: 10.0),
-          _mailButton(),
+          _mailButton(nursingData.id , nursingData.email, nursingData.name),
           SizedBox(height: 10.0),
           detail.methodPayments.length == 0 ? Padding(
             padding: const EdgeInsets.only(bottom:10.0),
@@ -312,7 +314,7 @@ class _NusingDetailState extends State<NusingDetail> {
 
           _header("施設の概要"),
           SizedBox(height: 10.0),
-          _mailButton(),
+          _mailButton(nursingData.id , nursingData.email, nursingData.name),
 
           _itemHeader('事業主体'),
           _itemData(nursingData.businessEntity),
@@ -946,14 +948,16 @@ class _NusingDetailState extends State<NusingDetail> {
     );
   }
 
-  Widget _mailButton(){
+  Widget _mailButton(int id, String email , String name){
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingMail(nursingId: widget.nursingId,)));
+            var document_status = [];
+            //document_status[id] = true;
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> NusingMail(nursingId: widget.nursingId, id: id, email: email, name: name,document: document_status,)));
           },
           color: Colors.green,
           textColor: Colors.white,

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tis/bloc/get_nursing_detail_bloc.dart';
 import 'package:tis/model/nursingMailComment.dart';
+import 'package:tis/views/nursing_mail_complete.dart';
+import 'package:tis/views/nusing_favourite_mail.dart';
 import 'package:tis/views/send_completely.dart';
 
 class NursingMailConfirm extends StatefulWidget {
   final String nursingId;
+  
   final NursingMailCommentModel mailcomment;
 
   const NursingMailConfirm({Key key,@required this.nursingId,@required this.mailcomment}) : super(key: key);
@@ -52,17 +55,16 @@ class _NursingMailConfirmState extends State<NursingMailConfirm> {
                 SizedBox(height: 10),
 
                 Row(
-                  
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue[300]),
+                        color: Colors.blue[300], 
                       ),
                       child: Text("1.入力",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 12
                         ),
@@ -151,31 +153,53 @@ class _NursingMailConfirmState extends State<NursingMailConfirm> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16
                               ),),
-                              Text(widget.mailcomment.postal != null ? widget.mailcomment.postal : "",
-                                style: TextStyle(
-                                  fontSize: 16
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 2 , vertical: 4),
+                                child: Text(widget.mailcomment.postal != null ? widget.mailcomment.postal : "",
+                                  style: TextStyle(
+                                    fontSize: 16
+                                  ),
                                 ),
                               ),
-                              Text("都道府県" , 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
-                              ),),
-                              Text(widget.mailcomment.city != null ? widget.mailcomment.city : "" ),
-                              Text("市区町村" , 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
-                              ),),
-                              Text(widget.mailcomment.township != null ? widget.mailcomment.township : "" ),
-                              Text("番地（建物名)" , 
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
-                              ),),
-                              Text(widget.mailcomment.address != null ? widget.mailcomment.address : "",
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4 , vertical: 4),
+                                child: Text("都道府県" , 
                                 style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16
+                                ),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8 , vertical: 4),
+                                child: Text(widget.mailcomment.division != null ? widget.mailcomment.division : "" ),
+                              ),
+                              
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12 , vertical: 4),
+                                child: Text("市区町村" , 
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12 , vertical: 4),
+                                child: Text(widget.mailcomment.township != null ? widget.mailcomment.township : "" ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16 , vertical: 4),
+                                child: Text("番地（建物名)" , 
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16 , vertical: 4),
+                                child: Text(widget.mailcomment.city != null ? widget.mailcomment.city : "",
+                                  style: TextStyle(
+                                    fontSize: 16
+                                  ),
                                 ),
                               ),
                             ]
@@ -215,7 +239,7 @@ class _NursingMailConfirmState extends State<NursingMailConfirm> {
                     TableRow( children: [ _columnHeader("お名前"), ] ),
                     TableRow(
                       children: [
-                        _column(widget.mailcomment.tname),
+                        _column(widget.mailcomment.ttname),
                       ]
                     ),
                     TableRow( children: [ _columnHeader("性別"), ] ),
@@ -253,26 +277,27 @@ class _NursingMailConfirmState extends State<NursingMailConfirm> {
 
                 SizedBox(height: 20.0),
 
-                Center(
-                  child: Text("※未入力の必須項目がございます。",
-                    style: TextStyle(
-                      color: Colors.red
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.0),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     RaisedButton(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const SendCompletely()));
+                        Navigator.pop(context);
+                      },
+                      color: Colors.red,
+                      textColor: Colors.white,
+                      child: Text('入力画面に戻る', style: TextStyle(fontSize: 16,)),
+                    ),
+                    SizedBox(width: 20),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const NursingMailComplete()));
                       },
                       color: Colors.green,
                       textColor: Colors.white,
-                      child: Text('確認ページに進む', style: TextStyle(fontSize: 16,)),
+                      child: Text('上記内容を送信する', style: TextStyle(fontSize: 16,)),
                     ),
                   ]
                 ),

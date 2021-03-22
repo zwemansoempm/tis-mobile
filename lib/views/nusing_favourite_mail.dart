@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:tis/app-validation.dart';
 import 'package:tis/bloc/get_city_bloc.dart';
 import 'package:tis/bloc/get_nursing_detail_bloc.dart';
 import 'package:tis/bloc/get_postalList_block.dart';
@@ -23,8 +24,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NusingMail extends StatefulWidget {
   final String nursingId;
+  final int id;
+  final String email;
+  final String name;
+  final List<dynamic> document;
 
-  const NusingMail({Key key,@required this.nursingId}) : super(key: key);
+  const NusingMail({Key key,@required this.nursingId, @required this.id, @required this.email, @required this.name, @required this.document}) : super(key: key);
 
   @override
   _NusingMailState createState() => _NusingMailState();
@@ -33,7 +38,7 @@ class NusingMail extends StatefulWidget {
 enum Gender { male, female , couple }
 enum Fect { Yes, No , Nan}
 
-class _NusingMailState extends State<NusingMail> {
+class _NusingMailState extends State<NusingMail> with AppValidation {
   TextEditingController nameController = TextEditingController();
   TextEditingController furiganaController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
@@ -98,8 +103,8 @@ class _NusingMailState extends State<NusingMail> {
   void initState() {
     super.initState();
     stream = getNursingDetailBloc..getNursingDetailData(widget.nursingId);
-    fetchDat();
-    print(profileNumber);
+    //fetchDat();
+    //print(profileNumber);
   }
 
   @override
@@ -117,12 +122,12 @@ class _NusingMailState extends State<NusingMail> {
   NursingDetailResponse detailResponse ;
   String profileNumber;
 
-  fetchDat()  {
-    return getNursingDetailBloc.subject.stream.listen((event) {
-      event.profilenumbers.map((e) => {profileNumber = e.profilenumber}) ;
-      detailResponse = event;
-     });
-  }
+  // fetchDat()  {
+  //   return getNursingDetailBloc.subject.stream.listen((event) {
+  //     event.profilenumbers.map((e) => {profileNumber = e.profilenumber}) ;
+  //     detailResponse = event;
+  //    });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +237,8 @@ class _NusingMailState extends State<NusingMail> {
                         children: [
                           Theme(
                             child: TextFormField(
-                              validator:ValidationBuilder().regExp(RegExp("(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)", unicode: false),"First Name,Last Nameを入力してください。").minLength(1).maxLength(50).build(),
+                              //validator:ValidationBuilder().regExp(RegExp("(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)", unicode: false),"First Name,Last Nameを入力してください。").minLength(1).maxLength(50).build(),
+                              validator: validateName,
                               controller: nameController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
@@ -264,13 +270,13 @@ class _NusingMailState extends State<NusingMail> {
                           Theme(
                             child: TextFormField(                                                
                               // validator:new ValidationBuilder().regExp(RegExp("/[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+/u",unicode: false),"フリガナを入力してください。")
-                              // .minLength(1).maxLength(50).build(),                          
+                              // .minLength(1).maxLength(50).build(), 
+                              //validator: validateFuri,                         
                               controller: furiganaController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.all(8),
                                 fillColor: Colors.grey,
-                                // labelText: 'フリガナを入力してください。',
                                 hintText: 'フリガナを入力してください。',
                               ),
                             ),
@@ -294,14 +300,13 @@ class _NusingMailState extends State<NusingMail> {
                           primaryColor: Colors.blue,
                         ),
                         child: TextFormField(
-                          //keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.number,
                           // validator:new ValidationBuilder().regExp(RegExp("^([0-9]{4}|[0-9]{2})[-]([0]?[1-9]|[1][0-2])[-]([0]?[1-9]|[1|2][0-9]|[3][0|1])",unicode: false),"生年月日を入力してください。")
                           // .minLength(10).maxLength(10).build(), 
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             fillColor: Colors.grey,
                             contentPadding: EdgeInsets.fromLTRB(30.0, 10.0, 100.0, 10.0),
-                            // labelText: '年 - 月 - 日',
                             hintText: '年 - 月 - 日',
                             hintStyle: TextStyle(fontSize: 15),
                           ),
@@ -375,16 +380,15 @@ class _NusingMailState extends State<NusingMail> {
                           SizedBox(height: 10.0),
                           Theme(
                             child: TextFormField(   
-                              //keyboardType: TextInputType.phone,                  
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              validator:new ValidationBuilder()
-                              .minLength(1).maxLength(10).build(),  
+                              keyboardType: TextInputType.phone,         
+                              // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              // validator:new ValidationBuilder()
+                              // .minLength(1).maxLength(10).build(),  
                               controller: zipCodeController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.all(8),
                                 fillColor: Colors.grey,
-                                //labelText: '郵便番号を入力してください。',
                                 hintText: '郵便番号を入力してください。',
                                 hintStyle: TextStyle(fontSize: 15),
                               ),
@@ -538,13 +542,15 @@ class _NusingMailState extends State<NusingMail> {
                           SizedBox(height: 10.0),
                           Theme(
                             child: TextFormField(
-                              validator:ValidationBuilder().phone('電話番号を入力してください。').minLength(1).maxLength(50).build(),
+                              keyboardType: TextInputType.phone,
+                              validator: validatePhone,
+                              maxLength: 13,
+                              //validator:ValidationBuilder().phone('電話番号を入力してください。').minLength(1).maxLength(50).build(),
                               controller: phoneNoController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.all(8),
                                 fillColor: Colors.grey,
-                                // labelText: '電話番号を入力してください。',
                                 hintText: '電話番号を入力してください。',
                               ),
                             ),
@@ -569,13 +575,13 @@ class _NusingMailState extends State<NusingMail> {
                         children: [
                           Theme(
                             child: TextFormField(
-                              validator:ValidationBuilder().email('メールアドレスを入力してください。').minLength(1).maxLength(50).build(),
+                              //validator:ValidationBuilder().email('※メールアドレスが正しくありません。もう一度入力してください。').minLength(1).maxLength(50).build(),
+                              validator: validateEmail,
                               controller: mailController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
                                 contentPadding: EdgeInsets.all(8),
-                                // labelText: 'メールアドレスを入力してください。',
                                 hintText: 'メールアドレスを入力してください。',
                               ),
                             ),
@@ -661,13 +667,11 @@ class _NusingMailState extends State<NusingMail> {
                         children: [
                           Theme(
                             child: TextFormField(
-                              //validator:ValidationBuilder().regExp(RegExp("(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)\\s+(\\[w]+|[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+|[々〆〤]+)", unicode: false),"First Name,Last Nameを入力してください。").minLength(1).maxLength(50).build(),
                               controller: tnameController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 fillColor: Colors.grey,
                                 contentPadding: EdgeInsets.all(8),
-                                // labelText: 'お名前を入力してください。',
                                 hintText: 'お名前を入力してください。',
                               ),
                             ),
@@ -901,15 +905,14 @@ class _NusingMailState extends State<NusingMail> {
           furiganaController.text,
           birthdayController.text, 
           genderController.text, 
-          zipCodeController.text, 
-          //city,
-          cityController.text,
-          townshipId.text,
+          zipCodeController.text,
+          stateController.text,
           addressController.text,
+          cityController.text,
           phoneNoController.text, 
           mailController.text, 
           relation, 
-          nameController.text,
+          tnameController.text,
           relGenderController.text, 
           years, 
           nursing, 
